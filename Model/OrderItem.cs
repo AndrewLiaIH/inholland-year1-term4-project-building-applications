@@ -2,18 +2,18 @@
 {
     public class OrderItem
     {
-        public uint OrderId { get; private set; }
-        public uint ItemId { get; private set; }
+        public Order Order { get; private set; }
+        public MenuItem Item { get; private set; }
         public DateTime PlacementTime { get; private set; }
         public string Status { get; private set; }
         public DateTime ChangeOfStatus { get; private set; }
         public uint Quantity { get; private set; }
         public string? Comment { get; private set; }
 
-        public OrderItem(uint orderId, uint itemId, DateTime placementTime, string status, DateTime changeOfStatus, uint quantity, string? comment)
+        public OrderItem(Order order, MenuItem item, DateTime placementTime, string status, DateTime changeOfStatus, uint quantity, string? comment)
         {
-            OrderId = orderId;
-            ItemId = itemId;
+            Order = order;
+            Item = item;
             PlacementTime = placementTime;
             Status = status;
             ChangeOfStatus = changeOfStatus;

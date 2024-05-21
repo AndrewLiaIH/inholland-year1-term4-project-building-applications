@@ -3,7 +3,7 @@
     public class MenuItem
     {
         public uint ItemId { get; private set; }
-        public string CategoryId { get; private set; }
+        public Category Category { get; private set; }
         public uint ItemNumber { get; private set; }
         public uint StockAmount { get; private set; }
         public bool OnMenu { get; private set; }
@@ -12,10 +12,10 @@
         public string? Name { get; private set; }
         public string? ShortName { get; private set; }
 
-        public MenuItem(uint itemId, string categoryId, uint itemNumber, uint stockAmount, bool onMenu, decimal price, string? description, string? name, string? shortName)
+        public MenuItem(uint itemId, Category category, uint itemNumber, uint stockAmount, bool onMenu, decimal price, string? description, string? name, string? shortName)
         {
             ItemId = itemId;
-            CategoryId = categoryId;
+            Category = category;
             ItemNumber = itemNumber;
             StockAmount = stockAmount;
             OnMenu = onMenu;
