@@ -54,7 +54,7 @@ namespace DAL
         /// <summary>
         /// For Select Queries.
         /// </summary>
-        protected DataTable ExecuteSelectQuery(string query)
+        protected DataTable ExecuteSelectQuery(string query, params SqlParameter[] sqlParameters)
         {
             DataTable dataTable = new DataTable();
             DataSet dataSet = new DataSet();
@@ -63,7 +63,7 @@ namespace DAL
             {
                 using (SqlConnection connection = OpenConnection())
                 {
-                    using (SqlCommand command = CreateCommand(connection, query))
+                    using (SqlCommand command = CreateCommand(connection, query, sqlParameters))
                     {
                         using (SqlDataAdapter adapter = new SqlDataAdapter())
                         {
@@ -89,12 +89,11 @@ namespace DAL
             throw new Exception(DatabaseErrorMessage, ex);
         }
 
-        private SqlCommand CreateCommand(SqlConnection connection, string query, SqlParameter[] parameters = null)
+        private SqlCommand CreateCommand(SqlConnection connection, string query, params SqlParameter[] parameters)
         {
             SqlCommand command = new SqlCommand(query, connection);
             
-            if (parameters != null)
-                command.Parameters.AddRange(parameters);
+            command.Parameters.AddRange(parameters);
 
             return command;
         }
