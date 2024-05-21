@@ -14,5 +14,10 @@
             CategoryType = categoryType;
             Alcoholic = alcoholic;
         }
+
+        public override string ToString()
+        {
+            return $"Category Type: {CategoryType}";
+        }
     }
 }

@@ -10,5 +10,10 @@
             CardId = cardId;
             MenuType = menuType;
         }
+
+        public override string ToString()
+        {
+            return $"MenuType: {MenuType}";
+        }
     }
 }

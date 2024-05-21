@@ -24,5 +24,10 @@
             Name = name;
             ShortName = shortName;
         }
+
+        public override string ToString()
+        {
+            return $"Name: {Name}, Short name: {ShortName}, Item number: {ItemNumber}, Stock amount: {StockAmount}, Description: {Description}, Price: {Price}";
+        }
     }
 }
