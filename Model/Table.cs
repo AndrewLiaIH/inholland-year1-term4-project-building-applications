@@ -2,9 +2,9 @@
 {
     public class Table
     {
-        public uint TableNumber { get; set; }
-        public Employee Host { get; set; }
-        public bool Occupied { get; set; }
+        public uint TableNumber { get; private set; }
+        public Employee Host { get; private set; }
+        public bool Occupied { get; private set; }
 
         public Table(uint tableNumber, Employee host, bool occupied)
         {
