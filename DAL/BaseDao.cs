@@ -91,10 +91,8 @@ namespace DAL
 
         private SqlCommand CreateCommand(SqlConnection connection, string query, params SqlParameter[] parameters)
         {
-            SqlCommand command = new SqlCommand(query, connection);
-            
+            SqlCommand command = new SqlCommand(query, connection);            
             command.Parameters.AddRange(parameters);
-
             return command;
         }
     }
