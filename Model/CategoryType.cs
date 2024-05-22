@@ -2,13 +2,10 @@
 {
     public enum CategoryType
     {
-        LunchStarters,
-        LunchMains,
-        LunchDesserts,
-        DinnerStarters,
-        DinnerEntrements,
-        DinnerMains,
-        DinnerDesserts,
+        Starters,
+        Mains,
+        Desserts,
+        Entrements,
         SoftDrinks,
         BeersOnTap,
         Wines,

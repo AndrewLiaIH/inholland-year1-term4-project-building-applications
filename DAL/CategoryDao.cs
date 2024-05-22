@@ -12,7 +12,7 @@ namespace DAL
         const string ColumnMenuId = "menu_id";
         const string ColumnCategoryType = "category_type";
         const string ColumnAlcoholic = "alcoholic";
-        const string CategoryErrorMessage = "Invalid category type.";
+        const string CategoryErrorMessage = "Unknown category type.";
         MenuCardDao menuCardDao;
 
         public CategoryDao()
@@ -49,13 +49,10 @@ namespace DAL
         {
             return categoryType switch
             {
-                "Lunch starters" => CategoryType.LunchStarters,
-                "Lunch main" => CategoryType.LunchMains,
-                "Lunch dessert" => CategoryType.LunchDesserts,
-                "Dinner starters" => CategoryType.DinnerStarters,
-                "Dinner entrements" => CategoryType.DinnerEntrements,
-                "Dinner mains" => CategoryType.DinnerMains,
-                "Dinner desserts" => CategoryType.DinnerDesserts,
+                "Starters" => CategoryType.Starters,
+                "Entrements" => CategoryType.Entrements,
+                "Main" => CategoryType.Mains,
+                "Desserts" => CategoryType.Desserts,
                 "Soft drinks" => CategoryType.SoftDrinks,
                 "Beers on tap" => CategoryType.BeersOnTap,
                 "Wines" => CategoryType.Wines,

@@ -10,7 +10,7 @@ namespace DAL
         const string QueryGetMenuCardById = $"{QueryGetAllMenuCards} WHERE {ColumnCardId} = @cardId";
         const string ColumnCardId = "card_id";
         const string ColumnMenuType = "menu_type";
-        const string MenuCardErrorMessage = "Invalid menu type.";
+        const string MenuCardErrorMessage = "Unknown menu type.";
 
         public List<MenuCard> GetAllMenuCards()
         {
