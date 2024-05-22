@@ -7,14 +7,24 @@ namespace DAL
     public class MenuCardDao : BaseDao
     {
         const string QueryGetAllMenuCards = $"SELECT {ColumnCardId}, {ColumnMenuType} FROM menu_card";
+        const string QueryGetMenuCardById = $"{QueryGetAllMenuCards} WHERE {ColumnCardId} = @cardId";
         const string ColumnCardId = "card_id";
         const string ColumnMenuType = "menu_type";
+        const string MenuCardErrorMessage = "Invalid menu type.";
 
         public List<MenuCard> GetAllMenuCards()
         {
             SqlParameter[] sqlParameters = Array.Empty<SqlParameter>();
             DataTable dataTable = ExecuteSelectQuery(QueryGetAllMenuCards, sqlParameters);
             return ReadTable(dataTable, ReadRow);
+        }
+
+        public MenuCard GetMenuCardById(uint cardId)
+        {
+            SqlParameter[] sqlParameters = new SqlParameter[] { new("@cardId", cardId) };
+            DataTable dataTable = ExecuteSelectQuery(QueryGetMenuCardById, sqlParameters);
+
+            return ReadTable(dataTable, ReadRow).FirstOrDefault();
         }
 
         private MenuCard ReadRow(DataRow dr)
@@ -32,7 +42,7 @@ namespace DAL
                 "Lunch" => MenuType.Lunch,
                 "Dinner" => MenuType.Dinner,
                 "Drinks" => MenuType.Drinks,
-                _ => throw new ArgumentException("Invalid menu type")
+                _ => throw new ArgumentException(MenuCardErrorMessage)
             };
         }
     }
