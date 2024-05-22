@@ -20,5 +20,10 @@
             Quantity = quantity;
             Comment = comment;
         }
+
+        public override string ToString()
+        {
+            return $"Placement time: {PlacementTime}, Status: {Status}, Change of status: {ChangeOfStatus}, Quantity: {Quantity}, Comment: {Comment}";
+        }
     }
 }
