@@ -4,7 +4,7 @@ using System.Data;
 
 namespace DAL
 {
-    internal abstract class BaseDao
+    public abstract class BaseDao
     {
         const string ConnectionStringName = "ChapeauDatabase";
         const string DatabaseErrorMessage = "Database operation failed.";
