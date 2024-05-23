@@ -7,12 +7,16 @@ namespace DAL
     public class CategoryDao : BaseDao
     {
         const string QueryGetAllCategories = $"SELECT {ColumnCategoryId}, {ColumnMenuId}, {ColumnCategoryType}, {ColumnAlcoholic} FROM category";
-        const string QueryGetCategoryById = $"{QueryGetAllCategories} WHERE {ColumnCategoryId} = @categoryId";
+        const string QueryGetCategoryById = $"{QueryGetAllCategories} WHERE {ColumnCategoryId} = {ParameterNameCategoryId}";
+
         const string ColumnCategoryId = "category_id";
         const string ColumnMenuId = "menu_id";
         const string ColumnCategoryType = "category_type";
         const string ColumnAlcoholic = "alcoholic";
         const string CategoryErrorMessage = "Unknown category type.";
+
+        const string ParameterNameCategoryId = "@CategoryId";
+
         MenuCardDao menuCardDao;
 
         public CategoryDao()
@@ -29,10 +33,12 @@ namespace DAL
 
         public Category GetCategoryById(uint categoryId)
         {
-            SqlParameter[] sqlParameters = new SqlParameter[] { new("@categoryId", categoryId) };
-            DataTable dataTable = ExecuteSelectQuery(QueryGetCategoryById, sqlParameters);
+            Dictionary<string, uint> parameters = new Dictionary<string, uint>()
+            {
+                { ParameterNameCategoryId, categoryId }
+            };
 
-            return ReadTable(dataTable, ReadRow).FirstOrDefault();
+            return GetById(QueryGetCategoryById, ReadRow, parameters);
         }
 
         private Category ReadRow(DataRow dr)
