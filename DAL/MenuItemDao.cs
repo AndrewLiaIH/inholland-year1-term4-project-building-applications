@@ -1,0 +1,57 @@
+﻿using Microsoft.Data.SqlClient;
+using Model;
+using System.Data;
+
+namespace DAL
+{
+    public class MenuItemDao : BaseDao
+    {
+        const string QueryGetAllMenuItems = $"SELECT {ColumnItemId}, {ColumnCategoryId}, {ColumnItemNumber}, {ColumnStockAmount}, {ColumnOnMenu}, {ColumnPrice}, {ColumnDescription}, {ColumnName}, {ColumnShortName} FROM menu_item";
+        const string QueryGetMenuItemById = $"{QueryGetAllMenuItems} WHERE {ColumnItemId} = @itemId";
+        const string ColumnItemId = "item_id";
+        const string ColumnCategoryId = "category_id";
+        const string ColumnItemNumber = "item_number";
+        const string ColumnStockAmount = "stock_amount";
+        const string ColumnOnMenu = "on_menu";
+        const string ColumnPrice = "price";
+        const string ColumnDescription = "description";
+        const string ColumnName = "name";
+        const string ColumnShortName = "short_name";
+        CategoryDao categoryDao;
+
+        public MenuItemDao()
+        {
+            categoryDao = new CategoryDao();
+        }
+
+        public List<MenuItem> GetAllMenuItems()
+        {
+            SqlParameter[] sqlParameters = Array.Empty<SqlParameter>();
+            DataTable dataTable = ExecuteSelectQuery(QueryGetAllMenuItems, sqlParameters);
+            return ReadTable(dataTable, ReadRow);
+        }
+
+        public MenuItem GetMenuItemById(uint itemId)
+        {
+            SqlParameter[] sqlParameters = new SqlParameter[] { new("@itemId", itemId) };
+            DataTable dataTable = ExecuteSelectQuery(QueryGetMenuItemById, sqlParameters);
+
+            return ReadTable(dataTable, ReadRow).FirstOrDefault();
+        }
+
+        private MenuItem ReadRow(DataRow dr)
+        {
+            uint itemId = (uint)dr[ColumnItemId];
+            uint categoryId = (uint)dr[ColumnCategoryId];
+            uint itemNumber = (uint)dr[ColumnItemNumber];
+            uint stockAmount = (uint)dr[ColumnStockAmount];
+            bool onMenu = (bool)dr[ColumnOnMenu];
+            decimal price = (decimal)dr[ColumnPrice];
+            string description = (string)dr[ColumnDescription];
+            string name = (string)dr[ColumnName];
+            string shortName = (string)dr[ColumnShortName];
+
+            return new MenuItem(itemId, categoryDao.GetCategoryById(categoryId), itemNumber, stockAmount, onMenu, price, description, name, shortName);
+        }
+    }
+}
