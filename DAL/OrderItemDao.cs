@@ -7,7 +7,8 @@ namespace DAL
     public class OrderItemDao : BaseDao
     {
         const string QueryGetAllOrderItems = $"SELECT {ColumnOrderId}, {ColumnItemId}, {ColumnPlacementTime}, {ColumnStatus}, {ColumnChangeOfStatus}, {ColumnQuantity}, {ColumnComment} FROM order_item";
-        const string QueryGetOrderItemById = $"{QueryGetAllOrderItems} WHERE {ColumnOrderId} = @orderId AND {ColumnItemId} = @itemId";
+        const string QueryGetOrderItemById = $"{QueryGetAllOrderItems} WHERE {ColumnOrderId} = {ParameterNameOrderId} AND {ColumnItemId} = {ParameterNameItemId}";
+        
         const string ColumnOrderId = "order_id";
         const string ColumnItemId = "item_id";
         const string ColumnPlacementTime = "placement_time";
@@ -15,7 +16,11 @@ namespace DAL
         const string ColumnChangeOfStatus = "change_of_status";
         const string ColumnQuantity = "quantity";
         const string ColumnComment = "comment";
-/*        OrderDao orderDao;*/
+
+        const string ParameterNameOrderId = "@OrderId";
+        const string ParameterNameItemId = "@ItemId";
+
+        /*        OrderDao orderDao;*/
         MenuItemDao menuItemDao;
 
         public OrderItemDao()
@@ -33,10 +38,13 @@ namespace DAL
 
         public OrderItem GetOrderItemById(uint orderId, uint itemId)
         {
-            SqlParameter[] sqlParameters = new SqlParameter[] { new("@orderId", orderId), new("@itemId", itemId) };
-            DataTable dataTable = ExecuteSelectQuery(QueryGetOrderItemById, sqlParameters);
+            Dictionary<string, uint> parameters = new Dictionary<string, uint>()
+            {
+                { ParameterNameOrderId, orderId },
+                { ParameterNameItemId, itemId }
+            };
 
-            return ReadTable(dataTable, ReadRow).FirstOrDefault();
+            return GetById(QueryGetOrderItemById, ReadRow, parameters);
         }
 
         private OrderItem ReadRow(DataRow dr)

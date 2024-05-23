@@ -91,9 +91,21 @@ namespace DAL
 
         private SqlCommand CreateCommand(SqlConnection connection, string query, params SqlParameter[] parameters)
         {
-            SqlCommand command = new SqlCommand(query, connection);            
+            SqlCommand command = new SqlCommand(query, connection);
             command.Parameters.AddRange(parameters);
             return command;
+        }
+
+        protected T GetById<T>(string query, Func<DataRow, T> readRow, Dictionary<string, uint> parameters)
+        {
+            SqlParameter[] sqlParameters = CreateSqlParameters(parameters);
+            DataTable dataTable = ExecuteSelectQuery(query, sqlParameters);
+            return ReadTable(dataTable, readRow).FirstOrDefault();
+        }
+
+        protected SqlParameter[] CreateSqlParameters(Dictionary<string, uint> parameters)
+        {
+            return parameters.Select(p => new SqlParameter(p.Key, p.Value)).ToArray();
         }
     }
 }
