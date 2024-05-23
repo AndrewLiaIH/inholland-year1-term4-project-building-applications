@@ -3,9 +3,9 @@
     public class MenuCard
     {
         public uint CardId { get; private set; }
-        public string MenuType { get; private set; }
+        public MenuType MenuType { get; private set; }
 
-        public MenuCard(uint cardId, string menuType)
+        public MenuCard(uint cardId, MenuType menuType)
         {
             CardId = cardId;
             MenuType = menuType;
