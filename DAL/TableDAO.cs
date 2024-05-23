@@ -4,12 +4,13 @@ using System.Data;
 
 namespace DAL
 {
-    public class TableDAO
+    public class TableDao : BaseDao
     {
-        EmployeeDAO employeeDAO;
-        const string QueryGetAllTables = $"SELECT {ColumnTableID}, {ColumnHostId}, {ColumnOccupied}, {ColumnTableNumber} FROM [table]";
+        EmployeeDAO employeeDao;
 
-        const string ColumnTableID = "table_id";
+        const string QueryGetAllTables = $"SELECT {ColumnTableId}, {ColumnHostId}, {ColumnOccupied}, {ColumnTableNumber} FROM [table]";
+
+        const string ColumnTableId = "table_id";
         const string ColumnHostId = "host";
         const string ColumnOccupied = "occupied";
         const string ColumnTableNumber = "table_number";
@@ -28,7 +29,7 @@ namespace DAL
 
         private Table ReadRow(DataRow dr)
         {
-            uint id = (uint)dr[ColumnTableID];
+            uint id = (uint)dr[ColumnTableId];
             uint hostId= (uint)dr[ColumnHostId];
             bool occupied = (bool)dr[ColumnOccupied];
             uint tableNumber = (uint)dr[ColumnTableNumber];

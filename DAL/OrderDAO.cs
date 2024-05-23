@@ -4,13 +4,14 @@ using System.Data;
 
 namespace DAL
 {
-    public class OrderDAO
+    public class OrderDao : BaseDao
     {
-        TableDAO tableDAO;
-        EmployeeDAO employeeDAO;
+        TableDao tableDao;
+        EmployeeDao employeeDao;
 
-        const string QueryGetAllOrders = $"SELECT {ColumnOrderID}, {ColumnTableId}, {ColumnPlacedById}, {ColumnOrderNumber}, {ColumnServingNumber}, {ColumnFinished}, {ColumnTotalPrice} FROM order";
-        const string ColumnOrderID = "order_id";
+        const string QueryGetAllOrders = $"SELECT {ColumnOrderId}, {ColumnTableId}, {ColumnPlacedById}, {ColumnOrderNumber}, {ColumnServingNumber}, {ColumnFinished}, {ColumnTotalPrice} FROM order";
+
+        const string ColumnOrderId = "order_id";
         const string ColumnTableId = "table_number";
         const string ColumnPlacedById = "placed_by";
         const string ColumnOrderNumber = "order_number";
@@ -27,7 +28,7 @@ namespace DAL
 
         private Order ReadRow(DataRow dr)
         {
-            uint id = (uint)dr[ColumnOrderID];
+            uint id = (uint)dr[ColumnOrderId];
             uint tableId = (uint)dr[ColumnTableId];
             uint employeeId = (uint)dr[ColumnPlacedById]; 
             uint orderNumber = (uint)dr[ColumnOrderNumber];

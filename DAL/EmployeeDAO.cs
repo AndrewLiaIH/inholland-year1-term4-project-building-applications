@@ -4,11 +4,11 @@ using Model;
 
 namespace DAL
 {
-    public class EmployeeDAO : BaseDAO
+    public class EmployeeDao : BaseDao
     {
-        const string QueryGetAllEmployees = $"SELECT {ColumnEmployeeID}, {ColumnEmployeeNumber}, {ColumnLogin}, {ColumnPassword}, {ColumnFirstName}, {ColumnLastName}, {ColumnEmail}, {ColumnPhoneNumber}, {ColumnEmployeeType} FROM employee;";
+        const string QueryGetAllEmployees = $"SELECT {ColumnEmployeeId}, {ColumnEmployeeNumber}, {ColumnLogin}, {ColumnPassword}, {ColumnFirstName}, {ColumnLastName}, {ColumnEmail}, {ColumnPhoneNumber}, {ColumnEmployeeType} FROM employee;";
 
-        const string ColumnEmployeeID = "employee_id";
+        const string ColumnEmployeeId = "employee_id";
         const string ColumnEmployeeNumber = "employee_number";
         const string ColumnLogin = "login";
         const string ColumnPassword = "password";
@@ -32,7 +32,7 @@ namespace DAL
 
         private Employee ReadRow(DataRow dr)
         {
-            uint id = (uint)dr[ColumnEmployeeID];
+            uint id = (uint)dr[ColumnEmployeeId];
             uint employeeNumber = (uint)dr[ColumnEmployeeNumber];
             uint login = (uint)dr[ColumnLogin];
             uint password = (uint)dr[ColumnPassword];
@@ -41,26 +41,16 @@ namespace DAL
             string email = (string)dr[ColumnEmail];
             string phoneNumber = (string)dr[ColumnPhoneNumber];
             string employeeType = (string)dr[ColumnEmployeeType];
-            EmployeeType type;            
 
-            switch (employeeType)
+            EmployeeType type = employeeType switch
             {
-                case "waiter":
-                    type = EmployeeType.Waiter;
-                    break;
-                case "waitress":
-                    type = EmployeeType.Waiter;
-                    break;
-                case "chef":
-                    type = EmployeeType.Chef;
-                    break;
-                case "bartender":
-                    type = EmployeeType.Bartender;
-                    break;
-                default:
-                    type = EmployeeType.Manager;
-                    break;
-            }
+                "waiter" => EmployeeType.Waiter,
+                "waitress" => EmployeeType.Waiter,
+                "chef" => EmployeeType.Chef,
+                "bartender" => EmployeeType.Bartender,
+                "manager" => EmployeeType.Manager,
+                _ => throw new ArgumentException("Unkown employee type")
+            };
 
             return new Employee(id, employeeNumber, login, password, firstName, lastName, email, phoneNumber, type);
         }
