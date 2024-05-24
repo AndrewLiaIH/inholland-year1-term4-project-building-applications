@@ -1,6 +1,6 @@
-﻿using Microsoft.Data.SqlClient;
-using Model;
+﻿using Model;
 using System.Data;
+using System.Data.SqlClient;
 
 namespace DAL
 {
@@ -8,7 +8,7 @@ namespace DAL
     {
         const string QueryGetAllOrderItems = $"SELECT {ColumnOrderId}, {ColumnItemId}, {ColumnPlacementTime}, {ColumnStatus}, {ColumnChangeOfStatus}, {ColumnQuantity}, {ColumnComment} FROM order_item";
         const string QueryGetOrderItemById = $"{QueryGetAllOrderItems} WHERE {ColumnOrderId} = {ParameterNameOrderId} AND {ColumnItemId} = {ParameterNameItemId}";
-        
+
         const string ColumnOrderId = "order_id";
         const string ColumnItemId = "item_id";
         const string ColumnPlacementTime = "placement_time";
@@ -25,7 +25,7 @@ namespace DAL
 
         public OrderItemDao()
         {
-/*            OrderDao = new();*/
+            /*            OrderDao = new();*/
             menuItemDao = new();
         }
 

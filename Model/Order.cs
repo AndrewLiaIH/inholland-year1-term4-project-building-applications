@@ -10,7 +10,7 @@
         public bool Finished { get; private set; }
         public decimal TotalPrice { get; private set; }
 
-        public Order(uint databaseId, Table table, Employee placedBy, uint orderNumber, uint servingNumber, bool finished, decimal totalPrice) 
+        public Order(uint databaseId, Table table, Employee placedBy, uint orderNumber, uint servingNumber, bool finished, decimal totalPrice)
         {
             DatabaseId = databaseId;
             Table = table;
@@ -23,7 +23,7 @@
 
         public override string ToString()
         {
-            return "";
+            return $"#{OrderNumber}: ${TotalPrice}";
         }
     }
 }
