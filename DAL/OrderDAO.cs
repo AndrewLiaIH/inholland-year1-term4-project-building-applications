@@ -1,6 +1,6 @@
 ﻿using Model;
-using System.Data.SqlClient;
 using System.Data;
+using System.Data.SqlClient;
 
 namespace DAL
 {
@@ -21,7 +21,7 @@ namespace DAL
 
         public List<Order> GetAllOrders()
         {
-            SqlParameter[] sqlParameters = new SqlParameter[Zero];
+            SqlParameter[] sqlParameters = Array.Empty<SqlParameter>();
             DataTable dataTable = ExecuteSelectQuery(QueryGetAllOrders, sqlParameters);
             return ReadTable(dataTable, ReadRow);
         }
@@ -30,15 +30,13 @@ namespace DAL
         {
             uint id = (uint)dr[ColumnOrderId];
             uint tableId = (uint)dr[ColumnTableId];
-            uint employeeId = (uint)dr[ColumnPlacedById]; 
+            uint employeeId = (uint)dr[ColumnPlacedById];
             uint orderNumber = (uint)dr[ColumnOrderNumber];
             uint servingNumber = (uint)dr[ColumnServingNumber];
             bool finished = (bool)dr[ColumnFinished];
             decimal totalPrice = (decimal)dr[ColumnTotalPrice];
-            Table table = tableDAO.GetTableById(tableId);
-            Employee employee = employeeDAO.GetEmployeeById(employeeId);
 
-            return new Order(id, table, employee, orderNumber, servingNumber, finished, totalPrice);
+            return new Order(id, tableDao.GetTableById(tableId), employeeDao.GetEmployeeById(employeeId), orderNumber, servingNumber, finished, totalPrice);
         }
     }
 }

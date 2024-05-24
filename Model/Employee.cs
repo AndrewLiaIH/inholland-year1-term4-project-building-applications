@@ -4,7 +4,7 @@
     {
         public uint DatabaseId { get; private set; }
         public uint EmployeeNumber { get; private set; }
-        public uint? Login {  get; private set; }
+        public uint? Login { get; private set; }
         public uint? Password { get; private set; } //Encryption?
         public string? FirstName { get; private set; }
         public string? LastName { get; private set; }
@@ -27,7 +27,7 @@
 
         public override string ToString()
         {
-            return "";
+            return $"{FirstName} {LastName}, {Type}";
         }
     }
 }
