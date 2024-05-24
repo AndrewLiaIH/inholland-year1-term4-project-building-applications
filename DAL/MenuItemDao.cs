@@ -48,7 +48,7 @@ namespace DAL
         private MenuItem ReadRow(DataRow dr)
         {
             uint itemId = (uint)dr[ColumnItemId];
-            uint categoryId = (uint)dr[ColumnCategoryId];
+            Category category = categoryDao.GetCategoryById((uint)dr[ColumnCategoryId]);
             uint itemNumber = (uint)dr[ColumnItemNumber];
             uint stockAmount = (uint)dr[ColumnStockAmount];
             bool onMenu = (bool)dr[ColumnOnMenu];
@@ -57,7 +57,7 @@ namespace DAL
             string name = (string)dr[ColumnName];
             string shortName = (string)dr[ColumnShortName];
 
-            return new MenuItem(itemId, categoryDao.GetCategoryById(categoryId), itemNumber, stockAmount, onMenu, price, description, name, shortName);
+            return new MenuItem(itemId, category, itemNumber, stockAmount, onMenu, price, description, name, shortName);
         }
     }
 }
