@@ -44,11 +44,11 @@ namespace DAL
         private Category ReadRow(DataRow dr)
         {
             uint categoryId = (uint)dr[ColumnCategoryId];
-            uint menuId = (uint)dr[ColumnMenuId];
-            string categoryType = (string)dr[ColumnCategoryType];
+            MenuCard menuCard = menuCardDao.GetMenuCardById((uint)dr[ColumnMenuId]);
+            CategoryType categoryType = ConvertToEnum((string)dr[ColumnCategoryType]);
             bool alcoholic = (bool)dr[ColumnAlcoholic];
 
-            return new Category(categoryId, menuCardDao.GetMenuCardById(menuId), ConvertToEnum(categoryType), alcoholic);
+            return new Category(categoryId, menuCard, categoryType, alcoholic);
         }
 
         private CategoryType ConvertToEnum(string categoryType)

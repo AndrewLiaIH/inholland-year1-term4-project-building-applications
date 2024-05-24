@@ -20,12 +20,12 @@ namespace DAL
         const string ParameterNameOrderId = "@OrderId";
         const string ParameterNameItemId = "@ItemId";
 
-        /*        OrderDao orderDao;*/
+        OrderDao orderDao;
         MenuItemDao menuItemDao;
 
         public OrderItemDao()
         {
-            /*            OrderDao = new();*/
+            orderDao = new();
             menuItemDao = new();
         }
 
@@ -49,15 +49,15 @@ namespace DAL
 
         private OrderItem ReadRow(DataRow dr)
         {
-            uint orderId = (uint)dr[ColumnOrderId];
-            uint itemId = (uint)dr[ColumnItemId];
+            Order order = orderDao.GetOrderById((uint)dr[ColumnOrderId]);
+            MenuItem menuItem = menuItemDao.GetMenuItemById((uint)dr[ColumnItemId]);
             DateTime placementTime = (DateTime)dr[ColumnPlacementTime];
             string status = (string)dr[ColumnStatus];
             DateTime changeOfStatus = (DateTime)dr[ColumnChangeOfStatus];
             uint quantity = (uint)dr[ColumnQuantity];
             string? comment = (string?)dr[ColumnComment];
 
-            return new OrderItem(orderId, menuItemDao.GetMenuItemById(itemId), placementTime, status, changeOfStatus, quantity, comment);
+            return new OrderItem(order, menuItem, placementTime, status, changeOfStatus, quantity, comment);
         }
     }
 }

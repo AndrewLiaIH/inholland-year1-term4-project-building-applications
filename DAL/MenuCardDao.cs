@@ -35,9 +35,9 @@ namespace DAL
         private MenuCard ReadRow(DataRow dr)
         {
             uint cardId = (uint)dr[ColumnCardId];
-            string menuType = (string)dr[ColumnMenuType];
+            MenuType menuType = ConvertToEnum((string)dr[ColumnMenuType]);
 
-            return new MenuCard(cardId, ConvertToEnum(menuType));
+            return new MenuCard(cardId, menuType);
         }
 
         private MenuType ConvertToEnum(string menuType)

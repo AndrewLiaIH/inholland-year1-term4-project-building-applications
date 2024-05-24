@@ -38,11 +38,11 @@ namespace DAL
         private Table ReadRow(DataRow dr)
         {
             uint id = (uint)dr[ColumnTableId];
-            uint hostId = (uint)dr[ColumnHostId];
+            Employee host = employeeDao.GetEmployeeById((uint)dr[ColumnHostId]);
             bool occupied = (bool)dr[ColumnOccupied];
             uint tableNumber = (uint)dr[ColumnTableNumber];
 
-            return new Table(id, employeeDao.GetEmployeeById(hostId), occupied, tableNumber);
+            return new Table(id, host, occupied, tableNumber);
         }
     }
 }

@@ -50,9 +50,9 @@ namespace DAL
             string lastName = (string)dr[ColumnLastName];
             string email = (string)dr[ColumnEmail];
             string phoneNumber = (string)dr[ColumnPhoneNumber];
-            string employeeType = (string)dr[ColumnEmployeeType];
+            EmployeeType employeeType = ConvertToEnum((string)dr[ColumnEmployeeType]);
 
-            return new Employee(id, employeeNumber, login, password, firstName, lastName, email, phoneNumber, ConvertToEnum(employeeType));
+            return new Employee(id, employeeNumber, login, password, firstName, lastName, email, phoneNumber, employeeType);
         }
 
         private EmployeeType ConvertToEnum(string employeeType)
