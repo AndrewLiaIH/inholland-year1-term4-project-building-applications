@@ -7,10 +7,13 @@ namespace DAL
     public class MenuCardDao : BaseDao
     {
         const string QueryGetAllMenuCards = $"SELECT {ColumnCardId}, {ColumnMenuType} FROM menu_card";
-        const string QueryGetMenuCardById = $"{QueryGetAllMenuCards} WHERE {ColumnCardId} = @cardId";
+        const string QueryGetMenuCardById = $"{QueryGetAllMenuCards} WHERE {ColumnCardId} = {ParameterNameCardId}";
+
         const string ColumnCardId = "card_id";
         const string ColumnMenuType = "menu_type";
         const string MenuCardErrorMessage = "Unknown menu type.";
+
+        const string ParameterNameCardId = "@cardId";
 
         public List<MenuCard> GetAllMenuCards()
         {
@@ -21,10 +24,12 @@ namespace DAL
 
         public MenuCard GetMenuCardById(uint cardId)
         {
-            SqlParameter[] sqlParameters = new SqlParameter[] { new("@cardId", cardId) };
-            DataTable dataTable = ExecuteSelectQuery(QueryGetMenuCardById, sqlParameters);
+            Dictionary<string, uint> parameters = new()
+            {
+                { ParameterNameCardId, cardId }
+            };
 
-            return ReadTable(dataTable, ReadRow).FirstOrDefault();
+            return GetById(QueryGetMenuCardById, ReadRow, parameters);
         }
 
         private MenuCard ReadRow(DataRow dr)

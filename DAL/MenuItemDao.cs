@@ -7,7 +7,8 @@ namespace DAL
     public class MenuItemDao : BaseDao
     {
         const string QueryGetAllMenuItems = $"SELECT {ColumnItemId}, {ColumnCategoryId}, {ColumnItemNumber}, {ColumnStockAmount}, {ColumnOnMenu}, {ColumnPrice}, {ColumnDescription}, {ColumnName}, {ColumnShortName} FROM menu_item";
-        const string QueryGetMenuItemById = $"{QueryGetAllMenuItems} WHERE {ColumnItemId} = @itemId";
+        const string QueryGetMenuItemById = $"{QueryGetAllMenuItems} WHERE {ColumnItemId} = {ParameterNameItemId}";
+
         const string ColumnItemId = "item_id";
         const string ColumnCategoryId = "category_id";
         const string ColumnItemNumber = "item_number";
@@ -17,6 +18,9 @@ namespace DAL
         const string ColumnDescription = "description";
         const string ColumnName = "name";
         const string ColumnShortName = "short_name";
+
+        const string ParameterNameItemId = "@itemId";
+
         CategoryDao categoryDao;
 
         public MenuItemDao()
@@ -33,10 +37,12 @@ namespace DAL
 
         public MenuItem GetMenuItemById(uint itemId)
         {
-            SqlParameter[] sqlParameters = new SqlParameter[] { new("@itemId", itemId) };
-            DataTable dataTable = ExecuteSelectQuery(QueryGetMenuItemById, sqlParameters);
+            Dictionary<string, uint> parameters = new()
+            {
+                { ParameterNameItemId, itemId }
+            };
 
-            return ReadTable(dataTable, ReadRow).FirstOrDefault();
+            return GetById(QueryGetMenuItemById, ReadRow, parameters);
         }
 
         private MenuItem ReadRow(DataRow dr)
