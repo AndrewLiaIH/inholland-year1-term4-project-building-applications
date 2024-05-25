@@ -6,21 +6,21 @@ namespace DAL
 {
     public class OrderDao : BaseDao
     {
-        TableDao tableDao;
-        EmployeeDao employeeDao;
+        private const string QueryGetAllOrders = $"SELECT {ColumnOrderId}, {ColumnTableId}, {ColumnPlacedById}, {ColumnOrderNumber}, {ColumnServingNumber}, {ColumnFinished}, {ColumnTotalPrice} FROM order";
+        private const string QueryGetOrderById = $"{QueryGetAllOrders} WHERE {ColumnOrderId} = {ParameterNameOrderId}";
 
-        const string QueryGetAllOrders = $"SELECT {ColumnOrderId}, {ColumnTableId}, {ColumnPlacedById}, {ColumnOrderNumber}, {ColumnServingNumber}, {ColumnFinished}, {ColumnTotalPrice} FROM order";
-        const string QueryGetOrderById = $"{QueryGetAllOrders} WHERE {ColumnOrderId} = {ParameterNameOrderId}";
+        private const string ColumnOrderId = "order_id";
+        private const string ColumnTableId = "table_number";
+        private const string ColumnPlacedById = "placed_by";
+        private const string ColumnOrderNumber = "order_number";
+        private const string ColumnServingNumber = "serving_number";
+        private const string ColumnFinished = "finished";
+        private const string ColumnTotalPrice = "total_price";
 
-        const string ColumnOrderId = "order_id";
-        const string ColumnTableId = "table_number";
-        const string ColumnPlacedById = "placed_by";
-        const string ColumnOrderNumber = "order_number";
-        const string ColumnServingNumber = "serving_number";
-        const string ColumnFinished = "finished";
-        const string ColumnTotalPrice = "total_price";
+        private const string ParameterNameOrderId = "@orderId";
 
-        const string ParameterNameOrderId = "@OrderId";
+        private TableDao tableDao = new();
+        private EmployeeDao employeeDao = new();
 
         public List<Order> GetAllOrders()
         {
@@ -49,7 +49,7 @@ namespace DAL
             bool finished = (bool)dr[ColumnFinished];
             decimal totalPrice = (decimal)dr[ColumnTotalPrice];
 
-            return new Order(id, table, employee, orderNumber, servingNumber, finished, totalPrice);
+            return new(id, table, employee, orderNumber, servingNumber, finished, totalPrice);
         }
     }
 }

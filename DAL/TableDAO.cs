@@ -6,17 +6,17 @@ namespace DAL
 {
     public class TableDao : BaseDao
     {
-        EmployeeDao employeeDao;
+        private const string QueryGetAllTables = $"SELECT {ColumnTableId}, {ColumnHostId}, {ColumnOccupied}, {ColumnTableNumber} FROM [table]";
+        private const string QueryGetTableById = $"{QueryGetAllTables} WHERE {ColumnTableId} = {ParameterNameTableId}";
 
-        const string QueryGetAllTables = $"SELECT {ColumnTableId}, {ColumnHostId}, {ColumnOccupied}, {ColumnTableNumber} FROM [table]";
-        const string QueryGetTableById = $"{QueryGetAllTables} WHERE {ColumnTableId} = {ParameterNameTableId}";
+        private const string ColumnTableId = "table_id";
+        private const string ColumnHostId = "host";
+        private const string ColumnOccupied = "occupied";
+        private const string ColumnTableNumber = "table_number";
 
-        const string ColumnTableId = "table_id";
-        const string ColumnHostId = "host";
-        const string ColumnOccupied = "occupied";
-        const string ColumnTableNumber = "table_number";
+        private const string ParameterNameTableId = "@tableId";
 
-        const string ParameterNameTableId = "@TableId";
+        private EmployeeDao employeeDao = new();
 
         public List<Table> GetAllTables()
         {
@@ -27,7 +27,7 @@ namespace DAL
 
         public Table GetTableById(uint tableId)
         {
-            Dictionary<string, uint> parameters = new Dictionary<string, uint>()
+            Dictionary<string, uint> parameters = new()
             {
                 { ParameterNameTableId, tableId }
             };
@@ -42,7 +42,7 @@ namespace DAL
             bool occupied = (bool)dr[ColumnOccupied];
             uint tableNumber = (uint)dr[ColumnTableNumber];
 
-            return new Table(id, host, occupied, tableNumber);
+            return new(id, host, occupied, tableNumber);
         }
     }
 }

@@ -6,28 +6,22 @@ namespace DAL
 {
     public class OrderItemDao : BaseDao
     {
-        const string QueryGetAllOrderItems = $"SELECT {ColumnOrderId}, {ColumnItemId}, {ColumnPlacementTime}, {ColumnStatus}, {ColumnChangeOfStatus}, {ColumnQuantity}, {ColumnComment} FROM order_item";
-        const string QueryGetOrderItemById = $"{QueryGetAllOrderItems} WHERE {ColumnOrderId} = {ParameterNameOrderId} AND {ColumnItemId} = {ParameterNameItemId}";
+        private const string QueryGetAllOrderItems = $"SELECT {ColumnOrderId}, {ColumnItemId}, {ColumnPlacementTime}, {ColumnStatus}, {ColumnChangeOfStatus}, {ColumnQuantity}, {ColumnComment} FROM order_item";
+        private const string QueryGetOrderItemById = $"{QueryGetAllOrderItems} WHERE {ColumnOrderId} = {ParameterNameOrderId} AND {ColumnItemId} = {ParameterNameItemId}";
 
-        const string ColumnOrderId = "order_id";
-        const string ColumnItemId = "item_id";
-        const string ColumnPlacementTime = "placement_time";
-        const string ColumnStatus = "status";
-        const string ColumnChangeOfStatus = "change_of_status";
-        const string ColumnQuantity = "quantity";
-        const string ColumnComment = "comment";
+        private const string ColumnOrderId = "order_id";
+        private const string ColumnItemId = "item_id";
+        private const string ColumnPlacementTime = "placement_time";
+        private const string ColumnStatus = "status";
+        private const string ColumnChangeOfStatus = "change_of_status";
+        private const string ColumnQuantity = "quantity";
+        private const string ColumnComment = "comment";
 
-        const string ParameterNameOrderId = "@OrderId";
-        const string ParameterNameItemId = "@ItemId";
+        private const string ParameterNameOrderId = "@orderId";
+        private const string ParameterNameItemId = "@itemId";
 
-        OrderDao orderDao;
-        MenuItemDao menuItemDao;
-
-        public OrderItemDao()
-        {
-            orderDao = new();
-            menuItemDao = new();
-        }
+        private OrderDao orderDao = new();
+        private MenuItemDao menuItemDao = new();
 
         public List<OrderItem> GetAllOrderItems()
         {
@@ -38,7 +32,7 @@ namespace DAL
 
         public OrderItem GetOrderItemById(uint orderId, uint itemId)
         {
-            Dictionary<string, uint> parameters = new Dictionary<string, uint>()
+            Dictionary<string, uint> parameters = new()
             {
                 { ParameterNameOrderId, orderId },
                 { ParameterNameItemId, itemId }
@@ -57,7 +51,7 @@ namespace DAL
             uint quantity = (uint)dr[ColumnQuantity];
             string? comment = (string?)dr[ColumnComment];
 
-            return new OrderItem(order, menuItem, placementTime, status, changeOfStatus, quantity, comment);
+            return new(order, menuItem, placementTime, status, changeOfStatus, quantity, comment);
         }
     }
 }

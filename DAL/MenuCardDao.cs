@@ -6,14 +6,15 @@ namespace DAL
 {
     public class MenuCardDao : BaseDao
     {
-        const string QueryGetAllMenuCards = $"SELECT {ColumnCardId}, {ColumnMenuType} FROM menu_card";
-        const string QueryGetMenuCardById = $"{QueryGetAllMenuCards} WHERE {ColumnCardId} = {ParameterNameCardId}";
+        private const string QueryGetAllMenuCards = $"SELECT {ColumnCardId}, {ColumnMenuType} FROM menu_card";
+        private const string QueryGetMenuCardById = $"{QueryGetAllMenuCards} WHERE {ColumnCardId} = {ParameterNameCardId}";
 
-        const string ColumnCardId = "card_id";
-        const string ColumnMenuType = "menu_type";
-        const string MenuCardErrorMessage = "Unknown menu type.";
+        private const string ColumnCardId = "card_id";
+        private const string ColumnMenuType = "menu_type";
 
-        const string ParameterNameCardId = "@cardId";
+        private const string ParameterNameCardId = "@cardId";
+
+        private const string MenuCardErrorMessage = "Unknown menu type.";
 
         public List<MenuCard> GetAllMenuCards()
         {

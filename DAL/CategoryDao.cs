@@ -6,23 +6,19 @@ namespace DAL
 {
     public class CategoryDao : BaseDao
     {
-        const string QueryGetAllCategories = $"SELECT {ColumnCategoryId}, {ColumnMenuId}, {ColumnCategoryType}, {ColumnAlcoholic} FROM category";
-        const string QueryGetCategoryById = $"{QueryGetAllCategories} WHERE {ColumnCategoryId} = {ParameterNameCategoryId}";
+        private const string QueryGetAllCategories = $"SELECT {ColumnCategoryId}, {ColumnMenuId}, {ColumnCategoryType}, {ColumnAlcoholic} FROM category";
+        private const string QueryGetCategoryById = $"{QueryGetAllCategories} WHERE {ColumnCategoryId} = {ParameterNameCategoryId}";
 
-        const string ColumnCategoryId = "category_id";
-        const string ColumnMenuId = "menu_id";
-        const string ColumnCategoryType = "category_type";
-        const string ColumnAlcoholic = "alcoholic";
-        const string CategoryErrorMessage = "Unknown category type.";
+        private const string ColumnCategoryId = "category_id";
+        private const string ColumnMenuId = "menu_id";
+        private const string ColumnCategoryType = "category_type";
+        private const string ColumnAlcoholic = "alcoholic";
 
-        const string ParameterNameCategoryId = "@CategoryId";
+        private const string ParameterNameCategoryId = "@categoryId";
 
-        MenuCardDao menuCardDao;
+        private const string CategoryErrorMessage = "Unknown category type.";
 
-        public CategoryDao()
-        {
-            menuCardDao = new();
-        }
+        private MenuCardDao menuCardDao = new();
 
         public List<Category> GetAllCategories()
         {
@@ -33,7 +29,7 @@ namespace DAL
 
         public Category GetCategoryById(uint categoryId)
         {
-            Dictionary<string, uint> parameters = new Dictionary<string, uint>()
+            Dictionary<string, uint> parameters = new()
             {
                 { ParameterNameCategoryId, categoryId }
             };
@@ -48,7 +44,7 @@ namespace DAL
             CategoryType categoryType = ConvertToEnum((string)dr[ColumnCategoryType]);
             bool alcoholic = (bool)dr[ColumnAlcoholic];
 
-            return new Category(categoryId, menuCard, categoryType, alcoholic);
+            return new(categoryId, menuCard, categoryType, alcoholic);
         }
 
         private CategoryType ConvertToEnum(string categoryType)

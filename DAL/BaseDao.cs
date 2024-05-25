@@ -4,22 +4,23 @@ using System.Data.SqlClient;
 
 namespace DAL
 {
+    // This class is written by Sia Iurashchuk
     public abstract class BaseDao
     {
-        const string ConnectionStringName = "ChapeauDatabase";
-        const string DatabaseErrorMessage = "Database operation failed.";
-        protected const int Zero = 0;
+        private const string ConnectionStringName = "ChapeauDatabase";
+        private const string DatabaseErrorMessage = "Database operation failed.";
+        private const int Zero = 0;
 
         private SqlConnection OpenConnection()
         {
-            SqlConnection connection = new SqlConnection(ConfigurationManager.ConnectionStrings[ConnectionStringName].ConnectionString);
+            SqlConnection connection = new(ConfigurationManager.ConnectionStrings[ConnectionStringName].ConnectionString);
             connection.Open();
             return connection;
         }
 
         protected List<T> ReadTable<T>(DataTable dataTable, Func<DataRow, T> readRow)
         {
-            List<T> list = new List<T>();
+            List<T> list = new();
 
             foreach (DataRow dr in dataTable.Rows)
             {
@@ -56,8 +57,8 @@ namespace DAL
         /// </summary>
         protected DataTable ExecuteSelectQuery(string query, params SqlParameter[] sqlParameters)
         {
-            DataTable dataTable = new DataTable();
-            DataSet dataSet = new DataSet();
+            DataTable dataTable = new();
+            DataSet dataSet = new();
 
             try
             {
@@ -65,7 +66,7 @@ namespace DAL
                 {
                     using (SqlCommand command = CreateCommand(connection, query, sqlParameters))
                     {
-                        using (SqlDataAdapter adapter = new SqlDataAdapter())
+                        using (SqlDataAdapter adapter = new())
                         {
 
                             adapter.SelectCommand = command;
@@ -91,7 +92,7 @@ namespace DAL
 
         private SqlCommand CreateCommand(SqlConnection connection, string query, params SqlParameter[] parameters)
         {
-            SqlCommand command = new SqlCommand(query, connection);
+            SqlCommand command = new(query, connection);
             command.Parameters.AddRange(parameters);
             return command;
         }
@@ -103,7 +104,7 @@ namespace DAL
             return ReadTable(dataTable, readRow).FirstOrDefault();
         }
 
-        protected SqlParameter[] CreateSqlParameters(Dictionary<string, uint> parameters)
+        private SqlParameter[] CreateSqlParameters(Dictionary<string, uint> parameters)
         {
             return parameters.Select(p => new SqlParameter(p.Key, p.Value)).ToArray();
         }
