@@ -7,9 +7,9 @@ namespace DAL
     // This class is written by Sia Iurashchuk
     public abstract class BaseDao
     {
-        const string ConnectionStringName = "ChapeauDatabase";
-        const string DatabaseErrorMessage = "Database operation failed.";
-        const int Zero = 0;
+        private const string ConnectionStringName = "ChapeauDatabase";
+        private const string DatabaseErrorMessage = "Database operation failed.";
+        private const int Zero = 0;
 
         private SqlConnection OpenConnection()
         {
@@ -104,7 +104,7 @@ namespace DAL
             return ReadTable(dataTable, readRow).FirstOrDefault();
         }
 
-        protected SqlParameter[] CreateSqlParameters(Dictionary<string, uint> parameters)
+        private SqlParameter[] CreateSqlParameters(Dictionary<string, uint> parameters)
         {
             return parameters.Select(p => new SqlParameter(p.Key, p.Value)).ToArray();
         }

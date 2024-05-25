@@ -4,7 +4,7 @@ using Model;
 namespace Service
 {
     // This class is written by Sia Iurashchuk
-    internal class OrderService
+    public class OrderService
     {
         private OrderDao orderDao = new();
 

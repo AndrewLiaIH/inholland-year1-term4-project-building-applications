@@ -6,21 +6,21 @@ namespace DAL
 {
     public class OrderDao : BaseDao
     {
-        const string QueryGetAllOrders = $"SELECT {ColumnOrderId}, {ColumnTableId}, {ColumnPlacedById}, {ColumnOrderNumber}, {ColumnServingNumber}, {ColumnFinished}, {ColumnTotalPrice} FROM order";
-        const string QueryGetOrderById = $"{QueryGetAllOrders} WHERE {ColumnOrderId} = {ParameterNameOrderId}";
+        private const string QueryGetAllOrders = $"SELECT {ColumnOrderId}, {ColumnTableId}, {ColumnPlacedById}, {ColumnOrderNumber}, {ColumnServingNumber}, {ColumnFinished}, {ColumnTotalPrice} FROM order";
+        private const string QueryGetOrderById = $"{QueryGetAllOrders} WHERE {ColumnOrderId} = {ParameterNameOrderId}";
 
-        const string ColumnOrderId = "order_id";
-        const string ColumnTableId = "table_number";
-        const string ColumnPlacedById = "placed_by";
-        const string ColumnOrderNumber = "order_number";
-        const string ColumnServingNumber = "serving_number";
-        const string ColumnFinished = "finished";
-        const string ColumnTotalPrice = "total_price";
+        private const string ColumnOrderId = "order_id";
+        private const string ColumnTableId = "table_number";
+        private const string ColumnPlacedById = "placed_by";
+        private const string ColumnOrderNumber = "order_number";
+        private const string ColumnServingNumber = "serving_number";
+        private const string ColumnFinished = "finished";
+        private const string ColumnTotalPrice = "total_price";
 
-        const string ParameterNameOrderId = "@orderId";
+        private const string ParameterNameOrderId = "@orderId";
 
-        TableDao tableDao = new();
-        EmployeeDao employeeDao = new();
+        private TableDao tableDao = new();
+        private EmployeeDao employeeDao = new();
 
         public List<Order> GetAllOrders()
         {

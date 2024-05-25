@@ -6,22 +6,22 @@ namespace DAL
 {
     public class EmployeeDao : BaseDao
     {
-        const string QueryGetAllEmployees = $"SELECT {ColumnEmployeeId}, {ColumnEmployeeNumber}, {ColumnLogin}, {ColumnPassword}, {ColumnFirstName}, {ColumnLastName}, {ColumnEmail}, {ColumnPhoneNumber}, {ColumnEmployeeType} FROM employee";
-        const string QueryGetEmployeeById = $"{QueryGetAllEmployees} WHERE {ColumnEmployeeId} = {ParameterNameEmployeeId}";
+        private const string QueryGetAllEmployees = $"SELECT {ColumnEmployeeId}, {ColumnEmployeeNumber}, {ColumnLogin}, {ColumnPassword}, {ColumnFirstName}, {ColumnLastName}, {ColumnEmail}, {ColumnPhoneNumber}, {ColumnEmployeeType} FROM employee";
+        private const string QueryGetEmployeeById = $"{QueryGetAllEmployees} WHERE {ColumnEmployeeId} = {ParameterNameEmployeeId}";
 
-        const string ColumnEmployeeId = "employee_id";
-        const string ColumnEmployeeNumber = "employee_number";
-        const string ColumnLogin = "login";
-        const string ColumnPassword = "password";
-        const string ColumnFirstName = "first_name";
-        const string ColumnLastName = "last_name";
-        const string ColumnEmail = "email";
-        const string ColumnPhoneNumber = "phone_number";
-        const string ColumnEmployeeType = "occupation";
+        private const string ColumnEmployeeId = "employee_id";
+        private const string ColumnEmployeeNumber = "employee_number";
+        private const string ColumnLogin = "login";
+        private const string ColumnPassword = "password";
+        private const string ColumnFirstName = "first_name";
+        private const string ColumnLastName = "last_name";
+        private const string ColumnEmail = "email";
+        private const string ColumnPhoneNumber = "phone_number";
+        private const string ColumnEmployeeType = "occupation";
 
-        const string ParameterNameEmployeeId = "@employeeId";
+        private const string ParameterNameEmployeeId = "@employeeId";
 
-        const string EmployeeErrorMessage = "Unkown employee type.";
+        private const string EmployeeErrorMessage = "Unkown employee type.";
 
         public List<Employee> GetAllEmployees()
         {

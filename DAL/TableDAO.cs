@@ -6,17 +6,17 @@ namespace DAL
 {
     public class TableDao : BaseDao
     {
-        const string QueryGetAllTables = $"SELECT {ColumnTableId}, {ColumnHostId}, {ColumnOccupied}, {ColumnTableNumber} FROM [table]";
-        const string QueryGetTableById = $"{QueryGetAllTables} WHERE {ColumnTableId} = {ParameterNameTableId}";
+        private const string QueryGetAllTables = $"SELECT {ColumnTableId}, {ColumnHostId}, {ColumnOccupied}, {ColumnTableNumber} FROM [table]";
+        private const string QueryGetTableById = $"{QueryGetAllTables} WHERE {ColumnTableId} = {ParameterNameTableId}";
 
-        const string ColumnTableId = "table_id";
-        const string ColumnHostId = "host";
-        const string ColumnOccupied = "occupied";
-        const string ColumnTableNumber = "table_number";
+        private const string ColumnTableId = "table_id";
+        private const string ColumnHostId = "host";
+        private const string ColumnOccupied = "occupied";
+        private const string ColumnTableNumber = "table_number";
 
-        const string ParameterNameTableId = "@tableId";
+        private const string ParameterNameTableId = "@tableId";
 
-        EmployeeDao employeeDao = new();
+        private EmployeeDao employeeDao = new();
 
         public List<Table> GetAllTables()
         {

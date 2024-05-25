@@ -6,19 +6,19 @@ namespace DAL
 {
     public class CategoryDao : BaseDao
     {
-        const string QueryGetAllCategories = $"SELECT {ColumnCategoryId}, {ColumnMenuId}, {ColumnCategoryType}, {ColumnAlcoholic} FROM category";
-        const string QueryGetCategoryById = $"{QueryGetAllCategories} WHERE {ColumnCategoryId} = {ParameterNameCategoryId}";
+        private const string QueryGetAllCategories = $"SELECT {ColumnCategoryId}, {ColumnMenuId}, {ColumnCategoryType}, {ColumnAlcoholic} FROM category";
+        private const string QueryGetCategoryById = $"{QueryGetAllCategories} WHERE {ColumnCategoryId} = {ParameterNameCategoryId}";
 
-        const string ColumnCategoryId = "category_id";
-        const string ColumnMenuId = "menu_id";
-        const string ColumnCategoryType = "category_type";
-        const string ColumnAlcoholic = "alcoholic";
+        private const string ColumnCategoryId = "category_id";
+        private const string ColumnMenuId = "menu_id";
+        private const string ColumnCategoryType = "category_type";
+        private const string ColumnAlcoholic = "alcoholic";
 
-        const string ParameterNameCategoryId = "@categoryId";
+        private const string ParameterNameCategoryId = "@categoryId";
 
-        const string CategoryErrorMessage = "Unknown category type.";
+        private const string CategoryErrorMessage = "Unknown category type.";
 
-        MenuCardDao menuCardDao = new();
+        private MenuCardDao menuCardDao = new();
 
         public List<Category> GetAllCategories()
         {
