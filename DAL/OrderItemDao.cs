@@ -17,17 +17,11 @@ namespace DAL
         const string ColumnQuantity = "quantity";
         const string ColumnComment = "comment";
 
-        const string ParameterNameOrderId = "@OrderId";
-        const string ParameterNameItemId = "@ItemId";
+        const string ParameterNameOrderId = "@orderId";
+        const string ParameterNameItemId = "@itemId";
 
-        OrderDao orderDao;
-        MenuItemDao menuItemDao;
-
-        public OrderItemDao()
-        {
-            orderDao = new();
-            menuItemDao = new();
-        }
+        OrderDao orderDao = new();
+        MenuItemDao menuItemDao = new();
 
         public List<OrderItem> GetAllOrderItems()
         {
@@ -38,7 +32,7 @@ namespace DAL
 
         public OrderItem GetOrderItemById(uint orderId, uint itemId)
         {
-            Dictionary<string, uint> parameters = new Dictionary<string, uint>()
+            Dictionary<string, uint> parameters = new()
             {
                 { ParameterNameOrderId, orderId },
                 { ParameterNameItemId, itemId }
@@ -57,7 +51,7 @@ namespace DAL
             uint quantity = (uint)dr[ColumnQuantity];
             string? comment = (string?)dr[ColumnComment];
 
-            return new OrderItem(order, menuItem, placementTime, status, changeOfStatus, quantity, comment);
+            return new(order, menuItem, placementTime, status, changeOfStatus, quantity, comment);
         }
     }
 }

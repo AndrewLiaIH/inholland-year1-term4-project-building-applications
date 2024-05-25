@@ -6,9 +6,6 @@ namespace DAL
 {
     public class OrderDao : BaseDao
     {
-        TableDao tableDao;
-        EmployeeDao employeeDao;
-
         const string QueryGetAllOrders = $"SELECT {ColumnOrderId}, {ColumnTableId}, {ColumnPlacedById}, {ColumnOrderNumber}, {ColumnServingNumber}, {ColumnFinished}, {ColumnTotalPrice} FROM order";
         const string QueryGetOrderById = $"{QueryGetAllOrders} WHERE {ColumnOrderId} = {ParameterNameOrderId}";
 
@@ -20,7 +17,10 @@ namespace DAL
         const string ColumnFinished = "finished";
         const string ColumnTotalPrice = "total_price";
 
-        const string ParameterNameOrderId = "@OrderId";
+        const string ParameterNameOrderId = "@orderId";
+
+        TableDao tableDao = new();
+        EmployeeDao employeeDao = new();
 
         public List<Order> GetAllOrders()
         {
@@ -49,7 +49,7 @@ namespace DAL
             bool finished = (bool)dr[ColumnFinished];
             decimal totalPrice = (decimal)dr[ColumnTotalPrice];
 
-            return new Order(id, table, employee, orderNumber, servingNumber, finished, totalPrice);
+            return new(id, table, employee, orderNumber, servingNumber, finished, totalPrice);
         }
     }
 }

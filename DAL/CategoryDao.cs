@@ -13,16 +13,12 @@ namespace DAL
         const string ColumnMenuId = "menu_id";
         const string ColumnCategoryType = "category_type";
         const string ColumnAlcoholic = "alcoholic";
+
+        const string ParameterNameCategoryId = "@categoryId";
+
         const string CategoryErrorMessage = "Unknown category type.";
 
-        const string ParameterNameCategoryId = "@CategoryId";
-
-        MenuCardDao menuCardDao;
-
-        public CategoryDao()
-        {
-            menuCardDao = new();
-        }
+        MenuCardDao menuCardDao = new();
 
         public List<Category> GetAllCategories()
         {
@@ -33,7 +29,7 @@ namespace DAL
 
         public Category GetCategoryById(uint categoryId)
         {
-            Dictionary<string, uint> parameters = new Dictionary<string, uint>()
+            Dictionary<string, uint> parameters = new()
             {
                 { ParameterNameCategoryId, categoryId }
             };
@@ -48,7 +44,7 @@ namespace DAL
             CategoryType categoryType = ConvertToEnum((string)dr[ColumnCategoryType]);
             bool alcoholic = (bool)dr[ColumnAlcoholic];
 
-            return new Category(categoryId, menuCard, categoryType, alcoholic);
+            return new(categoryId, menuCard, categoryType, alcoholic);
         }
 
         private CategoryType ConvertToEnum(string categoryType)

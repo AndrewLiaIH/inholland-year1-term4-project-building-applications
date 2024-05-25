@@ -21,12 +21,7 @@ namespace DAL
 
         const string ParameterNameItemId = "@itemId";
 
-        CategoryDao categoryDao;
-
-        public MenuItemDao()
-        {
-            categoryDao = new CategoryDao();
-        }
+        CategoryDao categoryDao = new();
 
         public List<MenuItem> GetAllMenuItems()
         {
@@ -57,7 +52,7 @@ namespace DAL
             string name = (string)dr[ColumnName];
             string shortName = (string)dr[ColumnShortName];
 
-            return new MenuItem(itemId, category, itemNumber, stockAmount, onMenu, price, description, name, shortName);
+            return new(itemId, category, itemNumber, stockAmount, onMenu, price, description, name, shortName);
         }
     }
 }

@@ -19,9 +19,9 @@ namespace DAL
         const string ColumnPhoneNumber = "phone_number";
         const string ColumnEmployeeType = "occupation";
 
-        const string ParameterNameEmployeeId = "@EmployeeId";
+        const string ParameterNameEmployeeId = "@employeeId";
 
-        const string EmployeeErrorMessage = "Unkown employee type";
+        const string EmployeeErrorMessage = "Unkown employee type.";
 
         public List<Employee> GetAllEmployees()
         {
@@ -32,7 +32,7 @@ namespace DAL
 
         public Employee GetEmployeeById(uint employeeId)
         {
-            Dictionary<string, uint> parameters = new Dictionary<string, uint>
+            Dictionary<string, uint> parameters = new()
             {
                 {ParameterNameEmployeeId, employeeId}
             };
@@ -52,7 +52,7 @@ namespace DAL
             string phoneNumber = (string)dr[ColumnPhoneNumber];
             EmployeeType employeeType = ConvertToEnum((string)dr[ColumnEmployeeType]);
 
-            return new Employee(id, employeeNumber, login, password, firstName, lastName, email, phoneNumber, employeeType);
+            return new(id, employeeNumber, login, password, firstName, lastName, email, phoneNumber, employeeType);
         }
 
         private EmployeeType ConvertToEnum(string employeeType)

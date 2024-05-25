@@ -11,9 +11,10 @@ namespace DAL
 
         const string ColumnCardId = "card_id";
         const string ColumnMenuType = "menu_type";
-        const string MenuCardErrorMessage = "Unknown menu type.";
 
         const string ParameterNameCardId = "@cardId";
+
+        const string MenuCardErrorMessage = "Unknown menu type.";
 
         public List<MenuCard> GetAllMenuCards()
         {
