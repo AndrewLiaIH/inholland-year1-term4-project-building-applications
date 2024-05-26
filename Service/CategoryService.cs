@@ -13,7 +13,7 @@ namespace Service
             return categoryDao.GetAllCategories();
         }
 
-        public Category GetCategoryById(uint id) 
+        public Category GetCategoryById(int id) 
         {
             return categoryDao.GetCategoryById(id);
         }

@@ -25,9 +25,9 @@ namespace DAL
             return ReadTable(dataTable, ReadRow);
         }
 
-        public Table GetTableById(uint tableId)
+        public Table GetTableById(int tableId)
         {
-            Dictionary<string, uint> parameters = new()
+            Dictionary<string, int> parameters = new()
             {
                 { ParameterNameTableId, tableId }
             };
@@ -37,10 +37,10 @@ namespace DAL
 
         private Table ReadRow(DataRow dr)
         {
-            uint id = (uint)dr[ColumnTableId];
-            Employee host = employeeDao.GetEmployeeById((uint)dr[ColumnHostId]);
+            int id = (int)dr[ColumnTableId];
+            Employee host = employeeDao.GetEmployeeById((int)dr[ColumnHostId]);
             bool occupied = (bool)dr[ColumnOccupied];
-            uint tableNumber = (uint)dr[ColumnTableNumber];
+            int tableNumber = (int)dr[ColumnTableNumber];
 
             return new(id, host, occupied, tableNumber);
         }

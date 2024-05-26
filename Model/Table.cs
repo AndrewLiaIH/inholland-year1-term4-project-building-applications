@@ -2,12 +2,12 @@
 {
     public class Table
     {
-        public uint DatabaseId { get; private set; }
+        public int DatabaseId { get; private set; }
         public Employee Host { get; private set; }
         public bool Occupied { get; private set; }
-        public uint TableNumber { get; private set; }
+        public int TableNumber { get; private set; }
 
-        public Table(uint databaseId, Employee host, bool occupied, uint tableNumber)
+        public Table(int databaseId, Employee host, bool occupied, int tableNumber)
         {
             DatabaseId = databaseId;
             Host = host;

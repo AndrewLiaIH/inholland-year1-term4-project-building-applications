@@ -13,7 +13,7 @@ namespace Service
             return employeeDao.GetAllEmployees();
         }
 
-        public Employee GetEmployeeById(uint id)
+        public Employee GetEmployeeById(int id)
         {
             return employeeDao.GetEmployeeById(id);
         }

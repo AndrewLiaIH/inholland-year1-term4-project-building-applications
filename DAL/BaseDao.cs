@@ -97,14 +97,14 @@ namespace DAL
             return command;
         }
 
-        protected T GetById<T>(string query, Func<DataRow, T> readRow, Dictionary<string, uint> parameters)
+        protected T GetById<T>(string query, Func<DataRow, T> readRow, Dictionary<string, int> parameters)
         {
             SqlParameter[] sqlParameters = CreateSqlParameters(parameters);
             DataTable dataTable = ExecuteSelectQuery(query, sqlParameters);
             return ReadTable(dataTable, readRow).FirstOrDefault();
         }
 
-        private SqlParameter[] CreateSqlParameters(Dictionary<string, uint> parameters)
+        private SqlParameter[] CreateSqlParameters(Dictionary<string, int> parameters)
         {
             return parameters.Select(p => new SqlParameter(p.Key, p.Value)).ToArray();
         }

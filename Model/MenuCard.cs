@@ -2,10 +2,10 @@
 {
     public class MenuCard
     {
-        public uint CardId { get; private set; }
+        public int CardId { get; private set; }
         public MenuType MenuType { get; private set; }
 
-        public MenuCard(uint cardId, MenuType menuType)
+        public MenuCard(int cardId, MenuType menuType)
         {
             CardId = cardId;
             MenuType = menuType;
