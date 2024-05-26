@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Model", "Model\Model.csproj
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Service", "Service\Service.csproj", "{82363DBE-5536-49D5-84C7-E4319F511DB8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UI", "UI\UI.csproj", "{2435C993-5F96-4DCA-AC92-43BB756FC418}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "View", "View\View.csproj", "{2435C993-5F96-4DCA-AC92-43BB756FC418}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ViewModel", "ViewModel\ViewModel.csproj", "{2A8B0EB9-A833-427E-9A97-17F66EEFF764}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{2435C993-5F96-4DCA-AC92-43BB756FC418}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2435C993-5F96-4DCA-AC92-43BB756FC418}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2435C993-5F96-4DCA-AC92-43BB756FC418}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2A8B0EB9-A833-427E-9A97-17F66EEFF764}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A8B0EB9-A833-427E-9A97-17F66EEFF764}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A8B0EB9-A833-427E-9A97-17F66EEFF764}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A8B0EB9-A833-427E-9A97-17F66EEFF764}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

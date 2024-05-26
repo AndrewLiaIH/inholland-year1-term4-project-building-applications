@@ -2,17 +2,17 @@
 {
     public class Employee
     {
-        public uint DatabaseId { get; private set; }
-        public uint EmployeeNumber { get; private set; }
-        public uint? Login { get; private set; }
-        public uint? Password { get; private set; } //Encryption?
+        public int DatabaseId { get; private set; }
+        public int EmployeeNumber { get; private set; }
+        public int? Login { get; private set; }
+        public int? Password { get; private set; } //Encryption?
         public string? FirstName { get; private set; }
         public string? LastName { get; private set; }
         public string? Email { get; private set; }
         public string? PhoneNumber { get; private set; }
         public EmployeeType Type { get; private set; }
 
-        public Employee(uint databaseId, uint employeeNumber, uint login, uint password, string firstName, string lastName, string email, string phoneNumber, EmployeeType type)
+        public Employee(int databaseId, int employeeNumber, int login, int password, string firstName, string lastName, string email, string phoneNumber, EmployeeType type)
         {
             DatabaseId = databaseId;
             EmployeeNumber = employeeNumber;

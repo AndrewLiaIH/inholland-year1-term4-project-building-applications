@@ -2,12 +2,12 @@
 {
     public class Category
     {
-        public uint CategoryId { get; private set; }
+        public int CategoryId { get; private set; }
         public MenuCard MenuCard { get; private set; }
         public CategoryType CategoryType { get; private set; }
-        public bool Alcoholic { get; private set; }
+        public bool? Alcoholic { get; private set; }
 
-        public Category(uint categoryId, MenuCard menuCard, CategoryType categoryType, bool alcoholic)
+        public Category(int categoryId, MenuCard menuCard, CategoryType categoryType, bool? alcoholic)
         {
             CategoryId = categoryId;
             MenuCard = menuCard;

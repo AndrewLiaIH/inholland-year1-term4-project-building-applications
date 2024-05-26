@@ -29,9 +29,9 @@ namespace DAL
             return ReadTable(dataTable, ReadRow);
         }
 
-        public Order GetOrderById(uint orderId)
+        public Order GetOrderById(int orderId)
         {
-            Dictionary<string, uint> parameters = new()
+            Dictionary<string, int> parameters = new()
             {
                 { ParameterNameOrderId, orderId }
             };
@@ -41,11 +41,11 @@ namespace DAL
 
         private Order ReadRow(DataRow dr)
         {
-            uint id = (uint)dr[ColumnOrderId];
-            Table table = tableDao.GetTableById((uint)dr[ColumnTableId]);
-            Employee employee = employeeDao.GetEmployeeById((uint)dr[ColumnPlacedById]);
-            uint orderNumber = (uint)dr[ColumnOrderNumber];
-            uint servingNumber = (uint)dr[ColumnServingNumber];
+            int id = (int)dr[ColumnOrderId];
+            Table table = tableDao.GetTableById((int)dr[ColumnTableId]);
+            Employee employee = employeeDao.GetEmployeeById((int)dr[ColumnPlacedById]);
+            int orderNumber = (int)dr[ColumnOrderNumber];
+            int servingNumber = (int)dr[ColumnServingNumber];
             bool finished = (bool)dr[ColumnFinished];
             decimal totalPrice = (decimal)dr[ColumnTotalPrice];
 

@@ -16,8 +16,6 @@ namespace DAL
 
         private const string ParameterNameCategoryId = "@categoryId";
 
-        private const string CategoryErrorMessage = "Unknown category type.";
-
         private MenuCardDao menuCardDao = new();
 
         public List<Category> GetAllCategories()
@@ -27,9 +25,9 @@ namespace DAL
             return ReadTable(dataTable, ReadRow);
         }
 
-        public Category GetCategoryById(uint categoryId)
+        public Category GetCategoryById(int categoryId)
         {
-            Dictionary<string, uint> parameters = new()
+            Dictionary<string, int> parameters = new()
             {
                 { ParameterNameCategoryId, categoryId }
             };
@@ -39,29 +37,18 @@ namespace DAL
 
         private Category ReadRow(DataRow dr)
         {
-            uint categoryId = (uint)dr[ColumnCategoryId];
-            MenuCard menuCard = menuCardDao.GetMenuCardById((uint)dr[ColumnMenuId]);
-            CategoryType categoryType = ConvertToEnum((string)dr[ColumnCategoryType]);
-            bool alcoholic = (bool)dr[ColumnAlcoholic];
+            int categoryId = (int)dr[ColumnCategoryId];
+            MenuCard menuCard = menuCardDao.GetMenuCardById((int)dr[ColumnMenuId]);
+            CategoryType categoryType;
+            Enum.TryParse((string)dr[ColumnCategoryType], out categoryType);
+            bool? alcoholic = null;
+
+            if (dr[ColumnAlcoholic] != DBNull.Value)
+            {
+                alcoholic = (bool)dr[ColumnAlcoholic];
+            }
 
             return new(categoryId, menuCard, categoryType, alcoholic);
-        }
-
-        private CategoryType ConvertToEnum(string categoryType)
-        {
-            return categoryType switch
-            {
-                "Starters" => CategoryType.Starters,
-                "Entrements" => CategoryType.Entrements,
-                "Main" => CategoryType.Mains,
-                "Desserts" => CategoryType.Desserts,
-                "Soft drinks" => CategoryType.SoftDrinks,
-                "Beers on tap" => CategoryType.BeersOnTap,
-                "Wines" => CategoryType.Wines,
-                "Spirit drinks" => CategoryType.SpiritDrinks,
-                "Coffee/Tea" => CategoryType.CoffeeTea,
-                _ => throw new ArgumentException(CategoryErrorMessage)
-            };
         }
     }
 }

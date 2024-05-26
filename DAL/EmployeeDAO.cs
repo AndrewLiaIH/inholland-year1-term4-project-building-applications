@@ -21,8 +21,6 @@ namespace DAL
 
         private const string ParameterNameEmployeeId = "@employeeId";
 
-        private const string EmployeeErrorMessage = "Unkown employee type.";
-
         public List<Employee> GetAllEmployees()
         {
             SqlParameter[] sqlParameters = Array.Empty<SqlParameter>();
@@ -30,9 +28,9 @@ namespace DAL
             return ReadTable(dataTable, ReadRow);
         }
 
-        public Employee GetEmployeeById(uint employeeId)
+        public Employee GetEmployeeById(int employeeId)
         {
-            Dictionary<string, uint> parameters = new()
+            Dictionary<string, int> parameters = new()
             {
                 {ParameterNameEmployeeId, employeeId}
             };
@@ -42,30 +40,18 @@ namespace DAL
 
         private Employee ReadRow(DataRow dr)
         {
-            uint id = (uint)dr[ColumnEmployeeId];
-            uint employeeNumber = (uint)dr[ColumnEmployeeNumber];
-            uint login = (uint)dr[ColumnLogin];
-            uint password = (uint)dr[ColumnPassword];
+            int id = (int)dr[ColumnEmployeeId];
+            int employeeNumber = (int)dr[ColumnEmployeeNumber];
+            int login = (int)dr[ColumnLogin];
+            int password = (int)dr[ColumnPassword];
             string firstName = (string)dr[ColumnFirstName];
             string lastName = (string)dr[ColumnLastName];
             string email = (string)dr[ColumnEmail];
             string phoneNumber = (string)dr[ColumnPhoneNumber];
-            EmployeeType employeeType = ConvertToEnum((string)dr[ColumnEmployeeType]);
+            EmployeeType employeeType;
+            Enum.TryParse((string)dr[ColumnEmployeeType], out employeeType);
 
             return new(id, employeeNumber, login, password, firstName, lastName, email, phoneNumber, employeeType);
-        }
-
-        private EmployeeType ConvertToEnum(string employeeType)
-        {
-            return employeeType switch
-            {
-                "waiter" => EmployeeType.Waiter,
-                "waitress" => EmployeeType.Waiter,
-                "chef" => EmployeeType.Chef,
-                "bartender" => EmployeeType.Bartender,
-                "manager" => EmployeeType.Manager,
-                _ => throw new ArgumentException(EmployeeErrorMessage)
-            };
         }
     }
 }

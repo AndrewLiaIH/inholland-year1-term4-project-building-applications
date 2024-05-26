@@ -14,8 +14,6 @@ namespace DAL
 
         private const string ParameterNameCardId = "@cardId";
 
-        private const string MenuCardErrorMessage = "Unknown menu type.";
-
         public List<MenuCard> GetAllMenuCards()
         {
             SqlParameter[] sqlParameters = Array.Empty<SqlParameter>();
@@ -23,9 +21,9 @@ namespace DAL
             return ReadTable(dataTable, ReadRow);
         }
 
-        public MenuCard GetMenuCardById(uint cardId)
+        public MenuCard GetMenuCardById(int cardId)
         {
-            Dictionary<string, uint> parameters = new()
+            Dictionary<string, int> parameters = new()
             {
                 { ParameterNameCardId, cardId }
             };
@@ -35,21 +33,11 @@ namespace DAL
 
         private MenuCard ReadRow(DataRow dr)
         {
-            uint cardId = (uint)dr[ColumnCardId];
-            MenuType menuType = ConvertToEnum((string)dr[ColumnMenuType]);
+            int cardId = (int)dr[ColumnCardId];
+            MenuType menuType;
+            Enum.TryParse((string)dr[ColumnMenuType], out menuType);
 
             return new MenuCard(cardId, menuType);
-        }
-
-        private MenuType ConvertToEnum(string menuType)
-        {
-            return menuType switch
-            {
-                "Lunch" => MenuType.Lunch,
-                "Dinner" => MenuType.Dinner,
-                "Drinks" => MenuType.Drinks,
-                _ => throw new ArgumentException(MenuCardErrorMessage)
-            };
         }
     }
 }

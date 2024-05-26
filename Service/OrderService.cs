@@ -13,7 +13,7 @@ namespace Service
             return orderDao.GetAllOrders();
         }
 
-        public Order GetOrderById(uint orderId)
+        public Order GetOrderById(int orderId)
         {
             return orderDao.GetOrderById(orderId);
         }

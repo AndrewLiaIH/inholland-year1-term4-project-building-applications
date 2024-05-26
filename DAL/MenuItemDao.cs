@@ -30,9 +30,9 @@ namespace DAL
             return ReadTable(dataTable, ReadRow);
         }
 
-        public MenuItem GetMenuItemById(uint itemId)
+        public MenuItem GetMenuItemById(int itemId)
         {
-            Dictionary<string, uint> parameters = new()
+            Dictionary<string, int> parameters = new()
             {
                 { ParameterNameItemId, itemId }
             };
@@ -42,10 +42,10 @@ namespace DAL
 
         private MenuItem ReadRow(DataRow dr)
         {
-            uint itemId = (uint)dr[ColumnItemId];
-            Category category = categoryDao.GetCategoryById((uint)dr[ColumnCategoryId]);
-            uint itemNumber = (uint)dr[ColumnItemNumber];
-            uint stockAmount = (uint)dr[ColumnStockAmount];
+            int itemId = (int)dr[ColumnItemId];
+            Category category = categoryDao.GetCategoryById((int)dr[ColumnCategoryId]);
+            int itemNumber = (int)dr[ColumnItemNumber];
+            int stockAmount = (int)dr[ColumnStockAmount];
             bool onMenu = (bool)dr[ColumnOnMenu];
             decimal price = (decimal)dr[ColumnPrice];
             string description = (string)dr[ColumnDescription];

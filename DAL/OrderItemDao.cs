@@ -30,9 +30,9 @@ namespace DAL
             return ReadTable(dataTable, ReadRow);
         }
 
-        public OrderItem GetOrderItemById(uint orderId, uint itemId)
+        public OrderItem GetOrderItemById(int orderId, int itemId)
         {
-            Dictionary<string, uint> parameters = new()
+            Dictionary<string, int> parameters = new()
             {
                 { ParameterNameOrderId, orderId },
                 { ParameterNameItemId, itemId }
@@ -43,12 +43,12 @@ namespace DAL
 
         private OrderItem ReadRow(DataRow dr)
         {
-            Order order = orderDao.GetOrderById((uint)dr[ColumnOrderId]);
-            MenuItem menuItem = menuItemDao.GetMenuItemById((uint)dr[ColumnItemId]);
+            Order order = orderDao.GetOrderById((int)dr[ColumnOrderId]);
+            MenuItem menuItem = menuItemDao.GetMenuItemById((int)dr[ColumnItemId]);
             DateTime placementTime = (DateTime)dr[ColumnPlacementTime];
             string status = (string)dr[ColumnStatus];
             DateTime changeOfStatus = (DateTime)dr[ColumnChangeOfStatus];
-            uint quantity = (uint)dr[ColumnQuantity];
+            int quantity = (int)dr[ColumnQuantity];
             string? comment = (string?)dr[ColumnComment];
 
             return new(order, menuItem, placementTime, status, changeOfStatus, quantity, comment);

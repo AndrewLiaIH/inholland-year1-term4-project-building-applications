@@ -13,7 +13,7 @@ namespace Service
             return menuItemDao.GetAllMenuItems();
         }
 
-        public MenuItem GetMenuItemById(uint itemId)
+        public MenuItem GetMenuItemById(int itemId)
         {
             return menuItemDao.GetMenuItemById(itemId);
         }
