@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Service.CategoryService">
+    <Position X="0.75" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAAAAAAAAAAAAAAAAAIAAAAAAAAAACAAAAAAAAAAA=</HashCode>
+      <FileName>CategoryService.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Service.EmployeeService">
+    <Position X="5.5" Y="1.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAIAIEAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>EmployeeService.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Service.MenuCardService">
+    <Position X="8" Y="1.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAQAAAAAAAAAAAAAAAAAAQgAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>MenuCardService.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Service.MenuItemService">
+    <Position X="3" Y="1.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAEAAAAAAAAAAAACAAAAAAAAAABAAAA=</HashCode>
+      <FileName>MenuItemService.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Service.OrderItemService">
+    <Position X="3" Y="3.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAEAAAAAg=</HashCode>
+      <FileName>OrderItemService.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Service.OrderService">
+    <Position X="5.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAEAAAg=</HashCode>
+      <FileName>OrderService.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Service.TableService">
+    <Position X="0.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAAAAAQAAAAAAAAAAAAAAAABAAAAA=</HashCode>
+      <FileName>TableService.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

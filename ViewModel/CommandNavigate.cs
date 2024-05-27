@@ -1,8 +1,8 @@
 ﻿namespace ViewModel
 {
-    internal class CommandNavigate : CommandBase
+    public class CommandNavigate : CommandBase
     {
-        private readonly NavigationService navigationService;
+        private NavigationService navigationService;
 
         public CommandNavigate(NavigationService navigationService)
         {
