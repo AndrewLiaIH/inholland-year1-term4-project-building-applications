@@ -45,7 +45,7 @@ namespace DAL
             Table table = tableDao.GetTableById((int)dr[ColumnTableId]);
             Employee employee = employeeDao.GetEmployeeById((int)dr[ColumnPlacedById]);
             int orderNumber = (int)dr[ColumnOrderNumber];
-            int servingNumber = (int)dr[ColumnServingNumber];
+            int? servingNumber = dr[ColumnServingNumber] as int?;
             bool finished = (bool)dr[ColumnFinished];
             decimal totalPrice = (decimal)dr[ColumnTotalPrice];
 
