@@ -45,11 +45,11 @@ namespace DAL
         {
             Order order = orderDao.GetOrderById((int)dr[ColumnOrderId]);
             MenuItem menuItem = menuItemDao.GetMenuItemById((int)dr[ColumnItemId]);
-            DateTime placementTime = (DateTime)dr[ColumnPlacementTime];
-            string status = (string)dr[ColumnStatus];
-            DateTime changeOfStatus = (DateTime)dr[ColumnChangeOfStatus];
-            int quantity = (int)dr[ColumnQuantity];
-            string? comment = (string?)dr[ColumnComment];
+            DateTime? placementTime = dr[ColumnPlacementTime] as DateTime?;
+            string? status = dr[ColumnStatus] as string;
+            DateTime? changeOfStatus = dr[ColumnChangeOfStatus] as DateTime?;
+            int? quantity = dr[ColumnQuantity] as int?;
+            string? comment = dr[ColumnComment] as string;
 
             return new(order, menuItem, placementTime, status, changeOfStatus, quantity, comment);
         }

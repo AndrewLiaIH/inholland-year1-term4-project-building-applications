@@ -2,6 +2,7 @@
 {
     public enum CategoryType
     {
+        NotSpecified,
         Starters,
         Mains,
         Desserts,

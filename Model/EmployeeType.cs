@@ -2,6 +2,10 @@
 {
     public enum EmployeeType
     {
-        Manager, Chef, Bartender, Waiter
+        NotSpecified,
+        Manager,
+        Chef,
+        Bartender,
+        Waiter
     }
 }
