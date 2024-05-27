@@ -1,4 +1,4 @@
-﻿namespace View
+﻿namespace UI
 {
     public class Folder
     {

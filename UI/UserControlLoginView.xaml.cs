@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace View
+namespace UI
 {
     /// <summary>
     /// Interaction logic for UserControlLogin.xaml
