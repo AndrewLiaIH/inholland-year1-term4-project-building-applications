@@ -42,13 +42,13 @@ namespace DAL
         {
             int id = (int)dr[ColumnEmployeeId];
             int employeeNumber = (int)dr[ColumnEmployeeNumber];
-            int login = (int)dr[ColumnLogin];
-            int password = (int)dr[ColumnPassword];
-            string firstName = (string)dr[ColumnFirstName];
-            string lastName = (string)dr[ColumnLastName];
-            string email = (string)dr[ColumnEmail];
-            string phoneNumber = (string)dr[ColumnPhoneNumber];
+            int? login = dr[ColumnLogin] as int?;
+            string? firstName = dr[ColumnFirstName] as string;
+            string? lastName = dr[ColumnLastName] as string;
+            string? email = dr[ColumnEmail] as string;
+            string? phoneNumber = dr[ColumnPhoneNumber] as string;
             bool parsedEmployeeType = Enum.TryParse((string)dr[ColumnEmployeeType], out EmployeeType employeeType);
+            string? password = dr[ColumnPassword] as string;
 
             return new(id, employeeNumber, login, password, firstName, lastName, email, phoneNumber, employeeType);
         }
