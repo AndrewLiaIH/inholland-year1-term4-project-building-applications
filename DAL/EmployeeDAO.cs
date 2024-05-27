@@ -1,6 +1,6 @@
 ﻿using Model;
 using System.Data;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 
 namespace DAL
 {
@@ -48,8 +48,7 @@ namespace DAL
             string lastName = (string)dr[ColumnLastName];
             string email = (string)dr[ColumnEmail];
             string phoneNumber = (string)dr[ColumnPhoneNumber];
-            EmployeeType employeeType;
-            Enum.TryParse((string)dr[ColumnEmployeeType], out employeeType);
+            bool parsedEmployeeType = Enum.TryParse((string)dr[ColumnEmployeeType], out EmployeeType employeeType);
 
             return new(id, employeeNumber, login, password, firstName, lastName, email, phoneNumber, employeeType);
         }

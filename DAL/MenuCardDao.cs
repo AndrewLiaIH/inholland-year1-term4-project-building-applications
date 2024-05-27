@@ -1,6 +1,6 @@
 ﻿using Model;
 using System.Data;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 
 namespace DAL
 {
@@ -34,9 +34,7 @@ namespace DAL
         private MenuCard ReadRow(DataRow dr)
         {
             int cardId = (int)dr[ColumnCardId];
-            MenuType menuType;
-            Enum.TryParse((string)dr[ColumnMenuType], out menuType);
-
+            bool parsedMenuType = Enum.TryParse((string)dr[ColumnMenuType], out MenuType menuType);
             return new MenuCard(cardId, menuType);
         }
     }

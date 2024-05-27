@@ -1,6 +1,6 @@
 ﻿using Model;
 using System.Data;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 
 namespace DAL
 {
@@ -39,8 +39,7 @@ namespace DAL
         {
             int categoryId = (int)dr[ColumnCategoryId];
             MenuCard menuCard = menuCardDao.GetMenuCardById((int)dr[ColumnMenuId]);
-            CategoryType categoryType;
-            Enum.TryParse((string)dr[ColumnCategoryType], out categoryType);
+            bool parsedCategoryType = Enum.TryParse((string)dr[ColumnCategoryType], out CategoryType categoryType);
             bool? alcoholic = null;
 
             if (dr[ColumnAlcoholic] != DBNull.Value)
