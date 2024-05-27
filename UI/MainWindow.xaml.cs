@@ -1,7 +1,6 @@
-﻿using ViewModel;
-using System.Windows;
+﻿using System.Windows;
 
-namespace View
+namespace UI
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
