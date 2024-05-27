@@ -1,6 +1,6 @@
-﻿using Model;
+﻿using Microsoft.Data.SqlClient;
+using Model;
 using System.Data;
-using Microsoft.Data.SqlClient;
 
 namespace DAL
 {

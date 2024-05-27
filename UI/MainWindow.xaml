@@ -11,13 +11,13 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <ui:UserControlHeader x:Name="userControlHeader" Visibility="Visible" Grid.Row="0"/>
-        <ui:UserControlLoginView x:Name="userControlLoginView" Visibility="Visible" Grid.Row="1"/>
-        <ui:UserControlTableView x:Name="userControlTableView" Visibility="Hidden" Grid.Row="1"/>
-        <ui:UserControlOrderView x:Name="userControlOrderView" Visibility="Hidden" Grid.Row="1"/>
-        <ui:UserControlKitchenView x:Name="userControlKitchenView" Visibility="Hidden" Grid.Row="1"/>
+        <ui:UserControlHeader x:Name="userControlHeader" Visibility="Visible" Grid.Row="0" SelectedFolderChanged="UserControlHeader_SelectedFolderChanged" />
+        <ui:UserControlLoginView x:Name="userControlLoginView" Visibility="Visible" Grid.Row="1" />
+        <ui:UserControlTableView x:Name="userControlTableView" Visibility="Hidden" Grid.Row="1" />
+        <ui:UserControlOrderView x:Name="userControlOrderView" Visibility="Hidden" Grid.Row="1" />
+        <ui:UserControlKitchenView x:Name="userControlKitchenView" Visibility="Hidden" Grid.Row="1" />
     </Grid>
 </Window>
