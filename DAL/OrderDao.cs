@@ -8,6 +8,7 @@ namespace DAL
     {
         private const string QueryGetAllOrders = $"SELECT {ColumnOrderId}, {ColumnTableId}, {ColumnPlacedById}, {ColumnOrderNumber}, {ColumnServingNumber}, {ColumnFinished}, {ColumnTotalPrice} FROM order";
         private const string QueryGetOrderById = $"{QueryGetAllOrders} WHERE {ColumnOrderId} = {ParameterNameOrderId}";
+        private const string QueryGetAllRunningOrders = $"SELECT {ColumnOrderId}, {ColumnTableId}, {ColumnPlacedById}, {ColumnOrderNumber}, {ColumnServingNumber}, {ColumnFinished}, {ColumnTotalPrice} FROM order WHERE {ColumnFinished} = 0";
 
         private const string ColumnOrderId = "order_id";
         private const string ColumnTableId = "table_number";
@@ -37,6 +38,13 @@ namespace DAL
             };
 
             return GetById(QueryGetOrderById, ReadRow, parameters);
+        }
+
+        public List<Order> GetAllRunningOrders()
+        {
+            SqlParameter[] sqlParameters = Array.Empty<SqlParameter>();
+            DataTable dataTable = ExecuteSelectQuery(QueryGetAllRunningOrders, sqlParameters);
+            return ReadTable(dataTable, ReadRow);
         }
 
         private Order ReadRow(DataRow dr)

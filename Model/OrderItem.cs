@@ -25,5 +25,10 @@
         {
             return $"Placement time: {PlacementTime}, Status: {Status}, Change of status: {ChangeOfStatus}, Quantity: {Quantity}, Comment: {Comment}";
         }
+
+        public void IncreaseQuantity()
+        {
+            Quantity++;
+        }
     }
 }
