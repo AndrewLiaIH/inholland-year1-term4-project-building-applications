@@ -44,13 +44,13 @@ namespace DAL
         {
             int itemId = (int)dr[ColumnItemId];
             Category category = categoryDao.GetCategoryById((int)dr[ColumnCategoryId]);
-            int itemNumber = (int)dr[ColumnItemNumber];
-            int stockAmount = (int)dr[ColumnStockAmount];
+            int? itemNumber = dr[ColumnItemNumber] as int?;
+            int? stockAmount = dr[ColumnStockAmount] as int?;
             bool onMenu = (bool)dr[ColumnOnMenu];
-            decimal price = (decimal)dr[ColumnPrice];
-            string description = (string)dr[ColumnDescription];
-            string name = (string)dr[ColumnName];
-            string shortName = (string)dr[ColumnShortName];
+            decimal? price = dr[ColumnPrice] as decimal?;
+            string? description = dr[ColumnDescription] as string;
+            string? name = dr[ColumnName] as string;
+            string? shortName = dr[ColumnShortName] as string;
 
             return new(itemId, category, itemNumber, stockAmount, onMenu, price, description, name, shortName);
         }

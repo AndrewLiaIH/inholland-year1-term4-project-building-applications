@@ -39,13 +39,8 @@ namespace DAL
         {
             int categoryId = (int)dr[ColumnCategoryId];
             MenuCard menuCard = menuCardDao.GetMenuCardById((int)dr[ColumnMenuId]);
-            bool parsedCategoryType = Enum.TryParse((string)dr[ColumnCategoryType], out CategoryType categoryType);
-            bool? alcoholic = null;
-
-            if (dr[ColumnAlcoholic] != DBNull.Value)
-            {
-                alcoholic = (bool)dr[ColumnAlcoholic];
-            }
+            bool parsedCategoryType = Enum.TryParse((string)dr[ColumnCategoryType], true, out CategoryType categoryType);
+            bool? alcoholic = dr[ColumnAlcoholic] as bool?;
 
             return new(categoryId, menuCard, categoryType, alcoholic);
         }
