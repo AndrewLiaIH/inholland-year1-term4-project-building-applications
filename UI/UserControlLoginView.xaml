@@ -29,6 +29,5 @@
         </Border>
         <Border Grid.Row="1" Grid.Column="1" Background="{StaticResource White}">
         </Border>
-
     </Grid>
 </UserControl>
