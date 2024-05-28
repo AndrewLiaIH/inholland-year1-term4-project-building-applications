@@ -8,6 +8,7 @@ namespace DAL
     {
         private const string QueryGetAllEmployees = $"SELECT {ColumnEmployeeId}, {ColumnEmployeeNumber}, {ColumnLogin}, {ColumnPassword}, {ColumnFirstName}, {ColumnLastName}, {ColumnEmail}, {ColumnPhoneNumber}, {ColumnEmployeeType} FROM employee";
         private const string QueryGetEmployeeById = $"{QueryGetAllEmployees} WHERE {ColumnEmployeeId} = {ParameterNameEmployeeId}";
+        private const string QueryGetEmployeeByLoginAndPassword = $"{QueryGetAllEmployees} WHERE {ColumnLogin} = {ParameterNameLogin} AND {ColumnPassword} = {ParameterNamePassword}";
 
         private const string ColumnEmployeeId = "employee_id";
         private const string ColumnEmployeeNumber = "employee_number";
@@ -20,6 +21,8 @@ namespace DAL
         private const string ColumnEmployeeType = "occupation";
 
         private const string ParameterNameEmployeeId = "@employeeId";
+        private const string ParameterNameLogin = "@login";
+        private const string ParameterNamePassword = "@password";
 
         public List<Employee> GetAllEmployees()
         {
@@ -32,10 +35,22 @@ namespace DAL
         {
             Dictionary<string, int> parameters = new()
             {
-                {ParameterNameEmployeeId, employeeId}
+                { ParameterNameEmployeeId, employeeId }
             };
 
-            return GetById(QueryGetEmployeeById, ReadRow, parameters);
+            return GetById(QueryGetAllEmployees, ReadRow, parameters);
+        }
+
+        public Employee GetEmployeeByLoginAndPassword(int employeeLogin, string password)
+        {
+            SqlParameter[] sqlParameters = new SqlParameter[]
+            {
+                new(ParameterNameLogin, employeeLogin),
+                new(ParameterNamePassword, password)
+            };
+
+            DataTable dataTable = ExecuteSelectQuery(QueryGetEmployeeByLoginAndPassword, sqlParameters);
+            return ReadTable(dataTable, ReadRow).FirstOrDefault();
         }
 
         private Employee ReadRow(DataRow dr)
