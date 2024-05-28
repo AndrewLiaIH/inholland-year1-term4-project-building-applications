@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using Model;
+using System.Windows;
 
 namespace UI
 {
@@ -56,6 +57,40 @@ namespace UI
                         userControlKitchenView.Visibility = Visibility.Visible;
                         break;
                 }
+            }
+        }
+
+        private void UserControlLoginView_LoginSuccessful(object sender, RoutedEventArgs e)
+        {
+            UpdateCurrentView(userControlLoginView.LoggedInEmployee);
+        }
+
+        public void UpdateCurrentView(Employee currentEmployee)
+        {
+            userControlLoginView.Visibility = Visibility.Hidden;
+            userControlTableView.Visibility = Visibility.Hidden;
+            userControlOrderView.Visibility = Visibility.Hidden;
+            userControlKitchenView.Visibility = Visibility.Hidden;
+
+            switch (currentEmployee.Type)
+            {
+                case EmployeeType.NotSpecified:
+                    userControlTableView.Visibility = Visibility.Visible;
+                    break;
+                case EmployeeType.Manager:
+                    userControlTableView.Visibility = Visibility.Visible;
+                    break;
+                case EmployeeType.Chef:
+                    userControlKitchenView.Visibility = Visibility.Visible;
+                    break;
+                case EmployeeType.Bartender:
+                    userControlKitchenView.Visibility = Visibility.Visible;
+                    break;
+                case EmployeeType.Waiter:
+                    userControlTableView.Visibility = Visibility.Visible;
+                    break;
+                default:
+                    throw new Exception("Nothing to show");
             }
         }
     }
