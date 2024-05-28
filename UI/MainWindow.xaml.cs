@@ -1,5 +1,6 @@
 ﻿using Model;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace UI
 {
@@ -8,6 +9,9 @@ namespace UI
     /// </summary>
     public partial class MainWindow : Window
     {
+        private const string WindowViewError = "Error occupied while displaying of a window";
+        private Dictionary<EmployeeType, UserControl> VisibilityMap;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -26,8 +30,18 @@ namespace UI
                 new Folder { Name = "Kitchen View", Type = "KitchenView" }
             };
 
+            Dictionary<EmployeeType, UserControl> visibilityMap = new()
+            {
+                { EmployeeType.NotSpecified, userControlTableView },
+                { EmployeeType.Manager, userControlTableView },
+                { EmployeeType.Chef, userControlKitchenView },
+                { EmployeeType.Bartender, userControlKitchenView },
+                { EmployeeType.Waiter, userControlTableView }
+            };
+
             userControlHeader.Folders = folders;
             userControlHeader.TemporaryFolders = temporaryFolders;
+            VisibilityMap = visibilityMap;
         }
 
         private void UserControlHeader_SelectedFolderChanged(object sender, RoutedEventArgs e)
@@ -67,30 +81,18 @@ namespace UI
 
         public void UpdateCurrentView(Employee currentEmployee)
         {
-            userControlLoginView.Visibility = Visibility.Hidden;
-            userControlTableView.Visibility = Visibility.Hidden;
-            userControlOrderView.Visibility = Visibility.Hidden;
-            userControlKitchenView.Visibility = Visibility.Hidden;
-
-            switch (currentEmployee.Type)
+            if (VisibilityMap.TryGetValue(currentEmployee.Type, out UserControl currentView))
             {
-                case EmployeeType.NotSpecified:
-                    userControlTableView.Visibility = Visibility.Visible;
-                    break;
-                case EmployeeType.Manager:
-                    userControlTableView.Visibility = Visibility.Visible;
-                    break;
-                case EmployeeType.Chef:
-                    userControlKitchenView.Visibility = Visibility.Visible;
-                    break;
-                case EmployeeType.Bartender:
-                    userControlKitchenView.Visibility = Visibility.Visible;
-                    break;
-                case EmployeeType.Waiter:
-                    userControlTableView.Visibility = Visibility.Visible;
-                    break;
-                default:
-                    throw new Exception("Nothing to show");
+                foreach (var visibility in VisibilityMap)
+                {
+                    visibility.Value.Visibility = Visibility.Hidden;
+                }
+
+                currentView.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                throw new Exception(WindowViewError);
             }
         }
     }

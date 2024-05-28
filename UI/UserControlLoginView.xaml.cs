@@ -12,25 +12,24 @@ namespace UI
     {
         public Employee LoggedInEmployee { get; private set; }
 
+        public static readonly RoutedEvent LoginEvent = EventManager.RegisterRoutedEvent(
+            "LoginSuccessful", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(UserControlLoginView));
+
+        public event RoutedEventHandler LoginSuccessful
+        {
+            add { AddHandler(LoginEvent, value); }
+            remove { RemoveHandler(LoginEvent, value); }
+        }
+
         public UserControlLoginView()
         {
             InitializeComponent();
         }
 
-        public static readonly RoutedEvent LoginSuccessfulEvent = EventManager.RegisterRoutedEvent(
-            "LoginSuccessful", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(UserControlLoginView));
-
-        // Provide CLR accessors for the event
-        public event RoutedEventHandler LoginSuccessful
-        {
-            add { AddHandler(LoginSuccessfulEvent, value); }
-            remove { RemoveHandler(LoginSuccessfulEvent, value); }
-        }
-
         private void ClickHandler(object sender, RoutedEventArgs e)
         {
             LoggedInEmployee = GetEmployee();
-            RaiseEvent(new RoutedEventArgs(LoginSuccessfulEvent));
+            RaiseEvent(new RoutedEventArgs(LoginEvent));
         }
 
         private Employee GetEmployee()
