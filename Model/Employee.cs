@@ -9,11 +9,11 @@
         public string? LastName { get; private set; }
         public string? Email { get; private set; }
         public string? PhoneNumber { get; private set; }
-        public EmployeeType? Type { get; private set; }
+        public EmployeeType Type { get; private set; }
 
         private string? Password;
 
-        public Employee(int databaseId, int employeeNumber, int? login, string? password, string? firstName, string? lastName, string? email, string? phoneNumber, EmployeeType? type)
+        public Employee(int databaseId, int employeeNumber, int? login, string? password, string? firstName, string? lastName, string? email, string? phoneNumber, EmployeeType type)
         {
             DatabaseId = databaseId;
             EmployeeNumber = employeeNumber;

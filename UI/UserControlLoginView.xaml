@@ -8,8 +8,8 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="250"/>
-            <RowDefinition Height="550"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -19,7 +19,7 @@
             <StackPanel Width="400" Height="300" Background="{StaticResource White}">
 
                 <TextBlock Text="User ID:" Foreground="{StaticResource TextDark}"/>
-                <TextBox x:Name="UserIdTextBox"/>
+                <TextBox x:Name="UserLoginTextBox"/>
 
                 <TextBlock Text="Password:" Foreground="{StaticResource TextDark}"/>
                 <TextBox x:Name="PasswordTextBox"/>

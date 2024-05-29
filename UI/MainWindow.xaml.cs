@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using Model;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace UI
 {
@@ -7,6 +9,9 @@ namespace UI
     /// </summary>
     public partial class MainWindow : Window
     {
+        private const string WindowViewError = "Error occupied while displaying of a window";
+        private Dictionary<EmployeeType, UserControl> VisibilityMap;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -25,8 +30,18 @@ namespace UI
                 new Folder { Name = "Kitchen View", Type = "KitchenView" }
             };
 
+            Dictionary<EmployeeType, UserControl> visibilityMap = new()
+            {
+                { EmployeeType.NotSpecified, userControlTableView },
+                { EmployeeType.Manager, userControlTableView },
+                { EmployeeType.Chef, userControlKitchenView },
+                { EmployeeType.Bartender, userControlKitchenView },
+                { EmployeeType.Waiter, userControlTableView }
+            };
+
             userControlHeader.Folders = folders;
             userControlHeader.TemporaryFolders = temporaryFolders;
+            VisibilityMap = visibilityMap;
         }
 
         private void UserControlHeader_SelectedFolderChanged(object sender, RoutedEventArgs e)
@@ -56,6 +71,28 @@ namespace UI
                         userControlKitchenView.Visibility = Visibility.Visible;
                         break;
                 }
+            }
+        }
+
+        private void UserControlLoginView_LoginSuccessful(object sender, RoutedEventArgs e)
+        {
+            UpdateCurrentView(userControlLoginView.LoggedInEmployee);
+        }
+
+        public void UpdateCurrentView(Employee currentEmployee)
+        {
+            if (VisibilityMap.TryGetValue(currentEmployee.Type, out UserControl currentView))
+            {
+                foreach (var visibility in VisibilityMap)
+                {
+                    visibility.Value.Visibility = Visibility.Hidden;
+                }
+
+                currentView.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                throw new Exception(WindowViewError);
             }
         }
     }
