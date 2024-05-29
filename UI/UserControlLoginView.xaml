@@ -16,18 +16,44 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Border Grid.Row="1" Grid.Column="0" Background="{StaticResource Color1}">
-            <StackPanel Width="400" Height="300" Background="{StaticResource White}">
+            <Border Style="{StaticResource RoundedBorderStyle}" Background="{StaticResource White}">
+                <StackPanel Style="{StaticResource LoginStackpanelStyle}" Background="{StaticResource White}">
 
-                <TextBlock Text="User ID:" Foreground="{StaticResource TextDark}"/>
-                <TextBox x:Name="UserLoginTextBox"/>
+                    <TextBlock Text="User ID:" Foreground="{StaticResource TextDark}" FontSize="16" FontFamily="Nunito Sans" Width="290"/>
+                    <TextBox x:Name="UserLoginTextBox"/>
 
-                <TextBlock Text="Password:" Foreground="{StaticResource TextDark}"/>
-                <TextBox x:Name="PasswordTextBox"/>
+                    <TextBlock Text="Password:" Foreground="{StaticResource TextDark}" FontSize="16" FontFamily="Nunito Sans" Width="290"/>
+                    <TextBox x:Name="PasswordTextBox"/>
 
-                <Button Style="{StaticResource FancyButtonStyle}" Content="Login" Click="ClickHandler"/>
-            </StackPanel>
+                    <Button  Content="Login" Click="ClickHandler" Foreground="{StaticResource White}"/>
+                </StackPanel>
+            </Border>
         </Border>
         <Border Grid.Row="1" Grid.Column="1" Background="{StaticResource White}">
+            <Border Style="{StaticResource RoundedBorderStyle}" Background="{StaticResource Color1}">
+                <StackPanel Style="{StaticResource LoginStackpanelStyle}" Background="{StaticResource Color1}">
+                    <StackPanel Style="{StaticResource LoginButtonsStackpanelStyle}">
+                        <Button Content="1" Style="{StaticResource LoginNumPadbuttonStyle}"/>
+                        <Button Content="2" Style="{StaticResource LoginNumPadbuttonStyle}"/>
+                        <Button Content="3" Style="{StaticResource LoginNumPadbuttonStyle}"/>
+                    </StackPanel>
+                    <StackPanel Style="{StaticResource LoginButtonsStackpanelStyle}">
+                        <Button Content="4" Style="{StaticResource LoginNumPadbuttonStyle}"/>
+                        <Button Content="5" Style="{StaticResource LoginNumPadbuttonStyle}"/>
+                        <Button Content="6" Style="{StaticResource LoginNumPadbuttonStyle}"/>
+                    </StackPanel>
+                    <StackPanel Style="{StaticResource LoginButtonsStackpanelStyle}">
+                        <Button Content="7" Style="{StaticResource LoginNumPadbuttonStyle}"/>
+                        <Button Content="8" Style="{StaticResource LoginNumPadbuttonStyle}"/>
+                        <Button Content="9" Style="{StaticResource LoginNumPadbuttonStyle}"/>
+                    </StackPanel>
+                    <StackPanel Style="{StaticResource LoginButtonsStackpanelStyle}">
+                        <Button Content="0" Style="{StaticResource LoginNumPadbuttonStyle}"/>
+                        <Button Content="CLEAR" Style="{StaticResource LoginNumPadbuttonStyle}"/>
+                        <Button Content="BACK" Style="{StaticResource LoginNumPadbuttonStyle}"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
         </Border>
     </Grid>
 </UserControl>
