@@ -59,8 +59,8 @@
                         <Button Content="9" Style="{StaticResource LoginNumPadbuttonStyle}"/>
                     </StackPanel>
                     <StackPanel Style="{StaticResource LoginButtonsStackpanelStyle}">
-                        <Button Content="0" Style="{StaticResource LoginNumPadbuttonStyle}"/>
                         <Button Content="CLEAR" Style="{StaticResource LoginNumPadbuttonStyle}"/>
+                        <Button Content="0" Style="{StaticResource LoginNumPadbuttonStyle}"/>
                         <Button Style="{StaticResource LoginNumPadbuttonStyle}">
                             <ContentControl Content="{StaticResource backSpaceSign}" Height="36" Width="36"/>
                         </Button>
