@@ -89,6 +89,7 @@ namespace UI
                 }
 
                 currentView.Visibility = Visibility.Visible;
+                userControlLoginView.Visibility = Visibility.Hidden;
             }
             else
             {
