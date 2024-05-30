@@ -22,6 +22,7 @@ namespace UI
 
             userControlHeader.Folders = FoldersKitchen;
             userControlHeader.SelectedFolder = FoldersKitchen.First();
+            userControlHeader.SelectedFolderChanged += UserControlHeader_SelectedFolderChanged;
         }
 
         private void UserControlHeader_SelectedFolderChanged(object sender, RoutedEventArgs e)
@@ -30,12 +31,16 @@ namespace UI
             
             if (selectedFolder != null)
             {
-                // Hide all views
+                // Hide all views and set IsActive to false
                 foreach (Folder folder in FoldersKitchen)
+                {
                     folder.UserControl.Visibility = Visibility.Hidden;
+                    folder.IsActive = false;
+                }
 
-                // Show the selected folder
+                // Show the selected folder and set IsActive to true
                 selectedFolder.UserControl.Visibility = Visibility.Visible;
+                selectedFolder.IsActive = true;
             }
         }
     }
