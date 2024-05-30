@@ -19,19 +19,12 @@
         </Grid.ColumnDefinitions>
         
         <Rectangle Grid.Row="0" Grid.ColumnSpan="6" Fill="{StaticResource Color5}" />
-        <ListBox x:Name="FoldersListBox" Grid.Row="0" Grid.Column="0" Margin="24 40 0 0" ItemsSource="{Binding Folders}" SelectionChanged="FoldersListBox_SelectionChanged">
+        <ListBox x:Name="FoldersListBox" Grid.Row="0" Grid.Column="0" Margin="24 40 0 -1" Background="Transparent" BorderThickness="0" BorderBrush="Transparent" ItemsSource="{Binding Folders}" SelectionChanged="FoldersListBox_SelectionChanged" ItemContainerStyle="{StaticResource FolderItemStyle}">
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
                     <StackPanel Orientation="Horizontal" />
                 </ItemsPanelTemplate>
             </ListBox.ItemsPanel>
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="{Binding Name}" FontSize="16" Margin="5"/>
-                    </StackPanel>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
         </ListBox>
         <TextBlock Grid.Row="0" Grid.Column="1" Text="Counters" />
         <TextBlock Grid.Row="0" Grid.Column="2" Text="Logo" />
