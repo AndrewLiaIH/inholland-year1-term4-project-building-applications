@@ -8,7 +8,6 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="8"/>
-            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"/>
@@ -20,7 +19,7 @@
         </Grid.ColumnDefinitions>
         
         <Rectangle Grid.Row="0" Grid.ColumnSpan="6" Fill="{StaticResource Color5}" />
-        <ListBox x:Name="FoldersListBox" Grid.Row="0" Grid.Column="0" Margin="24 40 0 0" ItemsSource="{Binding Folders}">
+        <ListBox x:Name="FoldersListBox" Grid.Row="0" Grid.Column="0" Margin="24 40 0 0" ItemsSource="{Binding Folders}" SelectionChanged="FoldersListBox_SelectionChanged">
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
                     <StackPanel Orientation="Horizontal" />
@@ -41,21 +40,6 @@
         <TextBlock Grid.Row="0" Grid.Column="5" Text="Log out" />
 
         <Rectangle Grid.Row="1" Grid.ColumnSpan="6" Fill="{StaticResource Color4}" />
-
-        <ListBox x:Name="TemporaryFoldersListBox" Grid.Row="2" Margin="10" ItemsSource="{Binding TemporaryFolders}" SelectionChanged="TemporaryFoldersListBox_SelectionChanged">
-            <ListBox.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <StackPanel Orientation="Horizontal" />
-                </ItemsPanelTemplate>
-            </ListBox.ItemsPanel>
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="{Binding Name}" FontSize="16" Margin="5"/>
-                    </StackPanel>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
-
+        
     </Grid>
 </UserControl>
