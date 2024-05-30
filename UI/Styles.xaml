@@ -111,7 +111,7 @@
         <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="Margin" Value="0,0,0,50"/>
         <Style.Triggers>
-            <Trigger Property="IsFocused" Value="True">
+            <Trigger Property="IsReadOnly" Value="True">
             <Setter Property="BorderBrush" Value="{StaticResource Color3}"/>
         </Trigger>
         </Style.Triggers>

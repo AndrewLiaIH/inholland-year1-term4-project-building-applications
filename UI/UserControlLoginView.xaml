@@ -31,10 +31,10 @@
 
 
                     <TextBlock Text="User ID:" Style="{StaticResource LoginTextBlockStyle}"/>
-                    <TextBox x:Name="UserLoginTextBox" Style="{StaticResource LoginTextBoxStyle}" Margin="0,0,0, 30"/>
+                    <TextBox x:Name="UserLoginTextBox" Style="{StaticResource LoginTextBoxStyle}" Margin="0,0,0, 30" Tag="" GotFocus="LoginFocused"/>
 
                     <TextBlock Text="Password:" Style="{StaticResource LoginTextBlockStyle}"/>
-                    <TextBox x:Name="PasswordTextBox" Style="{StaticResource LoginTextBoxStyle}"/>
+                    <TextBox x:Name="PasswordTextBox" Style="{StaticResource LoginTextBoxStyle}" GotFocus="PasswordFocused"/>
 
                     <Button  Content="Login" Click="ClickHandler" Style="{StaticResource LoginButtonStyle}"/>
                 </StackPanel>
@@ -44,24 +44,24 @@
             <Border Style="{StaticResource RoundedBorderStyle}" Background="{StaticResource Color1}">
                 <StackPanel Style="{StaticResource LoginStackpanelStyle}" Background="{StaticResource Color1}">
                     <StackPanel Style="{StaticResource LoginButtonsStackpanelStyle}">
-                        <Button Content="1" Style="{StaticResource LoginNumPadbuttonStyle}"/>
-                        <Button Content="2" Style="{StaticResource LoginNumPadbuttonStyle}"/>
-                        <Button Content="3" Style="{StaticResource LoginNumPadbuttonStyle}"/>
+                        <Button Content="1" Style="{StaticResource LoginNumPadbuttonStyle}" Tag="1" Click="NumpadNumberClick"/>
+                        <Button Content="2" Style="{StaticResource LoginNumPadbuttonStyle}" Tag="2" Click="NumpadNumberClick"/>
+                        <Button Content="3" Style="{StaticResource LoginNumPadbuttonStyle}" Tag="3" Click="NumpadNumberClick"/>
                     </StackPanel>
                     <StackPanel Style="{StaticResource LoginButtonsStackpanelStyle}">
-                        <Button Content="4" Style="{StaticResource LoginNumPadbuttonStyle}"/>
-                        <Button Content="5" Style="{StaticResource LoginNumPadbuttonStyle}"/>
-                        <Button Content="6" Style="{StaticResource LoginNumPadbuttonStyle}"/>
+                        <Button Content="4" Style="{StaticResource LoginNumPadbuttonStyle}" Tag="4" Click="NumpadNumberClick"/>
+                        <Button Content="5" Style="{StaticResource LoginNumPadbuttonStyle}" Tag="5" Click="NumpadNumberClick"/>
+                        <Button Content="6" Style="{StaticResource LoginNumPadbuttonStyle}" Tag="6" Click="NumpadNumberClick"/>
                     </StackPanel>
                     <StackPanel Style="{StaticResource LoginButtonsStackpanelStyle}">
-                        <Button Content="7" Style="{StaticResource LoginNumPadbuttonStyle}"/>
-                        <Button Content="8" Style="{StaticResource LoginNumPadbuttonStyle}"/>
-                        <Button Content="9" Style="{StaticResource LoginNumPadbuttonStyle}"/>
+                        <Button Content="7" Style="{StaticResource LoginNumPadbuttonStyle}" Tag="7" Click="NumpadNumberClick"/>
+                        <Button Content="8" Style="{StaticResource LoginNumPadbuttonStyle}" Tag="8" Click="NumpadNumberClick"/>
+                        <Button Content="9" Style="{StaticResource LoginNumPadbuttonStyle}" Tag="9" Click="NumpadNumberClick"/>
                     </StackPanel>
                     <StackPanel Style="{StaticResource LoginButtonsStackpanelStyle}">
-                        <Button Content="CLEAR" Style="{StaticResource LoginNumPadbuttonStyle}"/>
-                        <Button Content="0" Style="{StaticResource LoginNumPadbuttonStyle}"/>
-                        <Button Style="{StaticResource LoginNumPadbuttonStyle}">
+                        <Button Content="CLEAR" Style="{StaticResource LoginNumPadbuttonStyle}" Click="ClearClick"/>
+                        <Button Content="0" Style="{StaticResource LoginNumPadbuttonStyle}" Tag="0" Click="NumpadNumberClick"/>
+                        <Button Style="{StaticResource LoginNumPadbuttonStyle}" Click="BackSpaceClick">
                             <ContentControl Content="{StaticResource backSpaceSign}" Height="36" Width="36"/>
                         </Button>
                     </StackPanel>
