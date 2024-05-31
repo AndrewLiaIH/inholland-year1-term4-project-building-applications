@@ -65,30 +65,43 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ListBoxItem">
-                    <Border CornerRadius="5 5 0 0" BorderThickness="1" BorderBrush="{TemplateBinding BorderBrush}">
+                    <Border x:Name="Border" CornerRadius="5 5 0 0" BorderThickness="1" BorderBrush="{TemplateBinding BorderBrush}" Margin="0 0 2 0">
                         <Grid>
-                            <Rectangle Width="160" Height="40" Fill="{TemplateBinding Background}" />
-                            <TextBlock Text="{Binding Name}" TextAlignment="Center" VerticalAlignment="Center" Foreground="{TemplateBinding Foreground}" />
+                            <Rectangle x:Name="BackgroundRectangle" Width="160" Height="40" Fill="{TemplateBinding Background}" />
+                            <TextBlock x:Name="TextBlock" Text="{Binding Name}" TextAlignment="Center" VerticalAlignment="Center" Foreground="{TemplateBinding Foreground}" />
+                            <Line x:Name="Separator" X1="158" Y1="12" X2="158" Y2="28" Stroke="{TemplateBinding Foreground}" StrokeThickness="1" />
                         </Grid>
                     </Border>
+                    <ControlTemplate.Triggers>
+                        <DataTrigger Binding="{Binding IsActive}" Value="True">
+                            <Setter TargetName="BackgroundRectangle" Property="Fill" Value="{StaticResource Color4}" />
+                            <Setter TargetName="TextBlock" Property="Foreground" Value="{StaticResource TextDark}" />
+                            <Setter TargetName="Separator" Property="Stroke" Value="Transparent" />
+                            <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource Color4}" />
+                            <Setter TargetName="Border" Property="Effect">
+                                <Setter.Value>
+                                    <DropShadowEffect Color="Black" BlurRadius="4" ShadowDepth="4" Opacity="0.3" />
+                                </Setter.Value>
+                            </Setter>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding IsActive}" Value="False">
+                            <Setter TargetName="BackgroundRectangle" Property="Fill" Value="{StaticResource Color5}" />
+                            <Setter TargetName="TextBlock" Property="Foreground" Value="{StaticResource TextDark}" />
+                            <Setter TargetName="Separator" Property="Stroke" Value="{StaticResource TextDark}" />
+                            <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource Color5}" />
+                            <Setter TargetName="Border" Property="Effect">
+                                <Setter.Value>
+                                    <DropShadowEffect Color="Transparent" BlurRadius="0" ShadowDepth="0" Opacity="0"/>
+                                </Setter.Value>
+                            </Setter>
+                        </DataTrigger>
+                    </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-        <Style.Triggers>
-            <DataTrigger Binding="{Binding IsActive}" Value="True">
-                <Setter Property="Background" Value="{StaticResource Color4}" />
-                <Setter Property="Foreground" Value="{StaticResource TextDark}" />
-                <Setter Property="BorderBrush" Value="{StaticResource Color4}" />
-            </DataTrigger>
-            <DataTrigger Binding="{Binding IsActive}" Value="False">
-                <Setter Property="Background" Value="{StaticResource Color5}" />
-                <Setter Property="Foreground" Value="{StaticResource TextDark}" />
-                <Setter Property="BorderBrush" Value="{StaticResource Color5}" />
-            </DataTrigger>
-        </Style.Triggers>
     </Style>
 
-    
+
     <!--LOGIN VIEW-->
     
     <!--panels-->
