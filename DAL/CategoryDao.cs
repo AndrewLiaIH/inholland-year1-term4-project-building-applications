@@ -4,6 +4,7 @@ using System.Data;
 
 namespace DAL
 {
+    // This class is created by Orest Pokotylenko
     public class CategoryDao : BaseDao
     {
         private const string QueryGetAllCategories = $"SELECT {ColumnCategoryId}, {ColumnMenuId}, {ColumnCategoryType}, {ColumnAlcoholic} FROM category";

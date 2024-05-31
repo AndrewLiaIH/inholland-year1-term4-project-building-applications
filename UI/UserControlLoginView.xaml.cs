@@ -1,10 +1,12 @@
-﻿using Model;
+﻿using Microsoft.IdentityModel.Tokens;
+using Model;
 using Service;
 using System.Windows;
 using System.Windows.Controls;
 
 namespace UI
 {
+    // This class is created by Orest Pokotylenko
     /// <summary>
     /// Interaction logic for UserControlLogin.xaml
     /// </summary>
@@ -12,6 +14,9 @@ namespace UI
     {
         public Employee LoggedInEmployee { get; private set; }
         private TextBox activeTextBox;
+
+        private const string EmptyBoxExceptionMessage = "Please fill in all fields";
+        private const string WrongLoginOrPasswordMessage = "The user id or password is incorrect";
 
         public static readonly RoutedEvent LoginEvent = EventManager.RegisterRoutedEvent(
             "LoginSuccessful", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(UserControlLoginView));
@@ -30,25 +35,76 @@ namespace UI
 
         private void InitializeTextBox()
         {
-            activeTextBox = UserLoginTextBox;
+            activeTextBox = LoginTextBox;
             activeTextBox.IsReadOnly = true;
+        }
+
+        /// <summary>
+        /// Login methods
+        /// </summary>
+        private void LoginButton_Click(object sender, RoutedEventArgs e)
+        {
+            Login();
+
+            if (LoggedInEmployee != null)
+                RaiseEvent(new RoutedEventArgs(LoginEvent));
+        }
+
+        private void Login()
+        {
+            try
+            {
+                activeTextBox = null;
+                ValidateLogin();
+            }
+            catch (Exception ex)
+            {
+                SetTextBoxesToError();
+                LoginErrorMessage.Text = ex.Message;
+            }
+        }
+
+        private void ValidateLogin()
+        {
+            if (!InputEmptyValidation())
+            {
+                LoggedInEmployee = GetEmployee();
+
+                if (LoggedInEmployee == null)
+                {
+                    ClearTextBoxes();
+                    throw new Exception(WrongLoginOrPasswordMessage);
+                }
+            }
+            else
+            {
+                throw new Exception(EmptyBoxExceptionMessage);
+            }
+        }
+
+        private bool InputEmptyValidation()
+        {
+            return LoginTextBox.Text.IsNullOrEmpty() || PasswordTextBox.Text.IsNullOrEmpty();
         }
 
         private Employee GetEmployee()
         {
-            int login = int.Parse(UserLoginTextBox.Text);
+            int login = int.Parse(LoginTextBox.Text);
             string password = PasswordTextBox.Tag.ToString();
             EmployeeService employeeService = new();
 
             return employeeService.GetEmployeeByLoginAndPassword(login, password);
         }
 
-        private void NumpadNumberClick(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// Click events for all buttons of the numpad
+        /// </summary>
+        private void NumpadNumber_Click(object sender, RoutedEventArgs e)
         {
             string input = (sender as Button).Tag.ToString();
 
             if (activeTextBox != null && activeTextBox.IsReadOnly)
-                if (activeTextBox == UserLoginTextBox)
+                if (activeTextBox == LoginTextBox)
                 {
                     activeTextBox.Text += input;
                 }
@@ -56,13 +112,10 @@ namespace UI
                 {
                     activeTextBox.Text += "•";
                     activeTextBox.Tag += input;
-                }            
+                }
         }
 
-        /// <summary>
-        /// Click events for all buttons of the numpad
-        /// </summary>
-        private void BackSpaceClick(object sender, RoutedEventArgs e)
+        private void NumPadBackSpace_Click(object sender, RoutedEventArgs e)
         {
             if (activeTextBox != null && activeTextBox.Text.Length > 0)
             {
@@ -74,7 +127,7 @@ namespace UI
 
         }
 
-        private void ClearClick(object sender, RoutedEventArgs e)
+        private void NumPadClear_Click(object sender, RoutedEventArgs e)
         {
             if (activeTextBox != null)
             {
@@ -86,28 +139,45 @@ namespace UI
         }
 
         /// <summary>
-        /// Click events which change the active TextBox and make it possible to only use the numpad for input
+        /// TextBox states including standard, focus and error and states
         /// </summary>
-        private void LoginFocused(object sender, RoutedEventArgs e)
+        private void LoginTextBox_Focused(object sender, RoutedEventArgs e)
         {
             activeTextBox = sender as TextBox;
             activeTextBox.IsReadOnly = true;
 
-            PasswordTextBox.IsReadOnly = false;
+            foreach (TextBox textBox in LoginStackPanel.Children.OfType<TextBox>())
+            {
+                if (textBox != activeTextBox)
+                {
+                    textBox.IsReadOnly = false;
+                }
+            }
+
+            SetTextBoxToNormal();
         }
 
-        private void PasswordFocused(object sender, RoutedEventArgs e)
+        private void SetTextBoxesToError()
         {
-            activeTextBox = sender as TextBox;
-            activeTextBox.IsReadOnly = true;
+            var errorFieldState = (Style)FindResource("LoginTextBoxErrorStyle");
 
-            UserLoginTextBox.IsReadOnly = false;
+            LoginTextBox.Style = errorFieldState;
+            PasswordTextBox.Style = errorFieldState;
         }
 
-        private void ClickHandler(object sender, RoutedEventArgs e)
+        private void SetTextBoxToNormal()
         {
-            LoggedInEmployee = GetEmployee();
-            RaiseEvent(new RoutedEventArgs(LoginEvent));
+            var normalFieldState = (Style)FindResource("LoginTextBoxStyle");
+            activeTextBox.Style = normalFieldState;
+        }
+
+        private void ClearTextBoxes()
+        {
+            foreach (TextBox textBox in LoginStackPanel.Children.OfType<TextBox>())
+            {
+                textBox.Text = string.Empty;
+                textBox.Tag = string.Empty;
+            }
         }
     }
 }

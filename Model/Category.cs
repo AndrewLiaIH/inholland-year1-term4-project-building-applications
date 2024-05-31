@@ -1,5 +1,6 @@
 ﻿namespace Model
 {
+    // This class is created by Orest Pokotylenko
     public class Category
     {
         public int CategoryId { get; private set; }

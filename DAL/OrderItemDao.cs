@@ -4,6 +4,7 @@ using System.Data;
 
 namespace DAL
 {
+    // This class is created by Orest Pokotylenko
     public class OrderItemDao : BaseDao
     {
         private const string QueryGetAllOrderItems = $"SELECT {ColumnOrderId}, {ColumnItemId}, {ColumnPlacementTime}, {ColumnStatus}, {ColumnChangeOfStatus}, {ColumnQuantity}, {ColumnComment} FROM order_item";

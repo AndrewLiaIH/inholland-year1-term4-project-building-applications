@@ -185,7 +185,7 @@
         <Setter Property="FontSize" Value="16"/>
         <Setter Property="FontFamily" Value="Nunito Sans"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
-        <Setter Property="Margin" Value="0,0,0,50"/>
+        <Setter Property="Margin" Value="0,0,0,10"/>
         <Style.Triggers>
             <Trigger Property="IsReadOnly" Value="True">
             <Setter Property="BorderBrush" Value="{StaticResource Color3}"/>
@@ -226,6 +226,39 @@
                 <Setter Property="Background" Value="{StaticResource Color11}"/>
             </Trigger>
         </Style.Triggers>
+    </Style>
+
+    
+    <!--error styles-->
+    <Style x:Key="LoginErrorMessage" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="{StaticResource Color6}"/>
+        <Setter Property="Height" Value="21"/>
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="Width" Value="290"/>
+        <Setter Property="Margin" Value="0,0,0,26"/>
+    </Style>
+
+    <Style x:Key="LoginTextBoxErrorStyle" TargetType="TextBox">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TextBox">
+                    <Border Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="5">
+                        <ScrollViewer x:Name="PART_ContentHost"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Width" Value="290"/>
+        <Setter Property="Padding" Value="7"/>
+        <Setter Property="BorderBrush" Value="{StaticResource Color6}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Foreground" Value="{StaticResource TextDark}"/>
+        <Setter Property="FontSize" Value="16"/>
+        <Setter Property="FontFamily" Value="Nunito Sans"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="0,0,0,10"/>
     </Style>
 
 </ResourceDictionary>
