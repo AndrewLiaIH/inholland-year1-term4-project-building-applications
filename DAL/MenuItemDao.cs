@@ -4,6 +4,7 @@ using System.Data;
 
 namespace DAL
 {
+    // This class is created by Orest Pokotylenko
     public class MenuItemDao : BaseDao
     {
         private const string QueryGetAllMenuItems = $"SELECT {ColumnItemId}, {ColumnCategoryId}, {ColumnItemNumber}, {ColumnStockAmount}, {ColumnOnMenu}, {ColumnPrice}, {ColumnDescription}, {ColumnName}, {ColumnShortName} FROM menu_item";

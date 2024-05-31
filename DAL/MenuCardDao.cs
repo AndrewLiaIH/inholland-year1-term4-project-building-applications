@@ -4,6 +4,7 @@ using System.Data;
 
 namespace DAL
 {
+    // This class is created by Orest Pokotylenko
     public class MenuCardDao : BaseDao
     {
         private const string QueryGetAllMenuCards = $"SELECT {ColumnCardId}, {ColumnMenuType} FROM menu_card";
