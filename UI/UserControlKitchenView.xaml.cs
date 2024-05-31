@@ -23,6 +23,8 @@ namespace UI
             userControlHeader.Folders = FoldersKitchen;
             userControlHeader.SelectedFolder = FoldersKitchen.First();
             userControlHeader.SelectedFolderChanged += UserControlHeader_SelectedFolderChanged;
+            userControlHeader.CounterWaiting.Visibility = Visibility.Visible;
+            userControlHeader.CounterPreparing.Visibility = Visibility.Visible;
         }
 
         private void UserControlHeader_SelectedFolderChanged(object sender, RoutedEventArgs e)

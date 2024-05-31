@@ -6,19 +6,21 @@
              mc:Ignorable="d">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="8"/>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="8" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
         
-        <Rectangle Grid.Row="0" Grid.ColumnSpan="6" Fill="{StaticResource Color5}" />
+        <Rectangle Grid.Row="0" Grid.ColumnSpan="7" Fill="{StaticResource Color5}" />
+        
         <ListBox x:Name="FoldersListBox" Grid.Row="0" Grid.Column="0" Margin="24 40 0 -1" Background="Transparent" BorderThickness="0" BorderBrush="Transparent" ItemsSource="{Binding Folders}" SelectionChanged="FoldersListBox_SelectionChanged" ItemContainerStyle="{StaticResource FolderItemStyle}">
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
@@ -26,13 +28,50 @@
                 </ItemsPanelTemplate>
             </ListBox.ItemsPanel>
         </ListBox>
-        <TextBlock Grid.Row="0" Grid.Column="1" Text="Counters" />
-        <TextBlock Grid.Row="0" Grid.Column="2" Text="Logo" />
-        <TextBlock Grid.Row="0" Grid.Column="3" Text="Current Date/Time" />
-        <TextBlock Grid.Row="0" Grid.Column="4" Text="User" />
-        <TextBlock Grid.Row="0" Grid.Column="5" Text="Log out" />
 
-        <Rectangle Grid.Row="1" Grid.ColumnSpan="6" Fill="{StaticResource Color4}" />
+        <Grid x:Name="CounterWaiting" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" Margin="64 0 0 0" Visibility="Collapsed">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Canvas Grid.Row="0" Width="32" Height="32">
+                <Ellipse Width="32" Height="32" Fill="{StaticResource Color2}"/>
+            </Canvas>
+            <TextBlock Grid.Row="0" Text="0" TextAlignment="Center" VerticalAlignment="Center" Foreground="{StaticResource White}"/>
+            <TextBlock Grid.Row="1" Text="Waiting" Margin="0 4 0 0" />
+        </Grid>
+
+        <Grid x:Name="CounterPreparing" Grid.Row="0" Grid.Column="2" VerticalAlignment="Center" Margin="24 0 0 0" Visibility="Collapsed">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Canvas Grid.Row="0" Width="32" Height="32">
+                <Ellipse Width="32" Height="32" Fill="{StaticResource Color2}"/>
+            </Canvas>
+            <TextBlock Grid.Row="0" Text="0" TextAlignment="Center" VerticalAlignment="Center" Foreground="{StaticResource White}"/>
+            <TextBlock Grid.Row="1" Text="Preparing" Margin="0 4 0 0" />
+        </Grid>
+        
+        <ContentControl Grid.Row="0" Grid.ColumnSpan="7" HorizontalAlignment="Center" VerticalAlignment="Center" Content="{StaticResource logo}" Height="64" />
+
+        <TextBlock Grid.Row="0" Grid.Column="4" VerticalAlignment="Center" Text="Current Date/Time" Margin="0 0 50 0" />
+        
+        <Grid Grid.Row="0" Grid.Column="5" VerticalAlignment="Center" Margin="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <ContentControl Grid.Column="0" Content="{StaticResource userIcon}" Height="24" Width="24" Margin="0" />
+            <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="User Name" Margin="12 0 0 0" />
+        </Grid>
+        
+        <ContentControl Grid.Row="0" Grid.Column="6" Content="{StaticResource exitIcon}" Height="32" Width="32" Margin="50 24 24 24" />
+
+        <Rectangle Grid.Row="1" Grid.ColumnSpan="7" Fill="{StaticResource Color4}" />
         
     </Grid>
 </UserControl>
