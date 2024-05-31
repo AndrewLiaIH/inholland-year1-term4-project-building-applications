@@ -5,15 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d"
              d:DesignWidth="1600" d:DesignHeight="800">
-
-    <UserControl.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Resources\loginPageImages.xaml"/>
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </UserControl.Resources>
-
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -61,7 +53,7 @@
                         <Button Content="CLEAR" Style="{StaticResource LoginNumPadbuttonStyle}" Click="NumPadClear_Click"/>
                         <Button Content="0" Style="{StaticResource LoginNumPadbuttonStyle}" Tag="0" Click="NumpadNumber_Click"/>
                         <Button Style="{StaticResource LoginNumPadbuttonStyle}" Click="NumPadBackSpace_Click">
-                            <ContentControl Content="{StaticResource backSpaceSign}" Height="36" Width="36"/>
+                            <ContentControl Content="{StaticResource deleteIcon}" Height="36" Width="36"/>
                         </Button>
                     </StackPanel>
                 </StackPanel>
