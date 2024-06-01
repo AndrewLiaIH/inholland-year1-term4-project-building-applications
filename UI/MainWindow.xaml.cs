@@ -28,21 +28,48 @@ namespace UI
         private void UserControlLoginView_LoginSuccessful(object sender, RoutedEventArgs e)
         {
             UpdateCurrentView(userControlLoginView.LoggedInEmployee);
+
+            userControlKitchenView.SetLoggedInEmployee(userControlLoginView.LoggedInEmployee);
+            userControlKitchenView.userControlHeader.Logout += UserControlHeader_Logout;
         }
 
         public void UpdateCurrentView(Employee currentEmployee)
         {
             if (visibilityMap.TryGetValue(currentEmployee.Type, out UserControl currentView))
             {
-                foreach (KeyValuePair<EmployeeType, UserControl> visibility in visibilityMap)
-                    visibility.Value.Visibility = Visibility.Hidden;
-
-                currentView.Visibility = Visibility.Visible;
+                HideAllViews();
+                ShowView(currentView);
             }
             else
             {
                 throw new Exception(WindowViewError);
             }
+        }
+
+        private void UserControlHeader_Logout(object sender, EventArgs e)
+        {
+            Logout();
+        }
+
+        private void Logout()
+        {
+            HideAllViews();
+            ShowView(userControlLoginView);
+            //userControlLoginView.Refresh();
+
+            // Unsubscribe from logout event to avoid memory leaks
+            userControlKitchenView.userControlHeader.Logout -= UserControlHeader_Logout;
+        }
+
+        private void HideAllViews()
+        {
+            foreach (KeyValuePair<EmployeeType, UserControl> visibility in visibilityMap)
+                visibility.Value.Visibility = Visibility.Collapsed;
+        }
+
+        private void ShowView(UserControl view)
+        {
+            view.Visibility = Visibility.Visible;
         }
     }
 }

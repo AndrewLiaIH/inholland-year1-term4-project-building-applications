@@ -68,10 +68,10 @@
             </Grid.ColumnDefinitions>
 
             <ContentControl Grid.Column="0" Content="{StaticResource userIcon}" Height="24" Width="24" Margin="0" />
-            <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="User Name" Margin="12 0 0 0" />
+            <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="{Binding LoggedInEmployee}" Margin="12 0 0 0" />
         </Grid>
-        
-        <ContentControl Grid.Row="0" Grid.Column="7" Content="{StaticResource exitIcon}" Height="32" Width="32" Margin="50 24 24 24" />
+
+        <Button Grid.Row="0" Grid.Column="7" Content="{StaticResource exitIcon}" Click="LogoutButton_Click" Height="32" Width="32" Margin="50 24 24 24" BorderThickness="0" BorderBrush="Transparent" Background="Transparent" />
 
         <Rectangle Grid.Row="1" Grid.ColumnSpan="8" Fill="{StaticResource Color4}" />
         
