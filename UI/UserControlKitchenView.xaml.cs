@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using Model;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace UI
@@ -25,6 +26,11 @@ namespace UI
             userControlHeader.SelectedFolderChanged += UserControlHeader_SelectedFolderChanged;
             userControlHeader.CounterWaiting.Visibility = Visibility.Visible;
             userControlHeader.CounterPreparing.Visibility = Visibility.Visible;
+        }
+
+        public void SetLoggedInEmployee(Employee employee)
+        {
+            userControlHeader.LoggedInEmployee = employee;
         }
 
         private void UserControlHeader_SelectedFolderChanged(object sender, RoutedEventArgs e)
