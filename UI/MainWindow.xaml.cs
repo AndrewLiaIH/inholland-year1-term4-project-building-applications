@@ -11,6 +11,7 @@ namespace UI
     {
         private const string WindowViewError = "An error occurred while displaying a window.";
         private Dictionary<EmployeeType, UserControl> visibilityMap;
+        private UserControl currentView;
 
         public MainWindow()
         {
@@ -29,8 +30,16 @@ namespace UI
         {
             UpdateCurrentView(userControlLoginView.LoggedInEmployee);
 
-            userControlKitchenView.SetLoggedInEmployee(userControlLoginView.LoggedInEmployee);
-            userControlKitchenView.userControlHeader.Logout += UserControlHeader_Logout;
+            if (currentView == userControlKitchenView)
+            {
+                userControlKitchenView.SetLoggedInEmployee(userControlLoginView.LoggedInEmployee);
+                userControlKitchenView.userControlHeader.Logout += UserControlHeader_Logout;
+            }
+            else if (currentView == userControlTableView)
+            {
+                userControlTableView.SetLoggedInEmployee(userControlLoginView.LoggedInEmployee);
+                userControlTableView.userControlHeader.Logout += UserControlHeader_Logout;
+            }
         }
 
         public void UpdateCurrentView(Employee currentEmployee)
@@ -39,6 +48,7 @@ namespace UI
             {
                 HideAllViews();
                 ShowView(currentView);
+                this.currentView = currentView;
             }
             else
             {
