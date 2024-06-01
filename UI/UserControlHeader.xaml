@@ -17,9 +17,10 @@
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
         
-        <Rectangle Grid.Row="0" Grid.ColumnSpan="7" Fill="{StaticResource Color5}" />
+        <Rectangle Grid.Row="0" Grid.ColumnSpan="8" Fill="{StaticResource Color5}" />
         
         <ListBox x:Name="FoldersListBox" Grid.Row="0" Grid.Column="0" Margin="24 40 0 -1" Background="Transparent" BorderThickness="0" BorderBrush="Transparent" ItemsSource="{Binding Folders}" SelectionChanged="FoldersListBox_SelectionChanged" ItemContainerStyle="{StaticResource FolderItemStyle}">
             <ListBox.ItemsPanel>
@@ -55,11 +56,12 @@
             <TextBlock Grid.Row="1" Text="Preparing" Margin="0 4 0 0" />
         </Grid>
         
-        <ContentControl Grid.Row="0" Grid.ColumnSpan="7" HorizontalAlignment="Center" VerticalAlignment="Center" Content="{StaticResource logo}" Height="64" />
+        <ContentControl Grid.Row="0" Grid.ColumnSpan="8" HorizontalAlignment="Center" VerticalAlignment="Center" Content="{StaticResource logo}" Height="64" />
 
-        <TextBlock Grid.Row="0" Grid.Column="4" VerticalAlignment="Center" Text="Current Date/Time" Margin="0 0 50 0" />
-        
-        <Grid Grid.Row="0" Grid.Column="5" VerticalAlignment="Center" Margin="0">
+        <TextBlock x:Name="CurrentDateTextBlock" Grid.Row="0" Grid.Column="4" VerticalAlignment="Center" Margin="0 0 16 0" />
+        <TextBlock x:Name="CurrentTimeTextBlock" Grid.Row="0" Grid.Column="5" VerticalAlignment="Center" Margin="0 0 50 0" />
+
+        <Grid Grid.Row="0" Grid.Column="6" VerticalAlignment="Center" Margin="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
@@ -69,9 +71,9 @@
             <TextBlock Grid.Column="1" VerticalAlignment="Center" Text="User Name" Margin="12 0 0 0" />
         </Grid>
         
-        <ContentControl Grid.Row="0" Grid.Column="6" Content="{StaticResource exitIcon}" Height="32" Width="32" Margin="50 24 24 24" />
+        <ContentControl Grid.Row="0" Grid.Column="7" Content="{StaticResource exitIcon}" Height="32" Width="32" Margin="50 24 24 24" />
 
-        <Rectangle Grid.Row="1" Grid.ColumnSpan="7" Fill="{StaticResource Color4}" />
+        <Rectangle Grid.Row="1" Grid.ColumnSpan="8" Fill="{StaticResource Color4}" />
         
     </Grid>
 </UserControl>
