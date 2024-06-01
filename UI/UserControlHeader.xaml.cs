@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Threading;
 
 namespace UI
 {
@@ -26,12 +27,38 @@ namespace UI
             set { SetValue(SelectedFolderProperty, value); }
         }
 
+        private DispatcherTimer timer;
+
         public event RoutedEventHandler SelectedFolderChanged;
 
         public UserControlHeader()
         {
             InitializeComponent();
+            InitializeTimer();
             DataContext = this;
+        }
+
+        private void InitializeTimer()
+        {
+            timer = new DispatcherTimer
+            {
+                Interval = TimeSpan.FromSeconds(1)
+            };
+            timer.Tick += Timer_Tick;
+            timer.Start();
+
+            UpdateDateTime();
+        }
+
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+            UpdateDateTime();
+        }
+
+        private void UpdateDateTime()
+        {
+            CurrentDateTextBlock.Text = DateTime.Now.ToString("ddd, dd MMMM yyyy");
+            CurrentTimeTextBlock.Text = DateTime.Now.ToString("hh:mm:ss");
         }
 
         private static void OnSelectedFolderChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
