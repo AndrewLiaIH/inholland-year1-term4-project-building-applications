@@ -15,8 +15,8 @@ namespace UI
         public Employee LoggedInEmployee { get; private set; }
         private TextBox activeTextBox;
 
-        private const string EmptyBoxExceptionMessage = "Please fill in all fields";
-        private const string WrongLoginOrPasswordMessage = "The user id or password is incorrect";
+        private const string EmptyBoxExceptionMessage = "Please, fill in all fields.";
+        private const string WrongLoginOrPasswordMessage = "Wrong password or ID. Please, try again.";
 
         public static readonly RoutedEvent LoginEvent = EventManager.RegisterRoutedEvent(
             "LoginSuccessful", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(UserControlLoginView));
@@ -39,6 +39,14 @@ namespace UI
             activeTextBox.IsReadOnly = true;
         }
 
+        internal void Refresh()
+        {
+            ClearTextBoxes();
+            SetTextBoxToNormal();
+            SetCurrentTextBox(LoginTextBox);
+            LoggedInEmployee = null;
+        }
+
         /// <summary>
         /// Login methods
         /// </summary>
@@ -54,7 +62,6 @@ namespace UI
         {
             try
             {
-                activeTextBox = null;
                 ValidateLogin();
             }
             catch (Exception ex)
@@ -143,7 +150,12 @@ namespace UI
         /// </summary>
         private void LoginTextBox_Focused(object sender, RoutedEventArgs e)
         {
-            activeTextBox = sender as TextBox;
+            SetCurrentTextBox(sender as TextBox);
+        }
+
+        private void SetCurrentTextBox(TextBox currentTextBox)
+        {
+            activeTextBox = currentTextBox;
             activeTextBox.IsReadOnly = true;
 
             foreach (TextBox textBox in LoginStackPanel.Children.OfType<TextBox>())

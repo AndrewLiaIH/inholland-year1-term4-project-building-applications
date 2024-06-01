@@ -55,7 +55,7 @@ namespace UI
         {
             HideAllViews();
             ShowView(userControlLoginView);
-            //userControlLoginView.Refresh();
+            userControlLoginView.Refresh();
 
             // Unsubscribe from logout event to avoid memory leaks
             userControlKitchenView.userControlHeader.Logout -= UserControlHeader_Logout;
