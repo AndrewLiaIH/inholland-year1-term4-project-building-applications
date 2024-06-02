@@ -27,23 +27,16 @@
     <!-- Global TextBlock Style -->
     <Style TargetType="TextBlock">
         <Setter Property="FontFamily" Value="Noto Sans"/>
-        <Setter Property="FontSize" Value="16"/>
-        <Setter Property="Foreground" Value="{StaticResource TextDark}"/>
     </Style>
 
     <!-- Global TextBox Style -->
     <Style TargetType="TextBox">
         <Setter Property="FontFamily" Value="Noto Sans"/>
-        <Setter Property="FontSize" Value="16"/>
-        <Setter Property="Foreground" Value="{StaticResource TextDark}"/>
-        <Setter Property="Padding" Value="8"/>
     </Style>
 
     <!-- Global Label Style -->
     <Style TargetType="Label">
         <Setter Property="FontFamily" Value="Noto Sans"/>
-        <Setter Property="FontSize" Value="16"/>
-        <Setter Property="Foreground" Value="{StaticResource TextDark}"/>
     </Style>
 
 
@@ -61,14 +54,14 @@
     <!--HEADER-->
 
     <!--Folders-->
-    <Style TargetType="ListBoxItem" x:Key="FolderItemStyle">
+    <Style x:Key="FolderItemStyle" TargetType="ListBoxItem">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ListBoxItem">
                     <Border x:Name="Border" CornerRadius="5 5 0 0" BorderThickness="1" BorderBrush="{TemplateBinding BorderBrush}" Margin="0 0 2 0">
                         <Grid>
                             <Rectangle x:Name="BackgroundRectangle" Width="160" Height="40" Fill="{TemplateBinding Background}" />
-                            <TextBlock x:Name="TextBlock" Text="{Binding Name}" TextAlignment="Center" VerticalAlignment="Center" Foreground="{TemplateBinding Foreground}" />
+                            <TextBlock x:Name="TextBlock" Text="{Binding Name}" FontSize="16" TextAlignment="Center" VerticalAlignment="Center" Foreground="{TemplateBinding Foreground}" />
                             <Line x:Name="Separator" X1="158" Y1="12" X2="158" Y2="28" Stroke="{TemplateBinding Foreground}" StrokeThickness="1" />
                         </Grid>
                     </Border>
@@ -96,6 +89,31 @@
                             </Setter>
                         </DataTrigger>
                     </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="FolderListBoxStyle" TargetType="ListBox">
+        <Setter Property="Margin" Value="24 40 0 -1"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="BorderBrush" Value="Transparent"/>
+    </Style>
+
+    <Style x:Key="ExitButtonStyle" TargetType="Button">
+        <Setter Property="Height" Value="32"/>
+        <Setter Property="Width" Value="32"/>
+        <Setter Property="Margin" Value="50 24 24 24"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="BorderBrush" Value="Transparent"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Grid Background="{TemplateBinding Background}">
+                        <ContentPresenter />
+                    </Grid>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
@@ -214,6 +232,7 @@
         </Setter>
         <Setter Property="Background" Value="{StaticResource Color2}"/>
         <Setter Property="Foreground" Value="{StaticResource White}"/>
+        <Setter Property="BorderBrush" Value="Transparent"/>
         <Setter Property="FontSize" Value="16"/>
         <Setter Property="Width" Value="110"/>
         <Setter Property="Height" Value="40"/>
