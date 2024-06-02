@@ -45,6 +45,7 @@ namespace UI
             SetTextBoxToNormal();
             SetCurrentTextBox(LoginTextBox);
             LoggedInEmployee = null;
+            LoginErrorMessage.Text = string.Empty;
         }
 
         /// <summary>
