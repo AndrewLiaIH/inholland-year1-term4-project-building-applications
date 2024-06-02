@@ -45,6 +45,7 @@ namespace UI
             SetTextBoxToNormal();
             SetCurrentTextBox(LoginTextBox);
             LoggedInEmployee = null;
+            LoginErrorMessage.Text = string.Empty;
         }
 
         /// <summary>
@@ -68,6 +69,7 @@ namespace UI
             {
                 SetTextBoxesToError();
                 LoginErrorMessage.Text = ex.Message;
+                activeTextBox = null;
             }
         }
 
