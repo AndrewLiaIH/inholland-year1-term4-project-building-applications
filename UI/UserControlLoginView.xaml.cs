@@ -68,6 +68,7 @@ namespace UI
             {
                 SetTextBoxesToError();
                 LoginErrorMessage.Text = ex.Message;
+                activeTextBox = null;
             }
         }
 
