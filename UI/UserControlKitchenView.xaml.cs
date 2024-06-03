@@ -7,9 +7,10 @@ namespace UI
     /// <summary>
     /// Interaction logic for UserControlKitchenView.xaml
     /// </summary>
-    public partial class UserControlKitchenView : UserControl
+    public partial class UserControlKitchenView : UserControl, ILoggedInEmployeeHandler
     {
         public List<Folder> FoldersKitchen;
+        public UserControlHeader UserControlHeader => userControlHeader;
 
         public UserControlKitchenView()
         {

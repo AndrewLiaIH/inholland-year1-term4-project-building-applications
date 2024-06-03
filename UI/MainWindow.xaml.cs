@@ -30,15 +30,10 @@ namespace UI
         {
             UpdateCurrentView(userControlLoginView.LoggedInEmployee);
 
-            if (currentView == userControlKitchenView)
+            if (currentView is ILoggedInEmployeeHandler employeeHandler)
             {
-                userControlKitchenView.SetLoggedInEmployee(userControlLoginView.LoggedInEmployee);
-                userControlKitchenView.userControlHeader.Logout += UserControlHeader_Logout;
-            }
-            else if (currentView == userControlTableView)
-            {
-                userControlTableView.SetLoggedInEmployee(userControlLoginView.LoggedInEmployee);
-                userControlTableView.userControlHeader.Logout += UserControlHeader_Logout;
+                employeeHandler.SetLoggedInEmployee(userControlLoginView.LoggedInEmployee);
+                employeeHandler.UserControlHeader.Logout += UserControlHeader_Logout;
             }
         }
 

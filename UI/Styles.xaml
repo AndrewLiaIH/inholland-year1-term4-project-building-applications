@@ -327,8 +327,9 @@
                     <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding ServingNumber, StringFormat=#{0:D2}}" Margin="24 16 0 0" Foreground="{StaticResource White}" FontSize="24" />
                     <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding OrderStatus}" VerticalAlignment="Bottom" HorizontalAlignment="Center" Foreground="{StaticResource White}" FontSize="20" />
                     <TextBlock Grid.Row="0" Grid.Column="2" Text="{Binding Table.TableNumber, StringFormat=Table {0}}" Foreground="{StaticResource White}" FontSize="16" VerticalAlignment="Bottom" Margin="0 0 16 0" />
-                    <TextBlock Grid.Row="1" Grid.Column="0" Text="{Binding OrderItems[0].PlacementTime, StringFormat=Placed at: {0:HH:mm}}" />
-                    <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding OrderItems[0].PlacementTime, StringFormat=HH:mm}" />
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="{Binding OrderItems[0].PlacementTime, StringFormat=Placed at: {0:HH:mm}}" Foreground="{StaticResource White}" Margin="16 0 0 0" FontSize="16" VerticalAlignment="Bottom" />
+                    <ContentControl Content="" />
+                    <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding OrderItems[0].PlacementTime, StringFormat=HH:mm}" Foreground="{StaticResource White}" />
                 </Grid>
                 <ItemsControl Padding="16" ItemsSource="{Binding OrderItems}" ItemTemplate="{StaticResource OrderItemTemplate}" />
             </StackPanel>
