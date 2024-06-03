@@ -2,7 +2,6 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace UI
 {
@@ -76,7 +75,21 @@ namespace UI
         private static void OnSelectedFolderChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             UserControlHeader control = (UserControlHeader)d;
-            control.SelectedFolderChanged?.Invoke(control, new RoutedEventArgs());
+            control.OnSelectedFolderChanged();
+        }
+
+        private void OnSelectedFolderChanged()
+        {
+            SelectedFolderChanged?.Invoke(this, new RoutedEventArgs());
+
+            if (SelectedFolder != null)
+            {
+                foreach (Folder folder in Folders)
+                {
+                    folder.UserControl.Visibility = folder == SelectedFolder ? Visibility.Visible : Visibility.Hidden;
+                    folder.IsActive = folder == SelectedFolder;
+                }
+            }
         }
 
         private void FoldersListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)

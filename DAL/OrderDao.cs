@@ -1,14 +1,14 @@
-﻿using Microsoft.Data.SqlClient;
-using Model;
+﻿using Model;
 using System.Data;
 
 namespace DAL
 {
     public class OrderDao : BaseDao
     {
-        private const string QueryGetAllOrders = $"SELECT {ColumnOrderId}, {ColumnTableId}, {ColumnPlacedById}, {ColumnOrderNumber}, {ColumnServingNumber}, {ColumnFinished}, {ColumnTotalPrice} FROM order";
+        private const string QueryGetAllOrders = $"SELECT {ColumnOrderId}, {ColumnTableId}, {ColumnPlacedById}, {ColumnOrderNumber}, {ColumnServingNumber}, {ColumnFinished}, {ColumnTotalPrice} FROM [order]";
         private const string QueryGetOrderById = $"{QueryGetAllOrders} WHERE {ColumnOrderId} = {ParameterNameOrderId}";
-        private const string QueryGetAllRunningOrders = $"SELECT {ColumnOrderId}, {ColumnTableId}, {ColumnPlacedById}, {ColumnOrderNumber}, {ColumnServingNumber}, {ColumnFinished}, {ColumnTotalPrice} FROM order WHERE {ColumnFinished} = 0";
+        private const string QueryGetAllRunningOrders = $"SELECT {ColumnOrderId}, {ColumnTableId}, {ColumnPlacedById}, {ColumnOrderNumber}, {ColumnServingNumber}, {ColumnFinished}, {ColumnTotalPrice} FROM [order] WHERE {ColumnFinished} = 0";
+        private const string QueryGetAlFinishedOrders = $"SELECT {ColumnOrderId}, {ColumnTableId}, {ColumnPlacedById}, {ColumnOrderNumber}, {ColumnServingNumber}, {ColumnFinished}, {ColumnTotalPrice} FROM [order] WHERE {ColumnFinished} = 1";
 
         private const string ColumnOrderId = "order_id";
         private const string ColumnTableId = "table_number";
@@ -22,12 +22,18 @@ namespace DAL
 
         private TableDao tableDao = new();
         private EmployeeDao employeeDao = new();
+        private OrderItemDao orderItemDao = new();
 
         public List<Order> GetAllOrders()
         {
-            SqlParameter[] sqlParameters = Array.Empty<SqlParameter>();
-            DataTable dataTable = ExecuteSelectQuery(QueryGetAllOrders, sqlParameters);
-            return ReadTable(dataTable, ReadRow);
+            List<Order> orders = GetAll(QueryGetAllOrders, ReadRow);
+
+            foreach (Order order in orders)
+            {
+                GetAndSetAllItemsForOrder(order);
+            }
+
+            return orders;
         }
 
         public Order GetOrderById(int orderId)
@@ -37,14 +43,41 @@ namespace DAL
                 { ParameterNameOrderId, orderId }
             };
 
-            return GetById(QueryGetOrderById, ReadRow, parameters);
+            Order order = GetByIntParameters(QueryGetOrderById, ReadRow, parameters);
+
+            GetAndSetAllItemsForOrder(order);
+
+            return order;
         }
 
         public List<Order> GetAllRunningOrders()
         {
-            SqlParameter[] sqlParameters = Array.Empty<SqlParameter>();
-            DataTable dataTable = ExecuteSelectQuery(QueryGetAllRunningOrders, sqlParameters);
-            return ReadTable(dataTable, ReadRow);
+            List<Order> orders = GetAll(QueryGetAllRunningOrders, ReadRow);
+
+            foreach (Order order in orders)
+            {
+                GetAndSetAllItemsForOrder(order);
+            }
+
+            return orders;
+        }
+
+        public List<Order> GetAllFinishedOrders()
+        {
+            List<Order> orders = GetAll(QueryGetAlFinishedOrders, ReadRow);
+
+            foreach (Order order in orders)
+            {
+                GetAndSetAllItemsForOrder(order);
+            }
+
+            return orders;
+        }
+
+        private void GetAndSetAllItemsForOrder(Order order)
+        {
+            List<OrderItem> items = orderItemDao.GetAllItemsForOrder(order.DatabaseId);
+            order.SetOrderItems(items);
         }
 
         private Order ReadRow(DataRow dr)

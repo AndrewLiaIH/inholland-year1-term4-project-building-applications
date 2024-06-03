@@ -13,9 +13,9 @@ namespace Service
             return orderItemDao.GetAllOrderItems();
         }
 
-        public OrderItem GetOrderItemById(int orderId, int itemId)
+        public OrderItem GetOrderItemById(int orderId)
         {
-            return orderItemDao.GetOrderItemById(orderId, itemId);
+            return orderItemDao.GetOrderItemById(orderId);
         }
     }
 }

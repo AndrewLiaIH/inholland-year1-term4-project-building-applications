@@ -9,7 +9,21 @@
         public int? ServingNumber { get; private set; }
         public bool Finished { get; private set; }
         public decimal TotalPrice { get; private set; }
-        public List<OrderItem> orderItems { get; private set; }
+        public List<OrderItem> OrderItems { get; private set; }
+        private Status? orderStatus;
+        public Status? OrderStatus
+        {
+            get
+            {
+                orderStatus = GetOrderStatus();
+                return orderStatus;
+            }
+
+            set
+            {
+                orderStatus = value;
+            }
+        }
 
         public Order(int databaseId, Table table, Employee placedBy, int orderNumber, int? servingNumber, bool finished, decimal totalPrice)
         {
@@ -20,7 +34,7 @@
             ServingNumber = servingNumber;
             Finished = finished;
             TotalPrice = totalPrice;
-            orderItems = new();
+            OrderItems = new();
         }
 
         public override string ToString()
@@ -28,17 +42,41 @@
             return $"#{OrderNumber}: ${TotalPrice}";
         }
 
-        public void AddOrderItem(OrderItem newItem) 
+        public void AddOrderItem(OrderItem item) 
         {
-            if (orderItems.Contains(newItem))
-                foreach(OrderItem item in orderItems) 
-                    if(newItem.Item.ItemId == item.Item.ItemId && newItem.Comment == item.Comment)
-                    {
-                        item.IncreaseQuantity();
-                        return;
-                    }
+            if (OrderItems.Contains(item))
+                item.IncreaseQuantity();
+            else
+                OrderItems.Add(item);
+        }
 
-            orderItems.Add(newItem);
+        public void SetOrderItems(List<OrderItem> items)
+        {
+            OrderItems = items;
+        }
+
+        private Status? GetOrderStatus()
+        {
+            Status? status = null;
+            bool isNotDone = false;
+
+            foreach (OrderItem item in OrderItems)
+            {
+                if (item.ItemStatus != Status.Done)
+                    isNotDone = true;
+
+                if (status == null)
+                    status = item.ItemStatus;
+                else if (item.ItemStatus == Status.Preparing)
+                    status = item.ItemStatus;
+                else if (item.ItemStatus == Status.Waiting && status != Status.Preparing)
+                    status = item.ItemStatus;
+            }
+
+            if (!isNotDone)
+                status = Status.Done;
+
+            return status;
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using Microsoft.Data.SqlClient;
-using Model;
+﻿using Model;
 using System.Data;
 
 namespace DAL
@@ -17,9 +16,7 @@ namespace DAL
 
         public List<MenuCard> GetAllMenuCards()
         {
-            SqlParameter[] sqlParameters = Array.Empty<SqlParameter>();
-            DataTable dataTable = ExecuteSelectQuery(QueryGetAllMenuCards, sqlParameters);
-            return ReadTable(dataTable, ReadRow);
+            return GetAll(QueryGetAllMenuCards, ReadRow);
         }
 
         public MenuCard GetMenuCardById(int cardId)
@@ -29,7 +26,7 @@ namespace DAL
                 { ParameterNameCardId, cardId }
             };
 
-            return GetById(QueryGetMenuCardById, ReadRow, parameters);
+            return GetByIntParameters(QueryGetMenuCardById, ReadRow, parameters);
         }
 
         private MenuCard ReadRow(DataRow dr)

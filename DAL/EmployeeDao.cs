@@ -26,9 +26,7 @@ namespace DAL
 
         public List<Employee> GetAllEmployees()
         {
-            SqlParameter[] sqlParameters = Array.Empty<SqlParameter>();
-            DataTable dataTable = ExecuteSelectQuery(QueryGetAllEmployees, sqlParameters);
-            return ReadTable(dataTable, ReadRow);
+            return GetAll(QueryGetAllEmployees, ReadRow);
         }
 
         public Employee GetEmployeeById(int employeeId)
@@ -38,7 +36,7 @@ namespace DAL
                 { ParameterNameEmployeeId, employeeId }
             };
 
-            return GetById(QueryGetAllEmployees, ReadRow, parameters);
+            return GetByIntParameters(QueryGetEmployeeById, ReadRow, parameters);
         }
 
         public Employee GetEmployeeByLoginAndPassword(int employeeLogin, string password)
@@ -50,7 +48,7 @@ namespace DAL
             };
 
             DataTable dataTable = ExecuteSelectQuery(QueryGetEmployeeByLoginAndPassword, sqlParameters);
-            return ReadTable(dataTable, ReadRow).FirstOrDefault();
+            return ReadTable(dataTable, ReadRow).First();
         }
 
         private Employee ReadRow(DataRow dr)
