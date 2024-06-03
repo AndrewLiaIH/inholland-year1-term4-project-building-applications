@@ -1,5 +1,4 @@
-﻿using Microsoft.Data.SqlClient;
-using Model;
+﻿using Model;
 using System.Data;
 
 namespace DAL
@@ -21,9 +20,7 @@ namespace DAL
 
         public List<Category> GetAllCategories()
         {
-            SqlParameter[] sqlParameters = Array.Empty<SqlParameter>();
-            DataTable dataTable = ExecuteSelectQuery(QueryGetAllCategories, sqlParameters);
-            return ReadTable(dataTable, ReadRow);
+            return GetAll(QueryGetAllCategories, ReadRow);
         }
 
         public Category GetCategoryById(int categoryId)
@@ -33,7 +30,7 @@ namespace DAL
                 { ParameterNameCategoryId, categoryId }
             };
 
-            return GetById(QueryGetCategoryById, ReadRow, parameters);
+            return GetByIntParameters(QueryGetCategoryById, ReadRow, parameters);
         }
 
         private Category ReadRow(DataRow dr)

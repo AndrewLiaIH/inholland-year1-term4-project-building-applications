@@ -1,5 +1,4 @@
-﻿using Microsoft.Data.SqlClient;
-using Model;
+﻿using Model;
 using System.Data;
 
 namespace DAL
@@ -20,9 +19,7 @@ namespace DAL
 
         public List<Table> GetAllTables()
         {
-            SqlParameter[] sqlParameters = Array.Empty<SqlParameter>();
-            DataTable dataTable = ExecuteSelectQuery(QueryGetAllTables, sqlParameters);
-            return ReadTable(dataTable, ReadRow);
+            return GetAll(QueryGetAllTables, ReadRow);
         }
 
         public Table GetTableById(int tableId)
@@ -32,7 +29,7 @@ namespace DAL
                 { ParameterNameTableId, tableId }
             };
 
-            return GetById(QueryGetTableById, ReadRow, parameters);
+            return GetByIntParameters(QueryGetTableById, ReadRow, parameters);
         }
 
         private Table ReadRow(DataRow dr)

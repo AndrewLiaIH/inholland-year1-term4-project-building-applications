@@ -101,6 +101,7 @@
         <Setter Property="BorderBrush" Value="Transparent"/>
     </Style>
 
+    <!--Exit Button-->
     <Style x:Key="ExitButtonStyle" TargetType="Button">
         <Setter Property="Height" Value="32"/>
         <Setter Property="Width" Value="32"/>
@@ -274,5 +275,64 @@
         <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="Margin" Value="0,0,0,10"/>
     </Style>
+
+
+    <!--KITCHEN VIEW-->
+
+    <!--Order Cards-->
+    <Style x:Key="OrderCardStyle" TargetType="WrapPanel">
+        <Setter Property="Margin" Value="24" />
+    </Style>
+
+    <!-- DataTemplate for MenuItem -->
+    <DataTemplate x:Key="MenuItemTemplate">
+        <Border CornerRadius="5" BorderBrush="Gray" BorderThickness="1" Padding="5" Margin="2">
+            <StackPanel>
+                <TextBlock Text="{Binding Name}" FontWeight="Bold"/>
+                <TextBlock Text="{Binding Description}" FontStyle="Italic"/>
+                <TextBlock Text="{Binding Price, StringFormat={}{0:C}}" Foreground="Green"/>
+            </StackPanel>
+        </Border>
+    </DataTemplate>
+
+    <!-- DataTemplate for OrderItem -->
+    <DataTemplate x:Key="OrderItemTemplate">
+        <Border CornerRadius="5" BorderBrush="DarkGray" BorderThickness="1" Padding="5" Margin="2">
+            <StackPanel>
+                <TextBlock Text="{Binding Item.Name}" FontWeight="Bold"/>
+                <TextBlock Text="{Binding Status}" FontStyle="Italic"/>
+                <TextBlock Text="{Binding Quantity, StringFormat=Quantity: {0}}" Foreground="Blue"/>
+                <TextBlock Text="{Binding Comment}" Foreground="Gray"/>
+                <ItemsControl ItemsSource="{Binding Item.Category.MenuItems}" ItemTemplate="{StaticResource MenuItemTemplate}" />
+            </StackPanel>
+        </Border>
+    </DataTemplate>
+
+    <!-- DataTemplate for Order -->
+    <DataTemplate x:Key="OrderCardTemplate">
+        <Border CornerRadius="5" BorderBrush="{StaticResource Color10}" BorderThickness="1" Margin="0 0 24 24">
+            <StackPanel>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <Rectangle Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="3" Fill="{StaticResource Color6}" />
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding ServingNumber, StringFormat=#{0:D2}}" Margin="24 16 0 0" Foreground="{StaticResource White}" FontSize="24" />
+                    <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding OrderStatus}" VerticalAlignment="Bottom" HorizontalAlignment="Center" Foreground="{StaticResource White}" FontSize="20" />
+                    <TextBlock Grid.Row="0" Grid.Column="2" Text="{Binding Table.TableNumber, StringFormat=Table {0}}" Foreground="{StaticResource White}" FontSize="16" VerticalAlignment="Bottom" Margin="0 0 16 0" />
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="{Binding OrderItems[0].PlacementTime, StringFormat=Placed at: {0:HH:mm}}" />
+                    <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding OrderItems[0].PlacementTime, StringFormat=HH:mm}" />
+                </Grid>
+                <ItemsControl Padding="16" ItemsSource="{Binding OrderItems}" ItemTemplate="{StaticResource OrderItemTemplate}" />
+            </StackPanel>
+        </Border>
+    </DataTemplate>
 
 </ResourceDictionary>

@@ -9,7 +9,6 @@ namespace DAL
     {
         private const string ConnectionStringName = "ChapeauDatabase";
         private const string DatabaseErrorMessage = "Database operation failed.";
-        private const int Zero = 0;
 
         private SqlConnection OpenConnection()
         {
@@ -71,7 +70,7 @@ namespace DAL
 
                             adapter.SelectCommand = command;
                             adapter.Fill(dataSet);
-                            dataTable = dataSet.Tables[Zero];
+                            dataTable = dataSet.Tables[0];
                         }
                     }
                 }
@@ -90,20 +89,31 @@ namespace DAL
             throw new Exception(DatabaseErrorMessage, ex);
         }
 
-        private SqlCommand CreateCommand(SqlConnection connection, string query, params SqlParameter[] parameters)
+        private SqlCommand CreateCommand(SqlConnection connection, string query, params SqlParameter[] sqlParameters)
         {
             SqlCommand command = new(query, connection);
-            command.Parameters.AddRange(parameters);
+            command.Parameters.AddRange(sqlParameters);
             return command;
         }
 
-        protected T GetById<T>(string query, Func<DataRow, T> readRow, Dictionary<string, int> parameters)
+        protected T GetByIntParameters<T>(string query, Func<DataRow, T> readRow, Dictionary<string, int> parameters)
+        {
+            return GetAllByIntParameters(query, readRow, parameters).First();
+        }
+
+        protected List<T> GetAllByIntParameters<T>(string query, Func<DataRow, T> readRow, Dictionary<string, int> parameters)
         {
             SqlParameter[] sqlParameters = CreateSqlParameters(parameters);
             DataTable dataTable = ExecuteSelectQuery(query, sqlParameters);
-            return ReadTable(dataTable, readRow).FirstOrDefault();
+            return ReadTable(dataTable, readRow);
         }
 
+        protected List<T> GetAll<T>(string query, Func<DataRow, T> readRow)
+        {
+            DataTable dataTable = ExecuteSelectQuery(query);
+            return ReadTable(dataTable, readRow);
+        }
+        
         private SqlParameter[] CreateSqlParameters(Dictionary<string, int> parameters)
         {
             return parameters.Select(p => new SqlParameter(p.Key, p.Value)).ToArray();

@@ -10,7 +10,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <ui:UserControlHeader Grid.Row="0" x:Name="userControlHeader" SelectedFolderChanged="UserControlHeader_SelectedFolderChanged" />
+        <ui:UserControlHeader Grid.Row="0" x:Name="userControlHeader" />
         <ui:UserControlKitchenViewRunning Grid.Row="1" x:Name="userControlKitchenViewRunning" Visibility="Collapsed" />
         <ui:UserControlKitchenViewFinished Grid.Row="1" x:Name="userControlKitchenViewFinished" Visibility="Collapsed" />
     </Grid>

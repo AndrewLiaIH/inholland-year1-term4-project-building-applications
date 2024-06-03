@@ -17,5 +17,15 @@ namespace Service
         {
             return orderDao.GetOrderById(orderId);
         }
+
+        public List<Order> GetAllRunningOrders()
+        {
+            return orderDao.GetAllRunningOrders();
+        }
+
+        public List<Order> GetAllFinishedOrders()
+        {
+            return orderDao.GetAllFinishedOrders();
+        }
     }
 }
