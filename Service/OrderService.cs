@@ -27,5 +27,15 @@ namespace Service
         {
             return orderDao.GetAllFinishedOrders();
         }
+
+        public List<OrderItem> GetAllOrderItems()
+        {
+            return orderDao.GetAllOrderItems();
+        }
+
+        public OrderItem GetOrderItemById(int orderId)
+        {
+            return orderDao.GetOrderItemById(orderId);
+        }
     }
 }

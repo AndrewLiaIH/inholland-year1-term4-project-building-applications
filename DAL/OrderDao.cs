@@ -5,10 +5,11 @@ namespace DAL
 {
     public class OrderDao : BaseDao
     {
+        // Order
         private const string QueryGetAllOrders = $"SELECT {ColumnOrderId}, {ColumnTableId}, {ColumnPlacedById}, {ColumnOrderNumber}, {ColumnServingNumber}, {ColumnFinished}, {ColumnTotalPrice} FROM [order]";
         private const string QueryGetOrderById = $"{QueryGetAllOrders} WHERE {ColumnOrderId} = {ParameterNameOrderId}";
-        private const string QueryGetAllRunningOrders = $"SELECT {ColumnOrderId}, {ColumnTableId}, {ColumnPlacedById}, {ColumnOrderNumber}, {ColumnServingNumber}, {ColumnFinished}, {ColumnTotalPrice} FROM [order] WHERE {ColumnFinished} = 0";
-        private const string QueryGetAlFinishedOrders = $"SELECT {ColumnOrderId}, {ColumnTableId}, {ColumnPlacedById}, {ColumnOrderNumber}, {ColumnServingNumber}, {ColumnFinished}, {ColumnTotalPrice} FROM [order] WHERE {ColumnFinished} = 1";
+        private const string QueryGetAllRunningOrders = $"{QueryGetAllOrders} WHERE {ColumnFinished} = 0";
+        private const string QueryGetAlFinishedOrders = $"{QueryGetAllOrders} WHERE {ColumnFinished} = 1";
 
         private const string ColumnOrderId = "order_id";
         private const string ColumnTableId = "table_number";
@@ -20,13 +21,30 @@ namespace DAL
 
         private const string ParameterNameOrderId = "@orderId";
 
+        // OrderItem
+        private const string QueryGetAllOrderItems = $"SELECT {ColumnOrderItemId}, {ColumnOrderItemNumber}, {ColumnItemNumber}, {ColumnPlacementTime}, {ColumnStatus}, {ColumnChangeOfStatus}, {ColumnQuantity}, {ColumnComment} FROM order_item";
+        private const string QueryGetOrderItemById = $"{QueryGetAllOrderItems} WHERE {ColumnOrderItemId} = {ParameterNameOrderItemId}";
+        private const string QueryGetAllItemsOfOrder = $"{QueryGetAllOrderItems} WHERE {ColumnOrderItemNumber} = {ParameterNameOrderNumber}";
+
+        private const string ColumnOrderItemId = "order_id";
+        private const string ColumnOrderItemNumber = "order_number";
+        private const string ColumnItemNumber = "item_number";
+        private const string ColumnPlacementTime = "placement_time";
+        private const string ColumnStatus = "status";
+        private const string ColumnChangeOfStatus = "change_of_status";
+        private const string ColumnQuantity = "quantity";
+        private const string ColumnComment = "comment";
+
+        private const string ParameterNameOrderItemId = "@orderItemId";
+        private const string ParameterNameOrderNumber = "@orderNumber";
+
         private TableDao tableDao = new();
         private EmployeeDao employeeDao = new();
-        private OrderItemDao orderItemDao = new();
+        private MenuDao menuDao = new();
 
         public List<Order> GetAllOrders()
         {
-            List<Order> orders = GetAll(QueryGetAllOrders, ReadRow);
+            List<Order> orders = GetAll(QueryGetAllOrders, ReadRowOrder);
 
             foreach (Order order in orders)
             {
@@ -43,7 +61,7 @@ namespace DAL
                 { ParameterNameOrderId, orderId }
             };
 
-            Order order = GetByIntParameters(QueryGetOrderById, ReadRow, parameters);
+            Order order = GetByIntParameters(QueryGetOrderById, ReadRowOrder, parameters);
 
             GetAndSetAllItemsForOrder(order);
 
@@ -52,7 +70,7 @@ namespace DAL
 
         public List<Order> GetAllRunningOrders()
         {
-            List<Order> orders = GetAll(QueryGetAllRunningOrders, ReadRow);
+            List<Order> orders = GetAll(QueryGetAllRunningOrders, ReadRowOrder);
 
             foreach (Order order in orders)
             {
@@ -64,7 +82,7 @@ namespace DAL
 
         public List<Order> GetAllFinishedOrders()
         {
-            List<Order> orders = GetAll(QueryGetAlFinishedOrders, ReadRow);
+            List<Order> orders = GetAll(QueryGetAlFinishedOrders, ReadRowOrder);
 
             foreach (Order order in orders)
             {
@@ -76,11 +94,36 @@ namespace DAL
 
         private void GetAndSetAllItemsForOrder(Order order)
         {
-            List<OrderItem> items = orderItemDao.GetAllItemsForOrder(order.DatabaseId);
+            List<OrderItem> items = GetAllItemsForOrder(order.DatabaseId);
             order.SetOrderItems(items);
         }
 
-        private Order ReadRow(DataRow dr)
+        public List<OrderItem> GetAllOrderItems()
+        {
+            return GetAll(QueryGetAllOrderItems, ReadRowOrderItem);
+        }
+
+        public OrderItem GetOrderItemById(int orderId)
+        {
+            Dictionary<string, int> parameters = new()
+            {
+                { ParameterNameOrderItemId, orderId }
+            };
+
+            return GetByIntParameters(QueryGetOrderItemById, ReadRowOrderItem, parameters);
+        }
+
+        private List<OrderItem> GetAllItemsForOrder(int orderNumber)
+        {
+            Dictionary<string, int> parameters = new()
+            {
+                { ParameterNameOrderNumber, orderNumber }
+            };
+
+            return GetAllByIntParameters(QueryGetAllItemsOfOrder, ReadRowOrderItem, parameters);
+        }
+
+        private Order ReadRowOrder(DataRow dr)
         {
             int id = (int)dr[ColumnOrderId];
             Table table = tableDao.GetTableById((int)dr[ColumnTableId]);
@@ -91,6 +134,19 @@ namespace DAL
             decimal totalPrice = (decimal)dr[ColumnTotalPrice];
 
             return new(id, table, employee, orderNumber, servingNumber, finished, totalPrice);
+        }
+
+        private OrderItem ReadRowOrderItem(DataRow dr)
+        {
+            int id = (int)dr[ColumnOrderItemId];
+            MenuItem menuItem = menuDao.GetMenuItemById((int)dr[ColumnItemNumber]);
+            DateTime? placementTime = dr[ColumnPlacementTime] as DateTime?;
+            Status? status = (Status)Enum.Parse(typeof(Status), (string)dr[ColumnStatus]);
+            DateTime? changeOfStatus = dr[ColumnChangeOfStatus] as DateTime?;
+            int? quantity = dr[ColumnQuantity] as int?;
+            string? comment = dr[ColumnComment] as string;
+
+            return new(id, menuItem, placementTime, status, changeOfStatus, quantity, comment);
         }
     }
 }
