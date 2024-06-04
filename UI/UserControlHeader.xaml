@@ -56,7 +56,7 @@
             <TextBlock Grid.Row="1" Text="Preparing" FontSize="16" Margin="0 4 0 0" />
         </Grid>
         
-        <ContentControl Grid.Row="0" Grid.ColumnSpan="8" HorizontalAlignment="Center" VerticalAlignment="Center" Content="{StaticResource logoHeader}" Height="64" />
+        <Image Grid.Row="0" Grid.ColumnSpan="8" HorizontalAlignment="Center" VerticalAlignment="Center" Source="{StaticResource logo}" Height="64" />
 
         <TextBlock x:Name="CurrentDateTextBlock" Grid.Row="0" Grid.Column="4" FontSize="16" VerticalAlignment="Center" Margin="0 0 16 0" />
         <TextBlock x:Name="CurrentTimeTextBlock" Grid.Row="0" Grid.Column="5" FontSize="16" VerticalAlignment="Center" Margin="0 0 50 0" />
@@ -67,11 +67,13 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
-            <ContentControl Grid.Column="0" Content="{StaticResource userIcon}" Height="24" Width="24" Margin="0" />
+            <Image Grid.Column="0" Source="{StaticResource userIcon}" Height="24" Width="24" Margin="0" />
             <TextBlock Grid.Column="1" FontSize="16" VerticalAlignment="Center" Text="{Binding LoggedInEmployee}" Margin="12 0 0 0" />
         </Grid>
 
-        <Button Grid.Row="0" Grid.Column="7" Content="{StaticResource exitIcon}" Click="LogoutButton_Click" Style="{StaticResource ExitButtonStyle}" />
+        <Button Grid.Row="0" Grid.Column="7" Click="LogoutButton_Click" Style="{StaticResource ExitButtonStyle}">
+            <Image Source="{StaticResource exitIcon}" Height="32" Width="32" />
+        </Button>
 
         <Rectangle Grid.Row="1" Grid.ColumnSpan="8" Fill="{StaticResource Color4}" />
         
