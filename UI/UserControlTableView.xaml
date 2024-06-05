@@ -12,6 +12,6 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <ui:UserControlHeader Grid.Row="0" x:Name="userControlHeader"/>
-        <ui:UserControlTableViewTables Grid.Row="1" x:Name="userControlTableViewTables" Visibility="Visible"/>
+        <ui:UserControlTableViewTables Grid.Row="1" x:Name="userControlTableViewTables" Visibility="Collapsed"/>
     </Grid>
 </UserControl>

@@ -19,10 +19,10 @@
             <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
 
-        <ItemsControl ItemsSource="{Binding Tables}" >
+        <ItemsControl ItemsSource="{Binding Tables}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <ui:UserControlTable/>
+                    <ui:UserControlTable DataContext="{Binding}"/>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
             <ItemsControl.ItemsPanel>
