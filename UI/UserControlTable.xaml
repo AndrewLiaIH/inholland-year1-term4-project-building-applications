@@ -5,43 +5,44 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:ui="clr-namespace:UI"
              mc:Ignorable="d">
-    
-    <Grid>
-        <Grid Margin="50">
-            <Border x:Name="RoundedBorder" Style="{StaticResource TableRoundedBorderStyle}">
-                <Grid Style="{StaticResource TableGridStyle}" Width="190" HorizontalAlignment="Right">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-                    <Grid Grid.Row="0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Button Grid.Column="0" x:Name="ButtonFree" Content="Free" Style="{StaticResource FreeButton}" Click="ButtonFree_Click" Margin="10,6,25,10"/>
-                        <Image x:Name="BellIcon" Grid.Row="0" Grid.Column="1" Source="{StaticResource BellIcon}" Style="{StaticResource TableBellIcon}" Width="20" Height="20" Margin="66,14,9,14" RenderTransformOrigin="-0.643,0.553"/>
-                    </Grid>
-                    <Grid Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <TextBlock Grid.Column="0" Text="Table 1" Style="{StaticResource TableNameStyle}"/>
-                    </Grid>
-                    <Grid Grid.Row="2" HorizontalAlignment="Center">
-                        <TextBlock Grid.Column="0" Padding="0,3,0,0" Text="5 Minutes"/>
-                    </Grid>
-                    <Grid Grid.Row="3">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Button x:Name="ButtonReserve" Grid.Column="0" Content="Reserve" Style="{StaticResource ButtonReserveStyle}" Click="ButtonReserve_Click"/>
-                        <Button x:Name="ButtonOrder" Grid.Column="1" Content="Order" Style="{StaticResource ButtonOrderStyle}" Click="ButtonOrder_Click"/>
-                        <Button x:Name="ButtonServed" Grid.Column="1" Content="Served" Style="{StaticResource ButtonServedStyle}" Click="ButtonServed_Click"/>
-                        <Button x:Name="ButtonEditOrder" Grid.Column="0" Content="Edit Order" Style="{StaticResource ButtonEditOrderStyle}" Click="ButtonEditOrder_Click"/>
-                    </Grid>
+
+    <Grid Margin="30">
+        <Border x:Name="RoundedBorder" Style="{StaticResource TableRoundedBorderStyle}">
+            <Grid Style="{StaticResource TableGridStyle}" HorizontalAlignment="Center">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Button Grid.Column="0" x:Name="ButtonFree" Content="Free" Style="{StaticResource FreeButton}" Click="ButtonFree_Click" Margin="9,0,31,0"/>
+                    <Image x:Name="BellIcon" Grid.Row="0" Grid.Column="1" Source="{StaticResource BellIcon}" Style="{StaticResource TableBellIcon}" Height="24" Margin="89,6,9,5"/>
                 </Grid>
-            </Border>
-        </Grid>
+                <Grid Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock Grid.Column="0" Text="Table 1" Style="{StaticResource TableNameStyle}"/>
+                </Grid>
+                <Grid Grid.Row="2" HorizontalAlignment="Center">
+                    <TextBlock Grid.Column="0" Padding="0,8,0,0" Text="5 Minutes"/>
+                </Grid>
+                <Grid Grid.Row="3" Style="{StaticResource ControlbuttonsGrid}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Button x:Name="ButtonReserve" Grid.Column="0" Content="Reserve" Style="{StaticResource ButtonReserveStyle}" Click="ButtonReserve_Click"/>
+                    <Button x:Name="ButtonOrderFreeTable" Grid.Column="1" Content="Order" Style="{StaticResource ButtonOrderStyle}" Click="ButtonOrder_Click"/>
+                    <Button x:Name="ButtonServed" Grid.Column="1" Content="Served" Style="{StaticResource ButtonServedStyle}" Click="ButtonServed_Click"/>
+                    <Button x:Name="ButtonEditOrder" Grid.Column="0" Content="Edit Order" Style="{StaticResource ButtonEditOrderStyle}" Click="ButtonEditOrder_Click"/>
+                </Grid>
+                <Grid Grid.Row="3" Style="{StaticResource OrderButtonGrid}">
+                    <Button x:Name="ButtonOrderReservedTable" Grid.Column="1" Content="Order" Style="{StaticResource ButtonOrderStyle}" Click="ButtonOrder_Click"/>
+                </Grid>
+            </Grid>
+        </Border>
     </Grid>
 </UserControl>
