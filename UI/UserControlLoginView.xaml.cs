@@ -61,34 +61,31 @@ namespace UI
 
         private void Login()
         {
-            try
-            {
-                ValidateLogin();
-            }
-            catch (Exception ex)
-            {
-                SetTextBoxesToError();
-                LoginErrorMessage.Text = ex.Message;
-                activeTextBox = null;
-            }
+            ValidateLogin();
         }
 
         private void ValidateLogin()
         {
-            if (!InputEmptyValidation())
+            if (InputEmptyValidation())
+            {
+                LoginUnsuccessful(EmptyBoxExceptionMessage);
+            }
+            else
             {
                 LoggedInEmployee = GetEmployee();
 
                 if (LoggedInEmployee == null)
                 {
-                    ClearTextBoxes();
-                    throw new Exception(WrongLoginOrPasswordMessage);
+                    LoginUnsuccessful(WrongLoginOrPasswordMessage);
                 }
             }
-            else
-            {
-                throw new Exception(EmptyBoxExceptionMessage);
-            }
+        }
+
+        private void LoginUnsuccessful(string errorMessage)
+        {
+            SetTextBoxesToError();
+            LoginErrorMessage.Text = errorMessage;
+            activeTextBox = null;
         }
 
         private bool InputEmptyValidation()
