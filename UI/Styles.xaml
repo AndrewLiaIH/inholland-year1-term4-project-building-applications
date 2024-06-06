@@ -214,6 +214,7 @@
         </Style.Triggers>
     </Style>
 
+    <!--login textBlock-->
     <Style x:Key="LoginTextBlockStyle" TargetType="TextBlock">
         <Setter Property="Width" Value="290"/>
         <Setter Property="FontSize" Value="16"/>
@@ -277,7 +278,7 @@
         <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="Margin" Value="0,0,0,10"/>
     </Style>
-    
+
     <!--RESTAURANT OVERVEIW-->
     
     <!--panels styles-->
@@ -302,11 +303,13 @@
         </Style.Triggers>
     </Style>
 
+    <!--table grid-->
     <Style x:Key="TableGridStyle" TargetType="Grid">
         <Setter Property="Width" Value="240"/>
         <Setter Property="Height" Value="240"/>
     </Style>
 
+    <!--table bell icon element-->
     <Style x:Key="TableBellIcon" TargetType="Image">
         <Style.Triggers>
             <DataTrigger Binding="{Binding TableState}" Value="Free">
@@ -347,6 +350,7 @@
         <Style.Triggers>
             <Trigger Property="IsPressed" Value="True">
                 <Setter Property="Background" Value="{StaticResource Color11}"/>
+                <Setter Property="Foreground" Value="{StaticResource TextDark}"/>
             </Trigger>
             <DataTrigger Binding="{Binding TableState}" Value="Free">
                 <Setter Property="Visibility" Value="Hidden"/>
@@ -363,12 +367,6 @@
         </Style.Triggers>
     </Style>
 
-    <Style x:Key="TableNameStyle" TargetType="TextBlock">
-        <Setter Property="FontSize" Value="24"/>
-        <Setter Property="Foreground" Value="{StaticResource TextDark}"/>
-        <Setter Property="Padding" Value="0,40,0,0"/>
-    </Style>
-    
     <!--table control buttons-->
     <Style x:Key="TableControlButtonsStyle" TargetType="Button">
         <Setter Property="Template">
@@ -392,6 +390,7 @@
         <Style.Triggers>
             <Trigger Property="IsPressed" Value="True">
                 <Setter Property="Background" Value="{StaticResource Color11}"/>
+                <Setter Property="Foreground" Value="{StaticResource TextDark}"/>
             </Trigger>
         </Style.Triggers>
     </Style>
@@ -421,40 +420,6 @@
             </DataTrigger>
             <DataTrigger Binding="{Binding TableState}" Value="Reserved">
                 <Setter Property="Visibility" Value="Hidden"/>
-            </DataTrigger>
-            <DataTrigger Binding="{Binding TableState}" Value="Occupied">
-                <Setter Property="Visibility" Value="Hidden"/>
-            </DataTrigger>
-            <DataTrigger Binding="{Binding TableState}" Value="ReadyToServe">
-                <Setter Property="Visibility" Value="Hidden"/>
-            </DataTrigger>
-        </Style.Triggers>
-    </Style>
-
-    <Style x:Key="ControlbuttonsGrid" TargetType="Grid">
-        <Style.Triggers>
-            <DataTrigger Binding="{Binding TableState}" Value="Free">
-                <Setter Property="Visibility" Value="Visible"/>
-            </DataTrigger>
-            <DataTrigger Binding="{Binding TableState}" Value="Reserved">
-                <Setter Property="Visibility" Value="Hidden"/>
-            </DataTrigger>
-            <DataTrigger Binding="{Binding TableState}" Value="Occupied">
-                <Setter Property="Visibility" Value="Visible"/>
-            </DataTrigger>
-            <DataTrigger Binding="{Binding TableState}" Value="ReadyToServe">
-                <Setter Property="Visibility" Value="Visible"/>
-            </DataTrigger>
-        </Style.Triggers>
-    </Style>
-
-    <Style x:Key="OrderButtonGrid" TargetType="Grid">
-        <Style.Triggers>
-            <DataTrigger Binding="{Binding TableState}" Value="Free">
-                <Setter Property="Visibility" Value="Hidden"/>
-            </DataTrigger>
-            <DataTrigger Binding="{Binding TableState}" Value="Reserved">
-                <Setter Property="Visibility" Value="Visible"/>
             </DataTrigger>
             <DataTrigger Binding="{Binding TableState}" Value="Occupied">
                 <Setter Property="Visibility" Value="Hidden"/>
@@ -499,6 +464,48 @@
                 <Setter Property="Visibility" Value="Visible"/>
             </DataTrigger>
         </Style.Triggers>
+    </Style>
+
+    <!--button grids-->
+    <Style x:Key="ControlbuttonsGrid" TargetType="Grid">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding TableState}" Value="Free">
+                <Setter Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding TableState}" Value="Reserved">
+                <Setter Property="Visibility" Value="Hidden"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding TableState}" Value="Occupied">
+                <Setter Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding TableState}" Value="ReadyToServe">
+                <Setter Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="OrderButtonGrid" TargetType="Grid">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding TableState}" Value="Free">
+                <Setter Property="Visibility" Value="Hidden"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding TableState}" Value="Reserved">
+                <Setter Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding TableState}" Value="Occupied">
+                <Setter Property="Visibility" Value="Hidden"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding TableState}" Value="ReadyToServe">
+                <Setter Property="Visibility" Value="Hidden"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <!--table name textBoloc-->
+    <Style x:Key="TableNameStyle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="24"/>
+        <Setter Property="Foreground" Value="{StaticResource TextDark}"/>
+        <Setter Property="Padding" Value="0,40,0,0"/>
     </Style>
 
     <!--KITCHEN VIEW-->

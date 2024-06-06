@@ -30,7 +30,7 @@ namespace UI
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public TableProperty(Table table, int rowIndex, int columnIndex)
+        public TableProperty(Table table,  int rowIndex, int columnIndex)
         {
             Table = table;
             RowIndex = rowIndex;

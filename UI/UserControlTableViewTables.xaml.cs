@@ -11,7 +11,7 @@ namespace UI
     /// </summary>
     public partial class UserControlTableViewTables : UserControl
     {
-        public ObservableCollection<TableProperty> Tables { get; } = new ObservableCollection<TableProperty>();
+        public ObservableCollection<TableProperty> Tables { get; } = new();
 
         public UserControlTableViewTables()
         {
@@ -51,11 +51,11 @@ namespace UI
 
             for (int i = 0; i < 2; i++)
             {
-                grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+                grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
             }
             for (int j = 0; j < 5; j++)
             {
-                grid.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+                grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
             }
         }
     }
