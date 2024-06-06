@@ -11,7 +11,7 @@ namespace UI
     /// </summary>
     public partial class UserControlTableViewTables : UserControl
     {
-        public ObservableCollection<TableProperty> Tables { get; } = new();
+        public ObservableCollection<TableViewModel> Tables { get; } = new();
 
         public UserControlTableViewTables()
         {
@@ -38,7 +38,7 @@ namespace UI
                 {
                     if (tableIndex < tables.Count)
                     {
-                        Tables.Add(new TableProperty(tables[tableIndex], i, j));
+                        Tables.Add(new TableViewModel(tables[tableIndex], i, j));
                         tableIndex++;
                     }
                 }

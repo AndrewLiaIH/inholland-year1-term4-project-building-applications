@@ -3,7 +3,11 @@ using System.ComponentModel;
 
 namespace UI
 {
-    public class TableProperty : INotifyPropertyChanged
+    //Created by Orest Pokotylenko
+    /// <summary>
+    /// TableViewModel class is used to represent the table from the Model layer in the TableViewTables user control.
+    /// </summary>
+    public class TableViewModel : INotifyPropertyChanged
     {
         public Table Table { get; set; }
         public int RowIndex { get; set; }
@@ -30,7 +34,7 @@ namespace UI
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public TableProperty(Table table,  int rowIndex, int columnIndex)
+        public TableViewModel(Table table,  int rowIndex, int columnIndex)
         {
             Table = table;
             RowIndex = rowIndex;

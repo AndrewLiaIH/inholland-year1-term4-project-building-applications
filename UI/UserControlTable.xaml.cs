@@ -8,7 +8,7 @@ namespace UI
     /// </summary>
     public partial class UserControlTable : UserControl
     {
-        private TableProperty tableProperty;
+        private TableViewModel tableViewModel;
 
         public UserControlTable()
         {
@@ -17,22 +17,22 @@ namespace UI
 
         private void ButtonFree_Click(object sender, RoutedEventArgs e)
         {
-            tableProperty.TableState = "Free";
+            tableViewModel.TableState = "Free";
         }
 
         private void ButtonReserve_Click(object sender, RoutedEventArgs e)
         {
-            tableProperty.TableState = "Reserved";
+            tableViewModel.TableState = "Reserved";
         }
 
         private void ButtonOrder_Click(object sender, RoutedEventArgs e)
         {
-            tableProperty.TableState = "Occupied";
+            tableViewModel.TableState = "Occupied";
         }
 
         private void ButtonServed_Click(object sender, RoutedEventArgs e)
         {
-            tableProperty.TableState = "Occupied";
+            tableViewModel.TableState = "Occupied";
         }
 
         private void ButtonEditOrder_Click(object sender, RoutedEventArgs e)
@@ -41,7 +41,7 @@ namespace UI
 
         private void TableLoaded_Load(object sender, RoutedEventArgs e)
         {
-            tableProperty = DataContext as TableProperty;
+            tableViewModel = DataContext as TableViewModel;
         }
     }
 }
