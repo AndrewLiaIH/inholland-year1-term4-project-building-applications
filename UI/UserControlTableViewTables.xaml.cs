@@ -1,17 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using Service;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using System.Windows;
+using System.Collections.ObjectModel;
+using Model;
 
 namespace UI
 {
@@ -20,9 +11,52 @@ namespace UI
     /// </summary>
     public partial class UserControlTableViewTables : UserControl
     {
+        public ObservableCollection<TableProperty> Tables { get; } = new();
+
         public UserControlTableViewTables()
         {
             InitializeComponent();
+
+            GetAllTables();
+            DataContext = this;
+        }
+
+        private void GetAllTables()
+        {
+            TableService tableService = new();
+            List<Table> tables = tableService.GetAllTables();
+            SetTables(tables);
+        }
+
+        private void SetTables(List<Table> tables)
+        {
+            int tableIndex = 0;
+
+            for (int i = 0; i < 2; i++)
+            {
+                for (int j = 0; j < 5; j++)
+                {
+                    if (tableIndex < tables.Count)
+                    {
+                        Tables.Add(new TableProperty(tables[tableIndex], i, j));
+                        tableIndex++;
+                    }
+                }
+            }
+        }
+
+        private void ItemsControlGrid_Loaded(object sender, RoutedEventArgs e)
+        {
+            Grid grid = sender as Grid;
+
+            for (int i = 0; i < 2; i++)
+            {
+                grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
+            }
+            for (int j = 0; j < 5; j++)
+            {
+                grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
+            }
         }
     }
 }

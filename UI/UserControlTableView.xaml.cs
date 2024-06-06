@@ -1,5 +1,4 @@
 ﻿using Model;
-using System.Windows;
 using System.Windows.Controls;
 
 namespace UI
@@ -7,9 +6,10 @@ namespace UI
     /// <summary>
     /// Interaction logic for UserControlTableView.xaml
     /// </summary>
-    public partial class UserControlTableView : UserControl
+    public partial class UserControlTableView : UserControl, ILoggedInEmployeeHandler
     {
         public List<Folder> FoldersTables;
+        public UserControlHeader UserControlHeader => userControlHeader;
 
         public UserControlTableView()
         {
@@ -22,24 +22,6 @@ namespace UI
 
             userControlHeader.Folders = FoldersTables;
             userControlHeader.SelectedFolder = FoldersTables.First();
-            userControlHeader.SelectedFolderChanged += UserControlHeader_SelectedFolderChanged;
-        }
-
-        private void UserControlHeader_SelectedFolderChanged(object sender, RoutedEventArgs e)
-        {
-            Folder selectedFolder = userControlHeader.SelectedFolder;
-
-            if (selectedFolder != null)
-            {
-                foreach (Folder folder in FoldersTables)
-                {
-                    folder.UserControl.Visibility = Visibility.Hidden;
-                    folder.IsActive = false;
-                }
-
-                selectedFolder.UserControl.Visibility = Visibility.Visible;
-                selectedFolder.IsActive = true;
-            }
         }
 
         public void SetLoggedInEmployee(Employee employee)

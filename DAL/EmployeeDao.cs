@@ -48,7 +48,7 @@ namespace DAL
             };
 
             DataTable dataTable = ExecuteSelectQuery(QueryGetEmployeeByLoginAndPassword, sqlParameters);
-            return ReadTable(dataTable, ReadRow).First();
+            return ReadTable(dataTable, ReadRow).FirstOrDefault();
         }
 
         private Employee ReadRow(DataRow dr)

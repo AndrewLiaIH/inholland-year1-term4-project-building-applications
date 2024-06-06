@@ -99,7 +99,7 @@
     </Style>
 
     <Style x:Key="FolderListBoxStyle" TargetType="ListBox">
-        <Setter Property="Margin" Value="24 40 0 -1"/>
+        <Setter Property="Margin" Value="24 40 0 -4"/>
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="BorderBrush" Value="Transparent"/>
@@ -214,6 +214,7 @@
         </Style.Triggers>
     </Style>
 
+    <!--login textBlock-->
     <Style x:Key="LoginTextBlockStyle" TargetType="TextBlock">
         <Setter Property="Width" Value="290"/>
         <Setter Property="FontSize" Value="16"/>
@@ -228,8 +229,7 @@
                 <ControlTemplate TargetType="Button">
                     <Border Background="{TemplateBinding Background}" 
                         BorderBrush="{TemplateBinding BorderBrush}" 
-                        BorderThickness="{TemplateBinding BorderThickness}" 
-                        CornerRadius="5">
+                        BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="5">
                         <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     </Border>
                 </ControlTemplate>
@@ -247,7 +247,6 @@
             </Trigger>
         </Style.Triggers>
     </Style>
-
     
     <!--error styles-->
     <Style x:Key="LoginErrorMessage" TargetType="TextBlock">
@@ -280,6 +279,234 @@
         <Setter Property="Margin" Value="0,0,0,10"/>
     </Style>
 
+    <!--RESTAURANT OVERVEIW-->
+    
+    <!--panels styles-->
+    <Style x:Key="TableRoundedBorderStyle" TargetType="Border">
+        <Setter Property="Width" Value="250"/>
+        <Setter Property="Height" Value="250"/>
+        <Setter Property="CornerRadius" Value="5"/>
+        <Setter Property="Padding" Value="10"/>
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding TableState}" Value="Free">
+                <Setter Property="Background" Value="{StaticResource Color9}"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding TableState}" Value="Reserved">
+                <Setter Property="Background" Value="{StaticResource Color8}"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding TableState}" Value="Occupied">
+                <Setter Property="Background" Value="{StaticResource Color6}"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding TableState}" Value="ReadyToServe">
+                <Setter Property="Background" Value="{StaticResource Color6}"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <!--table grid-->
+    <Style x:Key="TableGridStyle" TargetType="Grid">
+        <Setter Property="Width" Value="240"/>
+        <Setter Property="Height" Value="240"/>
+    </Style>
+
+    <!--table bell icon element-->
+    <Style x:Key="TableBellIcon" TargetType="Image">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding TableState}" Value="Free">
+                <Setter Property="Visibility" Value="Hidden"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding TableState}" Value="Reserved">
+                <Setter Property="Visibility" Value="Hidden"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding TableState}" Value="Occupied">
+                <Setter Property="Visibility" Value="Hidden"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding TableState}" Value="ReadyToServe">
+                <Setter Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <!--free button-->
+    <Style x:Key="FreeButton" TargetType="Button">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border Background="{TemplateBinding Background}" CornerRadius="15">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Background" Value="{StaticResource Color9}"/>
+        <Setter Property="Foreground" Value="{StaticResource White}"/>
+        <Setter Property="Width" Value="80"/>
+        <Setter Property="Height" Value="35"/>
+        <Setter Property="Effect">
+            <Setter.Value>
+                <DropShadowEffect Color="Black" Direction="280" BlurRadius="4" ShadowDepth="4" Opacity="0.4"/>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Background" Value="{StaticResource Color11}"/>
+                <Setter Property="Foreground" Value="{StaticResource TextDark}"/>
+            </Trigger>
+            <DataTrigger Binding="{Binding TableState}" Value="Free">
+                <Setter Property="Visibility" Value="Hidden"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding TableState}" Value="Reserved">
+                <Setter Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding TableState}" Value="Occupied">
+                <Setter Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding TableState}" Value="ReadyToServe">
+                <Setter Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <!--table control buttons-->
+    <Style x:Key="TableControlButtonsStyle" TargetType="Button">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border Background="{TemplateBinding Background}" CornerRadius="5">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Background" Value="{StaticResource Color2}"/>
+        <Setter Property="Foreground" Value="{StaticResource White}"/>
+        <Setter Property="Width" Value="90"/>
+        <Setter Property="Height" Value="35"/>
+        <Setter Property="Effect">
+            <Setter.Value>
+                <DropShadowEffect Color="Black" Direction="280" BlurRadius="4" ShadowDepth="4" Opacity="0.4"/>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Background" Value="{StaticResource Color11}"/>
+                <Setter Property="Foreground" Value="{StaticResource TextDark}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="ButtonOrderStyle" TargetType="Button" BasedOn="{StaticResource TableControlButtonsStyle}">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding TableState}" Value="Free">
+                <Setter Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding TableState}" Value="Reserved">
+                <Setter Property="Visibility" Value="Visible"/>
+                <Setter Property="Width" Value="200"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding TableState}" Value="Occupied">
+                <Setter Property="Visibility" Value="Hidden"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding TableState}" Value="ReadyToServe">
+                <Setter Property="Visibility" Value="Hidden"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="ButtonReserveStyle" TargetType="Button" BasedOn="{StaticResource TableControlButtonsStyle}">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding TableState}" Value="Free">
+                <Setter Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding TableState}" Value="Reserved">
+                <Setter Property="Visibility" Value="Hidden"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding TableState}" Value="Occupied">
+                <Setter Property="Visibility" Value="Hidden"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding TableState}" Value="ReadyToServe">
+                <Setter Property="Visibility" Value="Hidden"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="ButtonEditOrderStyle" TargetType="Button" BasedOn="{StaticResource TableControlButtonsStyle}">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding TableState}" Value="Free">
+                <Setter Property="Visibility" Value="Hidden"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding TableState}" Value="Reserved">
+                <Setter Property="Visibility" Value="Hidden"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding TableState}" Value="Occupied">
+                <Setter Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding TableState}" Value="ReadyToServe">
+                <Setter Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="ButtonServedStyle" TargetType="Button" BasedOn="{StaticResource TableControlButtonsStyle}">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding TableState}" Value="Free">
+                <Setter Property="Visibility" Value="Hidden"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding TableState}" Value="Reserved">
+                <Setter Property="Visibility" Value="Hidden"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding TableState}" Value="Occupied">
+                <Setter Property="Visibility" Value="Visible"/>
+                <Setter Property="IsEnabled" Value="False"/>
+                <Setter Property="Opacity" Value="0.5"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding TableState}" Value="ReadyToServe">
+                <Setter Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <!--button grids-->
+    <Style x:Key="ControlbuttonsGrid" TargetType="Grid">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding TableState}" Value="Free">
+                <Setter Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding TableState}" Value="Reserved">
+                <Setter Property="Visibility" Value="Hidden"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding TableState}" Value="Occupied">
+                <Setter Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding TableState}" Value="ReadyToServe">
+                <Setter Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="OrderButtonGrid" TargetType="Grid">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding TableState}" Value="Free">
+                <Setter Property="Visibility" Value="Hidden"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding TableState}" Value="Reserved">
+                <Setter Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding TableState}" Value="Occupied">
+                <Setter Property="Visibility" Value="Hidden"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding TableState}" Value="ReadyToServe">
+                <Setter Property="Visibility" Value="Hidden"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <!--table name textBoloc-->
+    <Style x:Key="TableNameStyle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="24"/>
+        <Setter Property="Foreground" Value="{StaticResource TextDark}"/>
+        <Setter Property="Padding" Value="0,40,0,0"/>
+    </Style>
 
     <!--KITCHEN VIEW-->
 
