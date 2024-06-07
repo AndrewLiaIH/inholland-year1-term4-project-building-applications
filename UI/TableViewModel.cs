@@ -1,4 +1,5 @@
-﻿using Model;
+﻿using Microsoft.IdentityModel.Tokens;
+using Model;
 using System.ComponentModel;
 
 namespace UI
@@ -12,9 +13,10 @@ namespace UI
         public Table Table { get; set; }
         public int RowIndex { get; set; }
         public int ColumnIndex { get; set; }
+        public List<Order> RunningOrders { get; private set; }
 
-        private string tableState;
-        public string TableState
+        private Status tableState;
+        public Status TableState
         {
             get { return tableState; }
             set
@@ -34,16 +36,45 @@ namespace UI
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public TableViewModel(Table table,  int rowIndex, int columnIndex)
+        public TableViewModel(Table table,  int rowIndex, int columnIndex, List<Order> runningOrders)
         {
             Table = table;
             RowIndex = rowIndex;
             ColumnIndex = columnIndex;
-
-            if (table.Occupied)
-                TableState = "Occupied";
-            else
-                TableState = "Free";
+            RunningOrders = runningOrders;
+            SetTableState();
         }
+
+        private void SetTableState()
+        {
+            if (ReadyToBeServed())
+                TableState = Status.ReadyToServe;
+            else if (TableHasRunningOrder())
+                TableState = Status.Occupied;
+            else if (Table.Occupied)
+                TableState = Status.Reserved;
+            else
+                TableState = Status.Free;
+        }
+
+        private bool TableHasRunningOrder()
+        {
+            return !RunningOrders.IsNullOrEmpty();
+        }
+
+        private bool ReadyToBeServed()
+        {
+            foreach (Order order in RunningOrders)
+            {
+                foreach (OrderItem item in order.OrderItems)
+                {
+                    if (item.ItemStatus == Status.ReadyToServe)
+                        return true;
+                }
+            }
+
+            return false;
+        }
+
     }
 }

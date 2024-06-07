@@ -37,5 +37,10 @@ namespace Service
         {
             return orderDao.GetOrderItemById(orderId);
         }
+
+        public void UpdateOrderCategoryStatus(List<OrderItem> orderItems)
+        {
+            orderDao.UpdateOrderCategoryStatus(orderItems);
+        }
     }
 }

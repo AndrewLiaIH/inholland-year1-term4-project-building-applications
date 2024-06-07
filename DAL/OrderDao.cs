@@ -1,5 +1,6 @@
-﻿using Model;
+﻿using Microsoft.Data.SqlClient;
 using System.Data;
+using Model;
 
 namespace DAL
 {
@@ -25,6 +26,7 @@ namespace DAL
         private const string QueryGetAllOrderItems = $"SELECT {ColumnOrderItemId}, {ColumnOrderItemNumber}, {ColumnItemNumber}, {ColumnPlacementTime}, {ColumnStatus}, {ColumnChangeOfStatus}, {ColumnQuantity}, {ColumnComment} FROM order_item";
         private const string QueryGetOrderItemById = $"{QueryGetAllOrderItems} WHERE {ColumnOrderItemId} = {ParameterNameOrderItemId}";
         private const string QueryGetAllItemsOfOrder = $"{QueryGetAllOrderItems} WHERE {ColumnOrderItemNumber} = {ParameterNameOrderNumber}";
+        private const string QueryUpdateOrderItemStatus = $"UPDATE order_item SET {ColumnStatus} = {ParameterNameOrderItemStatus} WHERE {ColumnOrderItemId} = {ParameterNameOrderItemId}";
 
         private const string ColumnOrderItemId = "order_id";
         private const string ColumnOrderItemNumber = "order_number";
@@ -37,6 +39,7 @@ namespace DAL
 
         private const string ParameterNameOrderItemId = "@orderItemId";
         private const string ParameterNameOrderNumber = "@orderNumber";
+        private const string ParameterNameOrderItemStatus = "@orderItemStatus";
 
         private TableDao tableDao = new();
         private EmployeeDao employeeDao = new();
@@ -111,6 +114,20 @@ namespace DAL
             };
 
             return GetByIntParameters(QueryGetOrderItemById, ReadRowOrderItem, parameters);
+        }
+
+        public void UpdateOrderCategoryStatus(List<OrderItem> orderItems)
+        {
+            foreach (OrderItem orderItem in orderItems)
+            {
+                SqlParameter[] parameters = new SqlParameter[]
+                {
+                    new(ParameterNameOrderItemId, orderItem.DatabaseId),
+                    new(ParameterNameOrderItemStatus, orderItem.ItemStatus.ToString())
+                };
+
+                ExecuteEditQuery(QueryUpdateOrderItemStatus, parameters);
+            }
         }
 
         private List<OrderItem> GetAllItemsForOrder(int orderNumber)
