@@ -12,6 +12,7 @@ namespace UI
     public partial class UserControlTableViewTables : UserControl
     {
         public ObservableCollection<TableViewModel> Tables { get; } = new();
+        OrderService orderService = new();
 
         public UserControlTableViewTables()
         {
@@ -30,7 +31,6 @@ namespace UI
 
         private List<Order> GetAllRunningOrders()
         {
-            OrderService orderService = new();
             return orderService.GetAllRunningOrders();
         }
 

@@ -35,11 +35,28 @@ namespace UI
         public UserControlTable()
         {
             InitializeComponent();
+
+            orderService.RunningOrdersChanged += OnRunningOrdersChanged;
+            tableService.TableOccupiedChanged += OnTableOccupiedChanged;
+        }
+
+        //Event handlers
+        private void TableLoaded_Load(object sender, RoutedEventArgs e)
+        {
+            tableViewModel = DataContext as TableViewModel;
         }
 
         private void ButtonFree_Click(object sender, RoutedEventArgs e)
         {
             UpdateTableOccupiedStatus(false);
+
+            foreach (Order order in tableViewModel.RunningOrders)
+            {
+                order.Finished = true;
+                UpdateOrderStatus(order);
+                orderService.UpdateAllOrderItemStatus(order);
+            }
+
             tableViewModel.TableState = Status.Free;
         }
 
@@ -66,15 +83,38 @@ namespace UI
             RaiseEvent(new RoutedEventArgs(EditOrderClickedEvent));
         }
 
-        private void TableLoaded_Load(object sender, RoutedEventArgs e)
+        private void OnRunningOrdersChanged()
         {
-            tableViewModel = DataContext as TableViewModel;
+            List<Order> ordersPerTable = orderService.GetAllRunningOrdersForTable(tableViewModel.Table);
+
+            if (!orderService.EqualRunningOrders(ordersPerTable, tableViewModel.RunningOrders))
+            {
+                tableViewModel.RunningOrders = ordersPerTable;
+                tableViewModel.SetTableState();
+            }
         }
 
+        private void OnTableOccupiedChanged()
+        {
+            Table updatedTable = tableService.GetTableById(tableViewModel.Table.DatabaseId);
+
+            if (!tableService.EqualTableoccupation(updatedTable, tableViewModel.Table))
+            {
+                tableViewModel.Table.Occupied = updatedTable.Occupied;
+                tableViewModel.SetTableState();
+            }
+        }
+
+        //Methods
         private void UpdateTableOccupiedStatus(bool status)
         {
             tableViewModel.Table.Occupied = status;
             tableService.UpdateTableStatus(tableViewModel.Table);
+        }
+
+        private void UpdateOrderStatus(Order order)
+        {
+            orderService.UpdateOrderStatus(order);
         }
 
         private List<OrderItem> OrderItemsToServed()

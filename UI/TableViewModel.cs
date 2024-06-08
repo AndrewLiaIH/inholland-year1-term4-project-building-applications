@@ -13,7 +13,7 @@ namespace UI
         public Table Table { get; set; }
         public int RowIndex { get; set; }
         public int ColumnIndex { get; set; }
-        public List<Order> RunningOrders { get; private set; }
+        public List<Order> RunningOrders;
 
         private Status tableState;
         public Status TableState
@@ -45,7 +45,7 @@ namespace UI
             SetTableState();
         }
 
-        private void SetTableState()
+        internal void SetTableState()
         {
             if (ReadyToBeServed())
                 TableState = Status.ReadyToServe;

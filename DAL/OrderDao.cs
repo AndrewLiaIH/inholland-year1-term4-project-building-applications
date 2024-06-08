@@ -11,6 +11,8 @@ namespace DAL
         private const string QueryGetOrderById = $"{QueryGetAllOrders} WHERE {ColumnOrderId} = {ParameterNameOrderId}";
         private const string QueryGetAllRunningOrders = $"{QueryGetAllOrders} WHERE {ColumnFinished} = 0";
         private const string QueryGetAlFinishedOrders = $"{QueryGetAllOrders} WHERE {ColumnFinished} = 1";
+        private const string QueryGetAllRunningOrdersPerTable = $"{QueryGetAllRunningOrders} AND {ColumnTableId} = {ParameterTableId}";
+        private const string QueryUpdateOrderStatus = $"UPDATE [order] SET {ColumnFinished} = {ParameterNameOrderStatus} WHERE {ColumnOrderId} = {ParameterNameOrderId}";
 
         private const string ColumnOrderId = "order_id";
         private const string ColumnTableId = "table_number";
@@ -21,12 +23,15 @@ namespace DAL
         private const string ColumnTotalPrice = "total_price";
 
         private const string ParameterNameOrderId = "@orderId";
+        private const string ParameterTableId = "@table_number";
+        private const string ParameterNameOrderStatus = "@finished";
 
         // OrderItem
         private const string QueryGetAllOrderItems = $"SELECT {ColumnOrderItemId}, {ColumnOrderItemNumber}, {ColumnItemNumber}, {ColumnPlacementTime}, {ColumnStatus}, {ColumnChangeOfStatus}, {ColumnQuantity}, {ColumnComment} FROM order_item";
         private const string QueryGetOrderItemById = $"{QueryGetAllOrderItems} WHERE {ColumnOrderItemId} = {ParameterNameOrderItemId}";
         private const string QueryGetAllItemsOfOrder = $"{QueryGetAllOrderItems} WHERE {ColumnOrderItemNumber} = {ParameterNameOrderNumber}";
-        private const string QueryUpdateOrderItemStatus = $"UPDATE order_item SET {ColumnStatus} = {ParameterNameOrderItemStatus} WHERE {ColumnOrderItemId} = {ParameterNameOrderItemId}";
+        private const string QueryUpdateAllOrderItemStatus = $"UPDATE order_item SET {ColumnStatus} = {ParameterNameOrderItemStatus} WHERE {ColumnOrderItemNumber} = {ParameterNameOrderNumber}";
+        private const string QueryUpdateOrderItemStatusByCategory = $"UPDATE order_item SET {ColumnStatus} = {ParameterNameOrderItemStatus} WHERE {ColumnOrderItemId} = {ParameterNameOrderItemId}";
 
         private const string ColumnOrderItemId = "order_id";
         private const string ColumnOrderItemNumber = "order_number";
@@ -57,6 +62,17 @@ namespace DAL
             return orders;
         }
 
+        public void UpdateOrderStatus(Order order)
+        {
+            SqlParameter[] parameters = new SqlParameter[]
+            {
+                new(ParameterNameOrderId, order.DatabaseId),
+                new(ParameterNameOrderStatus, order.Finished.ToString())
+            };
+
+            ExecuteEditQuery(QueryUpdateOrderStatus, parameters);
+        }
+
         public Order GetOrderById(int orderId)
         {
             Dictionary<string, int> parameters = new()
@@ -74,6 +90,24 @@ namespace DAL
         public List<Order> GetAllRunningOrders()
         {
             List<Order> orders = GetAll(QueryGetAllRunningOrders, ReadRowOrder);
+
+            foreach (Order order in orders)
+            {
+                GetAndSetAllItemsForOrder(order);
+            }
+
+            return orders;
+        }
+
+        public List<Order> GetAllRunningOrdersForTable(Table table)
+        {
+            SqlParameter[] parameters = new SqlParameter[]
+            {
+                new(ParameterTableId, table.DatabaseId)
+            };
+
+            DataTable ordersTable = ExecuteSelectQuery(QueryGetAllRunningOrdersPerTable, parameters);
+            List<Order> orders = ReadTable(ordersTable, ReadRowOrder);
 
             foreach (Order order in orders)
             {
@@ -126,8 +160,19 @@ namespace DAL
                     new(ParameterNameOrderItemStatus, orderItem.ItemStatus.ToString())
                 };
 
-                ExecuteEditQuery(QueryUpdateOrderItemStatus, parameters);
+                ExecuteEditQuery(QueryUpdateOrderItemStatusByCategory, parameters);
             }
+        }
+
+        public void UpdateAllOrderItemStatus(Order order)
+        {
+            SqlParameter[] parameters = new SqlParameter[]
+            {
+                new(ParameterNameOrderNumber, order.DatabaseId),
+                new(ParameterNameOrderItemStatus, Status.Served.ToString())
+            };
+
+            ExecuteEditQuery(QueryUpdateAllOrderItemStatus, parameters);
         }
 
         private List<OrderItem> GetAllItemsForOrder(int orderNumber)
