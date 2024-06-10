@@ -27,7 +27,7 @@
                     <TextBlock Grid.Column="0" Text="{Binding Table.TableNumber, StringFormat='Table {0}'}" Style="{StaticResource TableNameStyle}"/>
                 </Grid>
                 <Grid Grid.Row="2" HorizontalAlignment="Center">
-                    <TextBlock Grid.Column="0" Padding="0,8,0,0" Text="{Binding WaitingTime, StringFormat='{}{0:mm} Minutes'}" Style="{StaticResource WaitingTimeStyle}"/>
+                    <TextBlock Grid.Column="0" Padding="0,8,0,0" Text="{Binding WaitingTime.TotalMinutes, StringFormat='{}{0:F0} Minutes'}" Style="{StaticResource WaitingTimeStyle}"/>
                 </Grid>
                 <Grid Grid.Row="3" Style="{StaticResource ControlbuttonsGrid}">
                     <Grid.ColumnDefinitions>
