@@ -15,6 +15,20 @@ namespace UI
         public int ColumnIndex { get; set; }
         public List<Order> RunningOrders;
 
+        private TimeSpan? waitingTime;
+        public TimeSpan? WaitingTime
+        {
+            get { return waitingTime; }
+            set
+            {
+                if (waitingTime != value)
+                {
+                    waitingTime = value;
+                    OnPropertyChanged("WaitingTime");
+                }
+            }
+        }
+
         private Status tableState;
         public Status TableState
         {
@@ -76,5 +90,33 @@ namespace UI
             return false;
         }
 
+        private void CalculateWaitingTime(OrderItem orderItem)
+        {
+            if (orderItem != null)
+                WaitingTime = DateTime.Now - orderItem.PlacementTime;
+        }
+
+        private void SetWaitingTime()
+        {
+            OrderItem orderItemLongestWaiting = null;
+
+            foreach (Order order in RunningOrders)
+            {
+                for(int i = 0; i < order.OrderItems.Count; i++)
+                {
+                    if (order.OrderItems[i].ItemStatus != Status.Served)
+                        if (orderItemLongestWaiting == null || order.OrderItems[i].PlacementTime < orderItemLongestWaiting.PlacementTime)
+                            orderItemLongestWaiting = order.OrderItems[i];
+                }
+            }
+
+            CalculateWaitingTime(orderItemLongestWaiting);
+        }
+
+        internal void UpdateWaitingTime()
+        {
+            if (RunningOrders.Count > 0)
+                SetWaitingTime();
+        }
     }
 }

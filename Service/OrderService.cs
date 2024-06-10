@@ -8,6 +8,7 @@ namespace Service
     {
         private OrderDao orderDao = new();
         public event Action RunningOrdersChanged;
+        public event Action WaitingTimeChanged;
 
         public List<Order> GetAllOrders()
         {
@@ -62,6 +63,7 @@ namespace Service
         protected override void CheckForChanges(object sender, EventArgs e)
         {
             RunningOrdersChanged?.Invoke();
+            WaitingTimeChanged?.Invoke();
         }
 
         public bool EqualRunningOrders(List<Order> updatedOrders, List<Order> currentOrders)

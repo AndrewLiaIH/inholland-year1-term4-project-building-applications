@@ -37,6 +37,7 @@ namespace UI
             InitializeComponent();
 
             orderService.RunningOrdersChanged += OnRunningOrdersChanged;
+            orderService.WaitingTimeChanged += OnWaitingTimeChanged;
             tableService.TableOccupiedChanged += OnTableOccupiedChanged;
         }
 
@@ -58,6 +59,8 @@ namespace UI
             }
 
             tableViewModel.TableState = Status.Free;
+            tableViewModel.RunningOrders.Clear();
+            tableViewModel.WaitingTime = null;
         }
 
         private void ButtonReserve_Click(object sender, RoutedEventArgs e)
@@ -75,6 +78,9 @@ namespace UI
         {
             List<OrderItem> servedOrderItems = OrderItemsToServed();
             orderService.UpdateOrderCategoryStatus(servedOrderItems);
+            UpdateRunningOrders();
+            tableViewModel.UpdateWaitingTime();
+            tableViewModel.WaitingTime = null;
             tableViewModel.TableState = Status.Occupied;
         }
 
@@ -84,6 +90,11 @@ namespace UI
         }
 
         private void OnRunningOrdersChanged()
+        {
+            UpdateRunningOrders();
+        }
+
+        private void UpdateRunningOrders()
         {
             List<Order> ordersPerTable = orderService.GetAllRunningOrdersForTable(tableViewModel.Table);
 
@@ -134,6 +145,11 @@ namespace UI
             }
 
             return changedOrderItems;
+        }
+
+        private void OnWaitingTimeChanged()
+        {
+            tableViewModel.UpdateWaitingTime();
         }
     }
 }

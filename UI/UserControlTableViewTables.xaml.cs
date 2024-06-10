@@ -19,6 +19,7 @@ namespace UI
             InitializeComponent();
 
             GetAllTables();
+            UpdateWaitingTime();
             DataContext = this;
         }
 
@@ -46,6 +47,14 @@ namespace UI
                     Tables.Add(new TableViewModel(tables[tableIndex], i, j, ordersPerTable));
                     tableIndex++;
                 }
+            }
+        }
+
+        private void UpdateWaitingTime()
+        {
+            foreach (TableViewModel table in Tables)
+            {
+                table.UpdateWaitingTime();
             }
         }
 
