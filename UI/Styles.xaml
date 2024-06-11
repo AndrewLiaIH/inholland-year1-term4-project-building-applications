@@ -327,8 +327,8 @@
         </Style.Triggers>
     </Style>
 
-    <!--free button-->
-    <Style x:Key="FreeButton" TargetType="Button">
+    <!--green button-->
+    <Style x:Key="GreenButtonStyle" TargetType="Button">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
@@ -357,6 +357,40 @@
             </DataTrigger>
             <DataTrigger Binding="{Binding TableState}" Value="Reserved">
                 <Setter Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding TableState}" Value="Occupied">
+                <Setter Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding TableState}" Value="ReadyToServe">
+                <Setter Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="FreeButtonStyle" TargetType="Button" BasedOn="{StaticResource GreenButtonStyle}">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding TableState}" Value="Free">
+                <Setter Property="Visibility" Value="Hidden"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding TableState}" Value="Reserved">
+                <Setter Property="Visibility" Value="Hidden"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding TableState}" Value="Occupied">
+                <Setter Property="Visibility" Value="Hidden"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding TableState}" Value="ReadyToServe">
+                <Setter Property="Visibility" Value="Hidden"/>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="PayButtonStyle" TargetType="Button" BasedOn="{StaticResource GreenButtonStyle}">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding TableState}" Value="Free">
+                <Setter Property="Visibility" Value="Hidden"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding TableState}" Value="Reserved">
+                <Setter Property="Visibility" Value="Hidden"/>
             </DataTrigger>
             <DataTrigger Binding="{Binding TableState}" Value="Occupied">
                 <Setter Property="Visibility" Value="Visible"/>

@@ -13,19 +13,19 @@ namespace UI
         private TableService tableService = new();
         private OrderService orderService = new();
 
-        public static readonly RoutedEvent EditOrderClickedEvent = EventManager.RegisterRoutedEvent(
+        internal static readonly RoutedEvent EditOrderClickedEvent = EventManager.RegisterRoutedEvent(
         "EditOrderClicked", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(UserControlTable));
 
-        public event RoutedEventHandler EditOrderClicked
+        internal event RoutedEventHandler EditOrderClicked
         {
             add { AddHandler(EditOrderClickedEvent, value); }
             remove { RemoveHandler(EditOrderClickedEvent, value); }
         }
 
-        public static readonly RoutedEvent AddOrderClickedEvent = EventManager.RegisterRoutedEvent(
+        internal static readonly RoutedEvent AddOrderClickedEvent = EventManager.RegisterRoutedEvent(
         "AddOrderClicked", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(UserControlTable));
 
-        public event RoutedEventHandler AddOrderClicked
+        internal event RoutedEventHandler AddOrderClicked
         {
             add { AddHandler(AddOrderClickedEvent, value); }
             remove { RemoveHandler(AddOrderClickedEvent, value); }
@@ -55,6 +55,12 @@ namespace UI
             UpdateTableOccupiedStatus(false);
             FinishAllOrders();
             ResetTable();
+        }
+
+        private void ButtonPay_Click(object sender, RoutedEventArgs e)
+        {
+            ButtonPay.Visibility = Visibility.Hidden;
+            ButtonFree.Visibility = Visibility.Visible;
         }
 
         private void ButtonReserve_Click(object sender, RoutedEventArgs e)
