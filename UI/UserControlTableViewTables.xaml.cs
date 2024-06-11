@@ -11,13 +11,15 @@ namespace UI
     /// </summary>
     public partial class UserControlTableViewTables : UserControl
     {
-        public ObservableCollection<TableProperty> Tables { get; } = new();
+        public ObservableCollection<TableViewModel> Tables { get; } = new();
+        private OrderService orderService = new();
 
         public UserControlTableViewTables()
         {
             InitializeComponent();
 
             GetAllTables();
+            UpdateWaitingTime();
             DataContext = this;
         }
 
@@ -28,32 +30,55 @@ namespace UI
             SetTables(tables);
         }
 
+        private List<Order> GetAllRunningOrders()
+        {
+            return orderService.GetAllRunningOrders();
+        }
+
         private void SetTables(List<Table> tables)
         {
             int tableIndex = 0;
 
-            for (int i = 0; i < 2; i++)
+            for (int row = 0; row < 2; row++)
             {
-                for (int j = 0; j < 5; j++)
+                for (int col = 0; col < 5; col++)
                 {
-                    if (tableIndex < tables.Count)
-                    {
-                        Tables.Add(new TableProperty(tables[tableIndex], i, j));
-                        tableIndex++;
-                    }
+                    List<Order> ordersPerTable = RunningOrderPerTable(tables[tableIndex]);
+                    Tables.Add(new TableViewModel(tables[tableIndex], row, col, ordersPerTable));
+                    tableIndex++;
                 }
             }
+        }
+
+        private void UpdateWaitingTime()
+        {
+            foreach (TableViewModel table in Tables)
+            {
+                table.UpdateWaitingTime();
+            }
+        }
+
+        private List<Order> RunningOrderPerTable(Table table)
+        {
+            List<Order> runningOrders = GetAllRunningOrders();
+            List<Order> ordersPerTable = runningOrders.FindAll(order => order.Table.DatabaseId == table.DatabaseId);
+
+            return ordersPerTable;
         }
 
         private void ItemsControlGrid_Loaded(object sender, RoutedEventArgs e)
         {
             Grid grid = sender as Grid;
 
-            for (int i = 0; i < 2; i++)
+            int numberOfRows = 2;
+            int numberOfColumns = 5;
+
+            for (int i = 0; i < numberOfRows; i++)
             {
                 grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
             }
-            for (int j = 0; j < 5; j++)
+
+            for (int j = 0; j < numberOfColumns; j++)
             {
                 grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
             }

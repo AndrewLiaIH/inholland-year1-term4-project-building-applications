@@ -51,6 +51,16 @@ namespace UI
             }
         }
 
+        private void UserControlTable_EditOrderClicked(object sender, RoutedEventArgs e)
+        {
+            SetUserControlOrderView();
+        }
+
+        private void UserControlTable_AddOrderClicked(object sender, RoutedEventArgs e)
+        {
+            SetUserControlOrderView();
+        }
+
         private void UserControlHeader_Logout(object sender, EventArgs e)
         {
             Logout();
@@ -75,6 +85,13 @@ namespace UI
         private void ShowView(UserControl view)
         {
             view.Visibility = Visibility.Visible;
+        }
+
+        private void SetUserControlOrderView()
+        {
+            HideAllViews();
+            ShowView(userControlOrderView);
+            currentView = userControlOrderView;
         }
     }
 }
