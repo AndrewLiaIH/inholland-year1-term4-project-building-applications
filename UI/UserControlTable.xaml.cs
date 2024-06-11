@@ -5,12 +5,11 @@ using System.Windows.Controls;
 
 namespace UI
 {
-    /// <summary>
-    /// Interaction logic for UserControlTable.xaml
-    /// </summary>
+    // This class is created by Orest Pokotylenko
     public partial class UserControlTable : UserControl
     {
         private TableViewModel tableViewModel;
+
         private TableService tableService = new();
         private OrderService orderService = new();
 
@@ -35,7 +34,11 @@ namespace UI
         public UserControlTable()
         {
             InitializeComponent();
+            InitializeEvents();
+        }
 
+        private void InitializeEvents()
+        {
             orderService.RunningOrdersChanged += OnRunningOrdersChanged;
             orderService.WaitingTimeChanged += OnWaitingTimeChanged;
             tableService.TableOccupiedChanged += OnTableOccupiedChanged;
@@ -50,17 +53,8 @@ namespace UI
         private void ButtonFree_Click(object sender, RoutedEventArgs e)
         {
             UpdateTableOccupiedStatus(false);
-
-            foreach (Order order in tableViewModel.RunningOrders)
-            {
-                order.Finished = true;
-                UpdateOrderStatus(order);
-                orderService.UpdateAllOrderItemStatus(order);
-            }
-
-            tableViewModel.TableState = Status.Free;
-            tableViewModel.RunningOrders.Clear();
-            tableViewModel.WaitingTime = null;
+            FinishAllOrders();
+            ResetTable();
         }
 
         private void ButtonReserve_Click(object sender, RoutedEventArgs e)
@@ -76,11 +70,8 @@ namespace UI
 
         private void ButtonServed_Click(object sender, RoutedEventArgs e)
         {
-            List<OrderItem> servedOrderItems = OrderItemsToServed();
-            orderService.UpdateOrderCategoryStatus(servedOrderItems);
-            UpdateRunningOrders();
+            SetOrderItemsToServed();
             tableViewModel.UpdateWaitingTime();
-            tableViewModel.WaitingTime = null;
             tableViewModel.TableState = Status.Occupied;
         }
 
@@ -116,6 +107,11 @@ namespace UI
             }
         }
 
+        private void OnWaitingTimeChanged()
+        {
+            tableViewModel.UpdateWaitingTime();
+        }
+
         //Methods
         private void UpdateTableOccupiedStatus(bool status)
         {
@@ -134,21 +130,45 @@ namespace UI
 
             foreach (var order in tableViewModel.RunningOrders)
             {
-                foreach (var orderItem in order.OrderItems)
-                {
-                    if (orderItem.ItemStatus == Status.ReadyToServe)
-                    {
-                        orderItem.ItemStatus = Status.Served;
-                        changedOrderItems.Add(orderItem);
-                    }
-                }
+                ProcessOrderItemsToServed(order, changedOrderItems);
             }
 
             return changedOrderItems;
         }
 
-        private void OnWaitingTimeChanged()
+        private void ProcessOrderItemsToServed(Order order, List<OrderItem> changedOrderItems)
         {
+            foreach (var orderItem in order.OrderItems)
+            {
+                if (orderItem.ItemStatus == Status.ReadyToServe)
+                {
+                    orderItem.ItemStatus = Status.Served;
+                    changedOrderItems.Add(orderItem);
+                }
+            }
+        }
+
+        private void SetOrderItemsToServed()
+        {
+            List<OrderItem> servedOrderItems = OrderItemsToServed();
+            orderService.UpdateOrderCategoryStatus(servedOrderItems);
+            UpdateRunningOrders();
+        }
+
+        private void FinishAllOrders()
+        {
+            foreach (Order order in tableViewModel.RunningOrders)
+            {
+                order.Finished = true;
+                UpdateOrderStatus(order);
+                orderService.UpdateAllOrderItemStatus(order);
+            }
+        }
+
+        private void ResetTable()
+        {
+            tableViewModel.TableState = Status.Free;
+            tableViewModel.RunningOrders.Clear();
             tableViewModel.UpdateWaitingTime();
         }
     }

@@ -5,9 +5,6 @@ using System.ComponentModel;
 namespace UI
 {
     //Created by Orest Pokotylenko
-    /// <summary>
-    /// TableViewModel class is used to represent the table from the Model layer in the TableViewTables user control.
-    /// </summary>
     public class TableViewModel : INotifyPropertyChanged
     {
         public Table Table { get; set; }
@@ -56,6 +53,7 @@ namespace UI
             RowIndex = rowIndex;
             ColumnIndex = columnIndex;
             RunningOrders = runningOrders;
+
             SetTableState();
         }
 
@@ -78,37 +76,23 @@ namespace UI
 
         private bool ReadyToBeServed()
         {
-            foreach (Order order in RunningOrders)
-            {
-                foreach (OrderItem item in order.OrderItems)
-                {
-                    if (item.ItemStatus == Status.ReadyToServe)
-                        return true;
-                }
-            }
-
-            return false;
+            List<OrderItem> orderItems = RunningOrders.SelectMany(order => order.OrderItems).ToList();
+            return orderItems.Any(orderItem => orderItem.ItemStatus == Status.ReadyToServe);
         }
 
         private void CalculateWaitingTime(OrderItem orderItem)
         {
             if (orderItem != null)
                 WaitingTime = DateTime.Now - orderItem.PlacementTime;
+            else
+                WaitingTime = null;
         }
 
         private void SetWaitingTime()
         {
-            OrderItem orderItemLongestWaiting = null;
-
-            foreach (Order order in RunningOrders)
-            {
-                for(int i = 0; i < order.OrderItems.Count; i++)
-                {
-                    if (order.OrderItems[i].ItemStatus != Status.Served)
-                        if (orderItemLongestWaiting == null || order.OrderItems[i].PlacementTime < orderItemLongestWaiting.PlacementTime)
-                            orderItemLongestWaiting = order.OrderItems[i];
-                }
-            }
+            List<OrderItem> allOrderItems = RunningOrders.SelectMany(order => order.OrderItems).ToList();
+            List<OrderItem> waitingOrderItems = allOrderItems.Where(orderItem => orderItem.ItemStatus != Status.Served).ToList();
+            OrderItem orderItemLongestWaiting = waitingOrderItems.OrderBy(orderItem => orderItem.PlacementTime).FirstOrDefault();
 
             CalculateWaitingTime(orderItemLongestWaiting);
         }

@@ -12,7 +12,7 @@ namespace UI
     public partial class UserControlTableViewTables : UserControl
     {
         public ObservableCollection<TableViewModel> Tables { get; } = new();
-        OrderService orderService = new();
+        private OrderService orderService = new();
 
         public UserControlTableViewTables()
         {
@@ -39,12 +39,12 @@ namespace UI
         {
             int tableIndex = 0;
 
-            for (int i = 0; i < 2; i++)
+            for (int row = 0; row < 2; row++)
             {
-                for (int j = 0; j < 5; j++)
+                for (int col = 0; col < 5; col++)
                 {
                     List<Order> ordersPerTable = RunningOrderPerTable(tables[tableIndex]);
-                    Tables.Add(new TableViewModel(tables[tableIndex], i, j, ordersPerTable));
+                    Tables.Add(new TableViewModel(tables[tableIndex], row, col, ordersPerTable));
                     tableIndex++;
                 }
             }
@@ -70,11 +70,15 @@ namespace UI
         {
             Grid grid = sender as Grid;
 
-            for (int i = 0; i < 2; i++)
+            int numberOfRows = 2;
+            int numberOfColumns = 5;
+
+            for (int i = 0; i < numberOfRows; i++)
             {
                 grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
             }
-            for (int j = 0; j < 5; j++)
+
+            for (int j = 0; j < numberOfColumns; j++)
             {
                 grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
             }

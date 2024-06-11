@@ -7,8 +7,15 @@ namespace Service
     public class OrderService : BaseService
     {
         private OrderDao orderDao = new();
+
         public event Action RunningOrdersChanged;
         public event Action WaitingTimeChanged;
+
+        protected override void CheckForChanges(object sender, EventArgs e)
+        {
+            RunningOrdersChanged?.Invoke();
+            WaitingTimeChanged?.Invoke();
+        }
 
         public List<Order> GetAllOrders()
         {
@@ -60,43 +67,41 @@ namespace Service
             return orderDao.GetAllRunningOrdersForTable(table);
         }
 
-        protected override void CheckForChanges(object sender, EventArgs e)
-        {
-            RunningOrdersChanged?.Invoke();
-            WaitingTimeChanged?.Invoke();
-        }
-
         public bool EqualRunningOrders(List<Order> updatedOrders, List<Order> currentOrders)
         {
-            if (currentOrders != null)
+            if (updatedOrders == null || currentOrders == null)
+                return updatedOrders == currentOrders;
+            
+            if (updatedOrders.Count != currentOrders.Count)
+                return false;
+
+            for (int i = 0; i < updatedOrders.Count; i++)
             {
-                if (updatedOrders.Count != currentOrders.Count)
+                if (!EqualOrdersAndItems(updatedOrders[i], currentOrders[i]))
                     return false;
-
-                for (int i = 0; i < updatedOrders.Count; i++)
-                {
-                    if (updatedOrders[i].Table.DatabaseId != currentOrders[i].Table.DatabaseId)
-                        return false;
-                    else if (!EqualOrderItemsStatus(updatedOrders[i].OrderItems, currentOrders[i].OrderItems))
-                        return false;
-                }
             }
-
+            
             return true;
+        }
+
+        private bool EqualOrdersAndItems(Order updatedOrder, Order currentOrder)
+        {
+            return updatedOrder.Table.DatabaseId == currentOrder.Table.DatabaseId &&
+                   EqualOrderItemsStatus(updatedOrder.OrderItems, currentOrder.OrderItems);
         }
 
         private bool EqualOrderItemsStatus(List<OrderItem> updatedOrderItems, List<OrderItem> currentOrderItems)
         {
-            if (currentOrderItems != null)
-            {
-                if (updatedOrderItems.Count != currentOrderItems.Count)
-                    return false;
+            if (updatedOrderItems == null || currentOrderItems == null)
+                return updatedOrderItems == currentOrderItems;
 
-                for (int i = 0; i < updatedOrderItems.Count; i++)
-                {
-                    if (updatedOrderItems[i].ItemStatus != currentOrderItems[i].ItemStatus)
-                        return false;
-                }
+            if (updatedOrderItems.Count != currentOrderItems.Count)
+                return false;
+
+            for (int i = 0; i < updatedOrderItems.Count; i++)
+            {
+                if (updatedOrderItems[i].ItemStatus != currentOrderItems[i].ItemStatus)
+                    return false;
             }
 
             return true;
