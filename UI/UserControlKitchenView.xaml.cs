@@ -11,6 +11,8 @@ namespace UI
     {
         public List<Folder> FoldersKitchen;
         public UserControlHeader UserControlHeader => userControlHeader;
+        private UserControlKitchenViewRunning userControlKitchenViewRunning;
+        private UserControlKitchenViewFinished userControlKitchenViewFinished;
 
         public UserControlKitchenView()
         {
@@ -18,8 +20,8 @@ namespace UI
 
             FoldersKitchen = new()
             {
-                new Folder("Running", userControlKitchenViewRunning),
-                new Folder("Finished", userControlKitchenViewFinished)
+                new Folder("Running", ShowKitchenViewRunning),
+                new Folder("Finished", ShowKitchenViewFinished)
             };
 
             userControlHeader.Folders = FoldersKitchen;
@@ -31,6 +33,22 @@ namespace UI
         public void SetLoggedInEmployee(Employee employee)
         {
             userControlHeader.LoggedInEmployee = employee;
+        }
+
+        private void ShowKitchenViewRunning()
+        {
+            if (userControlKitchenViewRunning == null)
+                userControlKitchenViewRunning = new();
+
+            KitchenViewContentControl.Content = userControlKitchenViewRunning;
+        }
+
+        private void ShowKitchenViewFinished()
+        {
+            if (userControlKitchenViewFinished == null)
+                userControlKitchenViewFinished = new();
+
+            KitchenViewContentControl.Content = userControlKitchenViewFinished;
         }
     }
 }

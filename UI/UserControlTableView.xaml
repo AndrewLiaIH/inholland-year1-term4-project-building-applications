@@ -11,7 +11,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <ui:UserControlHeader Grid.Row="0" x:Name="userControlHeader"/>
-        <ui:UserControlTableViewTables Grid.Row="1" x:Name="userControlTableViewTables" Visibility="Collapsed"/>
+        <ui:UserControlHeader x:Name="userControlHeader" Grid.Row="0"/>
+        <ContentControl x:Name="TableViewContentControl" Grid.Row="1" />
     </Grid>
 </UserControl>

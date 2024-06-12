@@ -84,11 +84,10 @@ namespace UI
 
             if (SelectedFolder != null)
             {
+                SelectedFolder.ShowScreen();
+
                 foreach (Folder folder in Folders)
-                {
-                    folder.UserControl.Visibility = folder == SelectedFolder ? Visibility.Visible : Visibility.Hidden;
                     folder.IsActive = folder == SelectedFolder;
-                }
             }
         }
 

@@ -1,4 +1,5 @@
 ﻿using Model;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace UI
@@ -10,6 +11,7 @@ namespace UI
     {
         public List<Folder> FoldersTables;
         public UserControlHeader UserControlHeader => userControlHeader;
+        private UserControlTableViewTables userControlTableViewTables;
 
         public UserControlTableView()
         {
@@ -17,7 +19,7 @@ namespace UI
 
             FoldersTables = new()
             {
-                new("Table View", userControlTableViewTables)
+                new("Table View", ShowTableViewTables)
             };
 
             userControlHeader.Folders = FoldersTables;
@@ -27,6 +29,14 @@ namespace UI
         public void SetLoggedInEmployee(Employee employee)
         {
             userControlHeader.LoggedInEmployee = employee;
+        }
+
+        private void ShowTableViewTables()
+        {
+            if (userControlTableViewTables == null)
+                userControlTableViewTables = new();
+
+            TableViewContentControl.Content = userControlTableViewTables;
         }
     }
 }

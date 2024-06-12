@@ -3,17 +3,11 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:ui="clr-namespace:UI"
-        ui:UserControlTable.EditOrderClicked="UserControlTable_EditOrderClicked"
-        ui:UserControlTable.AddOrderClicked="UserControlTable_AddOrderClicked"
         mc:Ignorable="d"
         Title="Chapeau"
         WindowState="Maximized"
         WindowStyle="None">
-    <Grid>        
-        <ui:UserControlLoginView x:Name="userControlLoginView" Visibility="Visible" LoginSuccessful="UserControlLoginView_LoginSuccessful" />
-        <ui:UserControlTableView x:Name="userControlTableView" Visibility="Collapsed" />
-        <ui:UserControlOrderView x:Name="userControlOrderView" Visibility="Collapsed" />
-        <ui:UserControlKitchenView x:Name="userControlKitchenView" Visibility="Collapsed" />
+    <Grid>
+        <ContentControl x:Name="MainContentControl" />
     </Grid>
 </Window>
