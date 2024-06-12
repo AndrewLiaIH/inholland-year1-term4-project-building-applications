@@ -10,6 +10,13 @@
         public DateTime? ChangeOfStatus { get; private set; }
         public int? Quantity { get; private set; }
         public string? Comment { get; private set; }
+        public TimeSpan RunningTime
+        {
+            get
+            {
+                return DateTime.Now - PlacementTime.Value;
+            }
+        }
 
         public OrderItem(int databaseId, MenuItem item, DateTime? placementTime, Status? status, DateTime? changeOfStatus, int? quantity, string? comment)
         {
