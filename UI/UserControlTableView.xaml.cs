@@ -9,7 +9,7 @@ namespace UI
     /// </summary>
     public partial class UserControlTableView : UserControl, ILoggedInEmployeeHandler
     {
-        public List<Folder> FoldersTables;
+        internal List<Folder> FoldersTables;
         public UserControlHeader UserControlHeader => userControlHeader;
         private UserControlTableViewTables userControlTableViewTables;
 

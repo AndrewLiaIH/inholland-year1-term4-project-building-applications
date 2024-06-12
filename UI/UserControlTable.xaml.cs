@@ -13,19 +13,19 @@ namespace UI
         private TableService tableService = new();
         private OrderService orderService = new();
 
-        public static readonly RoutedEvent EditOrderClickedEvent = EventManager.RegisterRoutedEvent(
+        internal static readonly RoutedEvent EditOrderClickedEvent = EventManager.RegisterRoutedEvent(
         "EditOrderClicked", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(UserControlTable));
 
-        public event RoutedEventHandler EditOrderClicked
+        internal event RoutedEventHandler EditOrderClicked
         {
             add { AddHandler(EditOrderClickedEvent, value); }
             remove { RemoveHandler(EditOrderClickedEvent, value); }
         }
 
-        public static readonly RoutedEvent AddOrderClickedEvent = EventManager.RegisterRoutedEvent(
+        internal static readonly RoutedEvent AddOrderClickedEvent = EventManager.RegisterRoutedEvent(
         "AddOrderClicked", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(UserControlTable));
 
-        public event RoutedEventHandler AddOrderClicked
+        internal event RoutedEventHandler AddOrderClicked
         {
             add { AddHandler(AddOrderClickedEvent, value); }
             remove { RemoveHandler(AddOrderClickedEvent, value); }
@@ -55,6 +55,13 @@ namespace UI
             UpdateTableOccupiedStatus(false);
             FinishAllOrders();
             ResetTable();
+        }
+
+        private void ButtonPay_Click(object sender, RoutedEventArgs e)
+        {
+            ButtonPay.Visibility = Visibility.Hidden;
+            ButtonFree.Visibility = Visibility.Visible;
+            ButtonEditOrder.IsEnabled = false;
         }
 
         private void ButtonReserve_Click(object sender, RoutedEventArgs e)
@@ -102,7 +109,7 @@ namespace UI
 
             if (!tableService.EqualTableoccupation(updatedTable, tableViewModel.Table))
             {
-                tableViewModel.Table.Occupied = updatedTable.Occupied;
+                tableViewModel.Table.SetOccupied(updatedTable.Occupied);
                 tableViewModel.SetTableState();
             }
         }
@@ -115,7 +122,7 @@ namespace UI
         //Methods
         private void UpdateTableOccupiedStatus(bool status)
         {
-            tableViewModel.Table.Occupied = status;
+            tableViewModel.Table.SetOccupied(status);
             tableService.UpdateTableStatus(tableViewModel.Table);
         }
 
@@ -142,7 +149,7 @@ namespace UI
             {
                 if (orderItem.ItemStatus == Status.ReadyToServe)
                 {
-                    orderItem.ItemStatus = Status.Served;
+                    orderItem.SetItemStatus(Status.Served);
                     changedOrderItems.Add(orderItem);
                 }
             }
@@ -159,7 +166,7 @@ namespace UI
         {
             foreach (Order order in tableViewModel.RunningOrders)
             {
-                order.Finished = true;
+                order.SetFinished(true);
                 UpdateOrderStatus(order);
                 orderService.UpdateAllOrderItemStatus(order);
             }

@@ -37,16 +37,15 @@ namespace UI
 
         private void SetTables(List<Table> tables)
         {
-            int tableIndex = 0;
+            List<Order> runningOrders = GetAllRunningOrders();
 
-            for (int row = 0; row < 2; row++)
+            for (int tableIndex = 0; tableIndex < tables.Count; tableIndex++)
             {
-                for (int col = 0; col < 5; col++)
-                {
-                    List<Order> ordersPerTable = RunningOrderPerTable(tables[tableIndex]);
-                    Tables.Add(new TableViewModel(tables[tableIndex], row, col, ordersPerTable));
-                    tableIndex++;
-                }
+                int row = tableIndex / 5;
+                int col = tableIndex % 5;
+
+                List<Order> ordersPerTable = RunningOrderPerTable(tables[tableIndex], runningOrders);
+                Tables.Add(new TableViewModel(tables[tableIndex], row, col, ordersPerTable));
             }
         }
 
@@ -58,12 +57,9 @@ namespace UI
             }
         }
 
-        private List<Order> RunningOrderPerTable(Table table)
+        private List<Order> RunningOrderPerTable(Table table, List<Order> runningOrders)
         {
-            List<Order> runningOrders = GetAllRunningOrders();
-            List<Order> ordersPerTable = runningOrders.FindAll(order => order.Table.DatabaseId == table.DatabaseId);
-
-            return ordersPerTable;
+            return runningOrders.FindAll(order => order.Table.DatabaseId == table.DatabaseId);
         }
 
         private void ItemsControlGrid_Loaded(object sender, RoutedEventArgs e)
