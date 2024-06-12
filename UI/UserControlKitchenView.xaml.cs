@@ -26,8 +26,6 @@ namespace UI
 
             userControlHeader.Folders = FoldersKitchen;
             userControlHeader.SelectedFolder = FoldersKitchen.First();
-            userControlHeader.CounterWaiting.Visibility = Visibility.Visible;
-            userControlHeader.CounterPreparing.Visibility = Visibility.Visible;
         }
 
         public void SetLoggedInEmployee(Employee employee)
@@ -40,6 +38,9 @@ namespace UI
             if (userControlKitchenViewRunning == null)
                 userControlKitchenViewRunning = new();
 
+            userControlHeader.CounterWaiting.Visibility = Visibility.Visible;
+            userControlHeader.CounterPreparing.Visibility = Visibility.Visible;
+
             KitchenViewContentControl.Content = userControlKitchenViewRunning;
         }
 
@@ -47,6 +48,9 @@ namespace UI
         {
             if (userControlKitchenViewFinished == null)
                 userControlKitchenViewFinished = new();
+
+            userControlHeader.CounterWaiting.Visibility = Visibility.Collapsed;
+            userControlHeader.CounterPreparing.Visibility = Visibility.Collapsed;
 
             KitchenViewContentControl.Content = userControlKitchenViewFinished;
         }

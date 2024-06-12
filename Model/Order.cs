@@ -24,6 +24,20 @@
                 orderStatus = value;
             }
         }
+        public List<CategoryGroup> OrderItemsByCategory
+        {
+            get
+            {
+                return OrderItems
+                    .GroupBy(item => item.Item.Category.CategoryType.ToString())
+                    .Select(group => new CategoryGroup
+                    {
+                        Category = group.Key,
+                        Items = group.ToList()
+                    })
+                    .ToList();
+            }
+        }
 
         public Order(int databaseId, Table table, Employee placedBy, int orderNumber, int? servingNumber, bool finished, decimal totalPrice)
         {

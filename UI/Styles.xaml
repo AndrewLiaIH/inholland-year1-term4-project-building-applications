@@ -1,9 +1,12 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:ui="clr-namespace:UI">
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="Resources\Images.xaml"/>
     </ResourceDictionary.MergedDictionaries>
+
+    <ui:BackgroundToForegroundMultiConverter x:Key="BackgroundToForegroundMultiConverter"/>
 
     <!--COLOURS-->
     
@@ -535,7 +538,7 @@
         </Style.Triggers>
     </Style>
 
-    <!--table name textBoloc-->
+    <!--table name textBlock-->
     <Style x:Key="TableNameStyle" TargetType="TextBlock">
         <Setter Property="FontSize" Value="24"/>
         <Setter Property="Foreground" Value="{StaticResource TextDark}"/>
@@ -585,17 +588,28 @@
                 <TextBlock Text="{Binding Status}" FontStyle="Italic"/>
                 <TextBlock Text="{Binding Quantity, StringFormat=Quantity: {0}}" Foreground="Blue"/>
                 <TextBlock Text="{Binding Comment}" Foreground="Gray"/>
-                <TextBlock Text="{Binding Item.Category}" Foreground="Gray"/>
-                <ItemsControl ItemsSource="{Binding Item.Category.MenuItems}" ItemTemplate="{StaticResource MenuItemTemplate}" />
+            </StackPanel>
+        </Border>
+    </DataTemplate>
+
+    <!-- DataTemplate for Category -->
+    <DataTemplate x:Key="CategoryTemplate">
+        <Border CornerRadius="5" BorderBrush="Gray" BorderThickness="1" Padding="5" Margin="5">
+            <StackPanel>
+                <TextBlock Text="{Binding Category}" FontWeight="Bold" FontSize="16" Foreground="{StaticResource TextDark}" Margin="5"/>
+                <ItemsControl ItemsSource="{Binding Items}" ItemTemplate="{StaticResource OrderItemTemplate}" />
             </StackPanel>
         </Border>
     </DataTemplate>
 
     <!-- DataTemplate for Order -->
     <DataTemplate x:Key="OrderCardTemplate">
-        <Border CornerRadius="5" BorderBrush="{StaticResource Color10}" BorderThickness="1" Margin="0 0 24 24">
+        <Border CornerRadius="5" BorderBrush="{StaticResource Color10}" BorderThickness="1" Margin="0 0 24 24" Background="{StaticResource White}">
             <StackPanel>
-                <Grid>
+                <Grid MinWidth="350">
+                    <Grid.Resources>
+                        <ui:BackgroundToForegroundMultiConverter x:Key="BackgroundToForegroundMultiConverter"/>
+                    </Grid.Resources>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
@@ -606,15 +620,68 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
 
-                    <Rectangle Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="3" Fill="{StaticResource Color6}" />
-                    <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding ServingNumber, StringFormat=#{0:D2}}" Margin="24 16 0 0" Foreground="{StaticResource White}" FontSize="24" />
-                    <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Text="{Binding OrderStatus}" VerticalAlignment="Bottom" HorizontalAlignment="Center" Foreground="{StaticResource White}" FontSize="20" />
-                    <TextBlock Grid.Row="0" Grid.Column="2" Text="{Binding Table.TableNumber, StringFormat=Table {0}}" Foreground="{StaticResource White}" FontSize="16" VerticalAlignment="Bottom" Margin="0 0 16 0" />
-                    <TextBlock Grid.Row="1" Grid.Column="0" Text="{Binding OrderItems[0].PlacementTime, StringFormat=Placed at: {0:HH:mm}}" Foreground="{StaticResource White}" Margin="16 0 0 16" FontSize="16" VerticalAlignment="Bottom" />
-                    <Image Grid.Row="1" Grid.Column="1" Height="24" Width="24" Source="{StaticResource sandClockIcon}" Margin="0 16 8 16" HorizontalAlignment="Right" />
-                    <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding OrderItems[0].PlacementTime, StringFormat=HH:mm}" Foreground="{StaticResource White}" FontSize="24" VerticalAlignment="Center" Margin="0 0 16 0" />
+                    <Rectangle x:Name="CardHeaderBackground" Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="3" Fill="{StaticResource Color6}" />
+
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding ServingNumber, StringFormat=#{0:D2}}" Margin="24 16 0 0" FontSize="24">
+                        <TextBlock.Foreground>
+                            <MultiBinding Converter="{StaticResource BackgroundToForegroundMultiConverter}">
+                                <Binding ElementName="CardHeaderBackground" Path="Fill"/>
+                                <Binding Source="{StaticResource White}"/>
+                                <Binding Source="{StaticResource TextDark}"/>
+                            </MultiBinding>
+                        </TextBlock.Foreground>
+                    </TextBlock>
+
+                    <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Text="{Binding OrderStatus}" VerticalAlignment="Bottom" HorizontalAlignment="Center" FontSize="20">
+                        <TextBlock.Foreground>
+                            <MultiBinding Converter="{StaticResource BackgroundToForegroundMultiConverter}">
+                                <Binding ElementName="CardHeaderBackground" Path="Fill"/>
+                                <Binding Source="{StaticResource White}"/>
+                                <Binding Source="{StaticResource TextDark}"/>
+                            </MultiBinding>
+                        </TextBlock.Foreground>
+                    </TextBlock>
+
+                    <TextBlock Grid.Row="0" Grid.Column="2" Text="{Binding Table.TableNumber, StringFormat=Table {0}}" FontSize="16" VerticalAlignment="Bottom" Margin="0 0 16 0">
+                        <TextBlock.Foreground>
+                            <MultiBinding Converter="{StaticResource BackgroundToForegroundMultiConverter}">
+                                <Binding ElementName="CardHeaderBackground" Path="Fill"/>
+                                <Binding Source="{StaticResource White}"/>
+                                <Binding Source="{StaticResource TextDark}"/>
+                            </MultiBinding>
+                        </TextBlock.Foreground>
+                    </TextBlock>
+
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="{Binding OrderItems[0].PlacementTime, StringFormat=Placed at: {0:HH:mm}}" Margin="16 0 0 16" FontSize="16" VerticalAlignment="Bottom">
+                        <TextBlock.Foreground>
+                            <MultiBinding Converter="{StaticResource BackgroundToForegroundMultiConverter}">
+                                <Binding ElementName="CardHeaderBackground" Path="Fill"/>
+                                <Binding Source="{StaticResource White}"/>
+                                <Binding Source="{StaticResource TextDark}"/>
+                            </MultiBinding>
+                        </TextBlock.Foreground>
+                    </TextBlock>
+
+                    <Image Grid.Row="1" Grid.Column="1" Height="24" Width="24" Margin="0 16 8 16" HorizontalAlignment="Right">
+                        <Image.Source>
+                            <MultiBinding Converter="{StaticResource BackgroundToForegroundMultiConverter}">
+                                <Binding ElementName="CardHeaderBackground" Path="Fill"/>
+                                <Binding Source="{StaticResource sandClockIcon}"/>
+                            </MultiBinding>
+                        </Image.Source>
+                    </Image>
+
+                    <TextBlock x:Name="RunningTimeTextBlock" Grid.Row="1" Grid.Column="2" FontSize="24" VerticalAlignment="Center" Margin="0 0 16 0">
+                        <TextBlock.Foreground>
+                            <MultiBinding Converter="{StaticResource BackgroundToForegroundMultiConverter}">
+                                <Binding ElementName="CardHeaderBackground" Path="Fill"/>
+                                <Binding Source="{StaticResource White}"/>
+                                <Binding Source="{StaticResource TextDark}"/>
+                            </MultiBinding>
+                        </TextBlock.Foreground>
+                    </TextBlock>
                 </Grid>
-                <ItemsControl Padding="16" ItemsSource="{Binding OrderItems}" ItemTemplate="{StaticResource OrderItemTemplate}" />
+                <ItemsControl Padding="16" ItemsSource="{Binding OrderItemsByCategory}" ItemTemplate="{StaticResource CategoryTemplate}" />
             </StackPanel>
         </Border>
     </DataTemplate>
