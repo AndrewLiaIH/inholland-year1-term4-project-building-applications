@@ -1,12 +1,11 @@
 ﻿using System.ComponentModel;
-using System.Windows.Controls;
 
 namespace UI
 {
     public class Folder : INotifyPropertyChanged
     {
         public string Name { get; }
-        public UserControl UserControl { get; }
+        public Action ShowScreen { get; }
         private bool isActive;
         public bool IsActive
         {
@@ -23,10 +22,10 @@ namespace UI
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public Folder(string name, UserControl userControl, bool isActive = false)
+        public Folder(string name, Action showScreen, bool isActive = false)
         {
             Name = name;
-            UserControl = userControl;
+            ShowScreen = showScreen;
             IsActive = isActive;
         }
 
