@@ -83,6 +83,7 @@ namespace DAL
             return dataTable;
         }
 
+
         private void HandleSqlException(SqlException ex)
         {
             // Preserve the original exception as an inner exception
