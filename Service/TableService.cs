@@ -26,7 +26,7 @@ namespace Service
 
         protected override void CheckForChanges(object sender, EventArgs e)
         {
-            TableOccupiedChanged?.Invoke();
+            //TableOccupiedChanged?.Invoke();
         }
 
         public bool EqualTableoccupation(Table updatedTable,  Table currentTable)

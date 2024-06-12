@@ -551,6 +551,7 @@
                 <TextBlock Text="{Binding Status}" FontStyle="Italic"/>
                 <TextBlock Text="{Binding Quantity, StringFormat=Quantity: {0}}" Foreground="Blue"/>
                 <TextBlock Text="{Binding Comment}" Foreground="Gray"/>
+                <TextBlock Text="{Binding Item.Category}" Foreground="Gray"/>
                 <ItemsControl ItemsSource="{Binding Item.Category.MenuItems}" ItemTemplate="{StaticResource MenuItemTemplate}" />
             </StackPanel>
         </Border>
