@@ -61,6 +61,7 @@ namespace UI
         {
             ButtonPay.Visibility = Visibility.Hidden;
             ButtonFree.Visibility = Visibility.Visible;
+            ButtonEditOrder.IsEnabled = false;
         }
 
         private void ButtonReserve_Click(object sender, RoutedEventArgs e)
@@ -108,7 +109,7 @@ namespace UI
 
             if (!tableService.EqualTableoccupation(updatedTable, tableViewModel.Table))
             {
-                tableViewModel.Table.Occupied = updatedTable.Occupied;
+                tableViewModel.Table.SetOccupied(updatedTable.Occupied);
                 tableViewModel.SetTableState();
             }
         }
@@ -121,7 +122,7 @@ namespace UI
         //Methods
         private void UpdateTableOccupiedStatus(bool status)
         {
-            tableViewModel.Table.Occupied = status;
+            tableViewModel.Table.SetOccupied(status);
             tableService.UpdateTableStatus(tableViewModel.Table);
         }
 
@@ -148,7 +149,7 @@ namespace UI
             {
                 if (orderItem.ItemStatus == Status.ReadyToServe)
                 {
-                    orderItem.ItemStatus = Status.Served;
+                    orderItem.SetItemStatus(Status.Served);
                     changedOrderItems.Add(orderItem);
                 }
             }
@@ -165,7 +166,7 @@ namespace UI
         {
             foreach (Order order in tableViewModel.RunningOrders)
             {
-                order.Finished = true;
+                order.SetFinished(true);
                 UpdateOrderStatus(order);
                 orderService.UpdateAllOrderItemStatus(order);
             }

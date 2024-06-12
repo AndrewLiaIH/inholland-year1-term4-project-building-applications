@@ -4,7 +4,7 @@
     {
         public int DatabaseId { get; private set; }
         public Employee Host { get; private set; }
-        public bool Occupied;
+        public bool Occupied {get; private set; }
         public int TableNumber { get; private set; }
 
         public Table(int databaseId, Employee host, bool occupied, int tableNumber)
@@ -13,6 +13,11 @@
             Host = host;
             Occupied = occupied;
             TableNumber = tableNumber;
+        }
+
+        public void SetOccupied(bool status)
+        {
+            Occupied = status;
         }
 
         public override string ToString()

@@ -44,7 +44,7 @@ namespace UI
                 for (int col = 0; col < 5; col++)
                 {
                     List<Order> ordersPerTable = RunningOrderPerTable(tables[tableIndex]);
-                    Tables.Add(new TableViewModel(tables[tableIndex], row, col, ordersPerTable));
+                    Tables.Add(new(tables[tableIndex], row, col, ordersPerTable));
                     tableIndex++;
                 }
             }
