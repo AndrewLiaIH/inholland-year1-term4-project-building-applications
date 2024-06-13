@@ -32,7 +32,7 @@ namespace UI
 
         private List<Order> GetAllRunningOrders()
         {
-            return orderService.GetAllRunningOrders();
+            return new();
         }
 
         private void SetTables(List<Table> tables)
