@@ -15,13 +15,12 @@ namespace UI
         public UserControlKitchenViewFinished()
         {
             InitializeComponent();
-            LoadOrders();
             DataContext = this;
         }
 
-        private void LoadOrders()
+        public void LoadOrders(bool forKitchen)
         {
-            Orders = orderService.GetAllFinishedOrders();
+            Orders = orderService.GetAllKitchenBarOrders(forKitchen, false);
         }
     }
 }

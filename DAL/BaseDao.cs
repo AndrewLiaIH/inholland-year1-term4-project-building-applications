@@ -109,9 +109,9 @@ namespace DAL
             return ReadTable(dataTable, readRow);
         }
 
-        protected List<T> GetAll<T>(string query, Func<DataRow, T> readRow)
+        protected List<T> GetAll<T>(string query, Func<DataRow, T> readRow, params SqlParameter[] sqlParameters)
         {
-            DataTable dataTable = ExecuteSelectQuery(query);
+            DataTable dataTable = ExecuteSelectQuery(query, sqlParameters);
             return ReadTable(dataTable, readRow);
         }
         

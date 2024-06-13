@@ -20,14 +20,13 @@ namespace UI
         public UserControlKitchenViewRunning()
         {
             InitializeComponent();
-            LoadOrders();
             InitializeTimer();
             DataContext = this;
         }
 
-        private void LoadOrders()
+        public void LoadOrders(bool forKitchen)
         {
-            Orders = orderService.GetAllWaitingAndPreparingOrders();
+            Orders = orderService.GetAllKitchenBarOrders(forKitchen, true);
         }
 
         private void InitializeTimer()

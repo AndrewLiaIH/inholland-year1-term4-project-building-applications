@@ -9,19 +9,20 @@ namespace DAL
         // Order
         private const string QueryGetAllOrders = $"SELECT {ColumnOrderId}, {ColumnTableId}, {ColumnPlacedById}, {ColumnOrderNumber}, {ColumnServingNumber}, {ColumnFinished}, {ColumnTotalPrice} FROM [order]";
         private const string QueryGetOrderById = $"{QueryGetAllOrders} WHERE {ColumnOrderId} = {ParameterNameOrderId}";
-        private const string QueryGetAllRunningOrders = $"{QueryGetAllOrders} WHERE {ColumnFinished} = 0";
-        private const string QueryGetAlFinishedOrders = $"{QueryGetAllOrders} WHERE {ColumnFinished} = 1";
-        private const string QueryGetAllRunningOrdersPerTable = $"{QueryGetAllRunningOrders} AND {ColumnTableId} = {ParameterTableId}";
+        private const string QueryGetAllRunningOrdersPerTable = ""; //$"{QueryGetAllRunningOrders} AND {ColumnTableId} = {ParameterTableId}";
         private const string QueryUpdateOrderStatus = $"UPDATE [order] SET {ColumnFinished} = {ParameterNameOrderStatus} WHERE {ColumnOrderId} = {ParameterNameOrderId}";
-        private const string QueryGetAllWaitingOrPreparingOrders = 
+        private const string QueryGetAllKitchenBarOrders = 
             $"SELECT DISTINCT O.{ColumnOrderId}, {ColumnTableId}, {ColumnPlacedById}, O.{ColumnOrderNumber}, {ColumnServingNumber}, {ColumnFinished}, {ColumnTotalPrice}, {ColumnStatus} FROM [order] AS O " +
             $"JOIN order_item AS OI ON O.{ColumnOrderId} = OI.{ColumnOrderItemNumber} " +
-            $"WHERE {ColumnStatus} = 'Preparing' OR " +
-            $"({ColumnStatus} = 'Waiting' AND " +
+            $"JOIN menu_item AS MI ON OI.{ColumnItemNumber} = MI.item_id " +
+            $"JOIN category AS C ON MI.category_id = C.category_id " +
+            $"JOIN menu_card AS MC ON C.menu_id = MC.card_id " +
+            $"WHERE {ColumnStatus} = {ParameterStatus2} OR " +
+            $"({ColumnStatus} = {ParameterStatus1} AND " +
             $"O.{ColumnOrderId} NOT IN " +
             $"(SELECT DISTINCT O.{ColumnOrderId} " +
             $"FROM [order] AS O JOIN order_item AS OI ON O.{ColumnOrderId} = OI.{ColumnOrderItemNumber} " +
-            $"WHERE {ColumnStatus} = 'Preparing'))";
+            $"WHERE {ColumnStatus} = {ParameterStatus2})) AND menu_type";
 
         private const string ColumnOrderId = "order_id";
         private const string ColumnTableId = "table_number";
@@ -34,6 +35,8 @@ namespace DAL
         private const string ParameterNameOrderId = "@orderId";
         private const string ParameterTableId = "@table_number";
         private const string ParameterNameOrderStatus = "@finished";
+        private const string ParameterStatus1 = "@status1";
+        private const string ParameterStatus2 = "@status2";
 
         // OrderItem
         private const string QueryGetAllOrderItems = $"SELECT {ColumnOrderItemId}, {ColumnOrderItemNumber}, {ColumnItemNumber}, {ColumnPlacementTime}, {ColumnStatus}, {ColumnChangeOfStatus}, {ColumnQuantity}, {ColumnComment} FROM order_item";
@@ -41,12 +44,14 @@ namespace DAL
         private const string QueryGetAllItemsOfOrder = $"{QueryGetAllOrderItems} WHERE {ColumnOrderItemNumber} = {ParameterNameOrderNumber}";
         private const string QueryUpdateAllOrderItemStatus = $"UPDATE order_item SET {ColumnStatus} = {ParameterNameOrderItemStatus} WHERE {ColumnOrderItemNumber} = {ParameterNameOrderNumber}";
         private const string QueryUpdateOrderItemStatusByCategory = $"UPDATE order_item SET {ColumnStatus} = {ParameterNameOrderItemStatus} WHERE {ColumnOrderItemId} = {ParameterNameOrderItemId}";
-        private const string QueryGetAllWaitingOrPreparingOrderItems = 
+        private const string QueryGetAllKitchenBarOrderItems = 
             $"SELECT OI.{ColumnOrderItemId}, OI.{ColumnOrderItemNumber}, OI.{ColumnItemNumber}, {ColumnPlacementTime}, {ColumnStatus}, {ColumnChangeOfStatus}, {ColumnQuantity}, {ColumnComment} FROM order_item AS OI " +
             $"JOIN menu_item AS MI ON OI.{ColumnItemNumber} = MI.item_id " +
             $"JOIN category AS C ON MI.category_id = C.category_id " +
             $"JOIN menu_card AS MC ON C.menu_id = MC.card_id " +
-            $"WHERE ({ColumnStatus} = 'Waiting' OR {ColumnStatus} = 'Preparing') AND menu_type != 'Drinks'";
+            $"WHERE ({ColumnStatus} = {ParameterStatus1} OR {ColumnStatus} = {ParameterStatus2}) AND menu_type";
+        private const string EqualDrinks = " = 'Drinks'";
+        private const string NotEqualDrinks = " != 'Drinks'";
 
         private const string ColumnOrderItemId = "order_id";
         private const string ColumnOrderItemNumber = "order_number";
@@ -102,22 +107,26 @@ namespace DAL
             return order;
         }
 
-        public List<Order> GetAllRunningOrders()
+        public List<Order> GetAllKitchenBarOrders(bool forKitchen, bool isRunning)
         {
-            List<Order> orders = GetAll(QueryGetAllRunningOrders, ReadRowOrder);
+            string queryEnd = forKitchen ? NotEqualDrinks : EqualDrinks;
+            string status1 = isRunning ? "Waiting" : "Done";
+            string status2 = isRunning ? "Preparing" : "Served";
 
-            foreach (Order order in orders)
+            SqlParameter[] parameters1 = new SqlParameter[]
             {
-                GetAndSetAllItemsForOrder(order);
-            }
+                new(ParameterStatus1, status1),
+                new(ParameterStatus2, status2)
+            };
 
-            return orders;
-        }
+            SqlParameter[] parameters2 = new SqlParameter[]
+            {
+                new(ParameterStatus1, status1),
+                new(ParameterStatus2, status2)
+            };
 
-        public List<Order> GetAllWaitingAndPreparingOrders()
-        {
-            List<OrderItem> orderItems = GetAll(QueryGetAllWaitingOrPreparingOrderItems, ReadRowOrderItem);
-            List<Order> orders = GetAll(QueryGetAllWaitingOrPreparingOrders, ReadRowOrderWithStatus);
+            List<OrderItem> orderItems = GetAll(QueryGetAllKitchenBarOrderItems + queryEnd, ReadRowOrderItem, parameters1);
+            List<Order> orders = GetAll(QueryGetAllKitchenBarOrders + queryEnd, ReadRowOrderWithStatus, parameters2);
 
             foreach (OrderItem item in orderItems)
                 orders.Find(i => i.DatabaseId == item.OrderId).OrderItems.Add(item);
@@ -134,18 +143,6 @@ namespace DAL
 
             DataTable ordersTable = ExecuteSelectQuery(QueryGetAllRunningOrdersPerTable, parameters);
             List<Order> orders = ReadTable(ordersTable, ReadRowOrder);
-
-            foreach (Order order in orders)
-            {
-                GetAndSetAllItemsForOrder(order);
-            }
-
-            return orders;
-        }
-
-        public List<Order> GetAllFinishedOrders()
-        {
-            List<Order> orders = GetAll(QueryGetAlFinishedOrders, ReadRowOrder);
 
             foreach (Order order in orders)
             {
