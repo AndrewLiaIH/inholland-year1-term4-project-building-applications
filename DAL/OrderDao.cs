@@ -13,6 +13,7 @@ namespace DAL
         private const string QueryGetAlFinishedOrders = $"{QueryGetAllOrders} WHERE {ColumnFinished} = 1";
         private const string QueryGetAllRunningOrdersPerTable = $"{QueryGetAllRunningOrders} AND {ColumnTableId} = {ParameterTableId}";
         private const string QueryUpdateOrderStatus = $"UPDATE [order] SET {ColumnFinished} = {ParameterNameOrderStatus} WHERE {ColumnOrderId} = {ParameterNameOrderId}";
+        private const string QueryGetAllWaitingOrPreparingOrders = $"SELECT DISTINCT O.{ColumnOrderId}, {ColumnTableId}, {ColumnPlacedById}, O.{ColumnOrderNumber}, {ColumnServingNumber}, {ColumnFinished}, {ColumnTotalPrice}, {ColumnStatus} FROM [order] AS O JOIN order_item AS OI ON O.{ColumnOrderId} = OI.{ColumnOrderItemNumber} WHERE {ColumnStatus} = 'Preparing' OR ({ColumnStatus} = 'Waiting' AND O.{ColumnOrderId} NOT IN (SELECT DISTINCT O.{ColumnOrderId} FROM [order] AS O JOIN order_item AS OI ON O.{ColumnOrderId} = OI.{ColumnOrderItemNumber} WHERE {ColumnStatus} = 'Preparing'))";
 
         private const string ColumnOrderId = "order_id";
         private const string ColumnTableId = "table_number";
@@ -32,6 +33,7 @@ namespace DAL
         private const string QueryGetAllItemsOfOrder = $"{QueryGetAllOrderItems} WHERE {ColumnOrderItemNumber} = {ParameterNameOrderNumber}";
         private const string QueryUpdateAllOrderItemStatus = $"UPDATE order_item SET {ColumnStatus} = {ParameterNameOrderItemStatus} WHERE {ColumnOrderItemNumber} = {ParameterNameOrderNumber}";
         private const string QueryUpdateOrderItemStatusByCategory = $"UPDATE order_item SET {ColumnStatus} = {ParameterNameOrderItemStatus} WHERE {ColumnOrderItemId} = {ParameterNameOrderItemId}";
+        private const string QueryGetAllWaitingOrPreparingOrderItems = $"{QueryGetAllOrderItems} WHERE {ColumnStatus} = 'Waiting' OR {ColumnStatus} = 'Preparing'";
 
         private const string ColumnOrderItemId = "order_id";
         private const string ColumnOrderItemNumber = "order_number";
@@ -95,6 +97,17 @@ namespace DAL
             {
                 GetAndSetAllItemsForOrder(order);
             }
+
+            return orders;
+        }
+
+        public List<Order> GetAllWaitingAndPreparingOrders()
+        {
+            List<OrderItem> orderItems = GetAll(QueryGetAllWaitingOrPreparingOrderItems, ReadRowOrderItem);
+            List<Order> orders = GetAll(QueryGetAllWaitingOrPreparingOrders, ReadRowOrderWithStatus);
+
+            foreach (OrderItem item in orderItems)
+                orders.Find(i => i.DatabaseId == item.OrderId).OrderItems.Add(item);
 
             return orders;
         }
@@ -198,9 +211,24 @@ namespace DAL
             return new(id, table, employee, orderNumber, servingNumber, finished, totalPrice);
         }
 
+        private Order ReadRowOrderWithStatus(DataRow dr)
+        {
+            int id = (int)dr[ColumnOrderId];
+            Table table = tableDao.GetTableById((int)dr[ColumnTableId]);
+            Employee employee = employeeDao.GetEmployeeById((int)dr[ColumnPlacedById]);
+            int orderNumber = (int)dr[ColumnOrderNumber];
+            int? servingNumber = dr[ColumnServingNumber] as int?;
+            bool finished = (bool)dr[ColumnFinished];
+            decimal totalPrice = (decimal)dr[ColumnTotalPrice];
+            Status? status = (Status)Enum.Parse(typeof(Status), (string)dr[ColumnStatus]);
+
+            return new(id, table, employee, orderNumber, servingNumber, finished, totalPrice, status);
+        }
+
         private OrderItem ReadRowOrderItem(DataRow dr)
         {
             int id = (int)dr[ColumnOrderItemId];
+            int orderId = (int)dr[ColumnOrderItemNumber];
             MenuItem menuItem = menuDao.GetMenuItemById((int)dr[ColumnItemNumber]);
             DateTime? placementTime = dr[ColumnPlacementTime] as DateTime?;
             Status? status = (Status)Enum.Parse(typeof(Status), (string)dr[ColumnStatus]);
@@ -208,7 +236,7 @@ namespace DAL
             int? quantity = dr[ColumnQuantity] as int?;
             string? comment = dr[ColumnComment] as string;
 
-            return new(id, menuItem, placementTime, status, changeOfStatus, quantity, comment);
+            return new(id, orderId, menuItem, placementTime, status, changeOfStatus, quantity, comment);
         }
     }
 }

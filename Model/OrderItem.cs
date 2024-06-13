@@ -4,6 +4,7 @@
     public class OrderItem
     {
         public int DatabaseId { get; private set; }
+        public int OrderId { get; private set; }
         public MenuItem Item { get; private set; }
         public DateTime? PlacementTime { get; private set; }
         public Status? ItemStatus { get; private set; }
@@ -18,9 +19,10 @@
             }
         }
 
-        public OrderItem(int databaseId, MenuItem item, DateTime? placementTime, Status? status, DateTime? changeOfStatus, int? quantity, string? comment)
+        public OrderItem(int databaseId, int orderId, MenuItem item, DateTime? placementTime, Status? status, DateTime? changeOfStatus, int? quantity, string? comment)
         {
             DatabaseId = databaseId;
+            OrderId = orderId;
             Item = item;
             PlacementTime = placementTime;
             ItemStatus = status;

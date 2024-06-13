@@ -24,6 +24,8 @@
                 orderStatus = value;
             }
         }
+        public Status? StatusFromDB { get; private set; }
+
         public List<CategoryGroup> OrderItemsByCategory
         {
             get
@@ -39,7 +41,7 @@
             }
         }
 
-        public Order(int databaseId, Table table, Employee placedBy, int orderNumber, int? servingNumber, bool finished, decimal totalPrice)
+        public Order(int databaseId, Table table, Employee placedBy, int orderNumber, int? servingNumber, bool finished, decimal totalPrice, Status? status = null)
         {
             DatabaseId = databaseId;
             Table = table;
@@ -48,6 +50,7 @@
             ServingNumber = servingNumber;
             Finished = finished;
             TotalPrice = totalPrice;
+            StatusFromDB = status;
             OrderItems = new();
         }
 

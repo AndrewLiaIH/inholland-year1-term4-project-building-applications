@@ -37,6 +37,11 @@ namespace Service
             return orderDao.GetAllFinishedOrders();
         }
 
+        public List<Order> GetAllWaitingAndPreparingOrders()
+        {
+            return orderDao.GetAllWaitingAndPreparingOrders();
+        }
+
         public List<OrderItem> GetAllOrderItems()
         {
             return orderDao.GetAllOrderItems();
