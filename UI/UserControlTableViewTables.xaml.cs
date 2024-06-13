@@ -17,9 +17,7 @@ namespace UI
         public UserControlTableViewTables()
         {
             InitializeComponent();
-
             GetAllTables();
-            UpdateWaitingTime();
             DataContext = this;
         }
 
@@ -28,11 +26,12 @@ namespace UI
             TableService tableService = new();
             List<Table> tables = tableService.GetAllTables();
             SetTables(tables);
+            UpdateWaitingTime();
         }
 
         private List<Order> GetAllRunningOrders()
         {
-            return orderService.GetAllRunningOrders();
+            return orderService.GetAllRunningOrdersForTables();
         }
 
         private void SetTables(List<Table> tables)
@@ -78,6 +77,9 @@ namespace UI
             {
                 grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
             }
+
+            //The grid won't be recreated again
+            (sender as FrameworkElement).Loaded -= ItemsControlGrid_Loaded;
         }
     }
 }

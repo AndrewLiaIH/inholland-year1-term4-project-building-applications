@@ -26,8 +26,8 @@ namespace UI
             }
         }
 
-        private Status tableState;
-        public Status TableState
+        private TableStatus tableState;
+        public TableStatus TableState
         {
             get { return tableState; }
             set
@@ -60,13 +60,13 @@ namespace UI
         internal void SetTableState()
         {
             if (ReadyToBeServed())
-                TableState = Status.ReadyToServe;
+                TableState = TableStatus.ReadyToServe;
             else if (TableHasRunningOrder())
-                TableState = Status.Occupied;
+                TableState = TableStatus.Occupied;
             else if (Table.Occupied)
-                TableState = Status.Reserved;
+                TableState = TableStatus.Reserved;
             else
-                TableState = Status.Free;
+                TableState = TableStatus.Free;
         }
 
         private bool TableHasRunningOrder()
@@ -77,7 +77,7 @@ namespace UI
         private bool ReadyToBeServed()
         {
             List<OrderItem> orderItems = RunningOrders.SelectMany(order => order.OrderItems).ToList();
-            return orderItems.Any(orderItem => orderItem.ItemStatus == Status.ReadyToServe);
+            return orderItems.Any(orderItem => orderItem.ItemStatus == OrderStatus.Done);
         }
 
         private void CalculateWaitingTime(OrderItem orderItem)
@@ -91,7 +91,7 @@ namespace UI
         private void SetWaitingTime()
         {
             List<OrderItem> allOrderItems = RunningOrders.SelectMany(order => order.OrderItems).ToList();
-            List<OrderItem> waitingOrderItems = allOrderItems.Where(orderItem => orderItem.ItemStatus != Status.Served).ToList();
+            List<OrderItem> waitingOrderItems = allOrderItems.Where(orderItem => orderItem.ItemStatus != OrderStatus.Served).ToList();
             OrderItem orderItemLongestWaiting = waitingOrderItems.OrderBy(orderItem => orderItem.PlacementTime).FirstOrDefault();
 
             CalculateWaitingTime(orderItemLongestWaiting);

@@ -32,6 +32,11 @@ namespace DAL
         private const string QueryGetAllItemsOfOrder = $"{QueryGetAllOrderItems} WHERE {ColumnOrderItemNumber} = {ParameterNameOrderNumber}";
         private const string QueryUpdateAllOrderItemStatus = $"UPDATE order_item SET {ColumnStatus} = {ParameterNameOrderItemStatus} WHERE {ColumnOrderItemNumber} = {ParameterNameOrderNumber}";
         private const string QueryUpdateOrderItemStatusByCategory = $"UPDATE order_item SET {ColumnStatus} = {ParameterNameOrderItemStatus} WHERE {ColumnOrderItemId} = {ParameterNameOrderItemId}";
+        private const string QueryGetAllRunningOrderItemsTable = 
+            $"SELECT O.{ColumnOrderId}, O.{ColumnTableId}, O.{ColumnPlacedById}, O.{ColumnOrderNumber}, O.{ColumnServingNumber}, O.{ColumnFinished}, O.{ColumnTotalPrice}, " +
+            $"OI.{ColumnOrderItemId}, OI.{ColumnOrderItemNumber}, OI.{ColumnItemNumber}, OI.{ColumnPlacementTime}, OI.{ColumnStatus}, OI.{ColumnChangeOfStatus}, OI.{ColumnQuantity}, OI.{ColumnComment} " +
+            $"FROM [order] O INNER JOIN order_item OI ON O.{ColumnOrderId} = OI.{ColumnOrderItemNumber} WHERE O.{ColumnFinished} = 0 OR EXISTS " +
+            $"(SELECT 1 FROM order_item oi WHERE oi.{ColumnOrderItemNumber} = O.{ColumnOrderId} AND oi.{ColumnStatus} <> 'Served')";
 
         private const string ColumnOrderItemId = "order_id";
         private const string ColumnOrderItemNumber = "order_number";
@@ -117,6 +122,20 @@ namespace DAL
             return orders;
         }
 
+        public List<Order> GetAllRunningOrdersForTables()
+        {
+            Dictionary<int, Order> ordersDictionary = new();
+
+            DataTable dataTabel = ExecuteSelectQuery(QueryGetAllRunningOrderItemsTable);
+
+            foreach (DataRow row in dataTabel.Rows) 
+            {
+                ReadCombinedRow(row, ordersDictionary);
+            }
+
+            return ordersDictionary.Values.ToList();
+        }
+
         public List<Order> GetAllFinishedOrders()
         {
             List<Order> orders = GetAll(QueryGetAlFinishedOrders, ReadRowOrder);
@@ -169,7 +188,7 @@ namespace DAL
             SqlParameter[] parameters = new SqlParameter[]
             {
                 new(ParameterNameOrderNumber, order.DatabaseId),
-                new(ParameterNameOrderItemStatus, Status.Served.ToString())
+                new(ParameterNameOrderItemStatus, OrderStatus.Served.ToString())
             };
 
             ExecuteEditQuery(QueryUpdateAllOrderItemStatus, parameters);
@@ -203,12 +222,26 @@ namespace DAL
             int id = (int)dr[ColumnOrderItemId];
             MenuItem menuItem = menuDao.GetMenuItemById((int)dr[ColumnItemNumber]);
             DateTime? placementTime = dr[ColumnPlacementTime] as DateTime?;
-            Status? status = (Status)Enum.Parse(typeof(Status), (string)dr[ColumnStatus]);
+            OrderStatus? status = (OrderStatus)Enum.Parse(typeof(OrderStatus), (string)dr[ColumnStatus]);
             DateTime? changeOfStatus = dr[ColumnChangeOfStatus] as DateTime?;
             int? quantity = dr[ColumnQuantity] as int?;
             string? comment = dr[ColumnComment] as string;
 
             return new(id, menuItem, placementTime, status, changeOfStatus, quantity, comment);
+        }
+
+        private void ReadCombinedRow(DataRow dr, Dictionary<int, Order> orderDict)
+        {
+            int orderId = (int)dr[ColumnOrderId];
+
+            if (!orderDict.TryGetValue(orderId, out Order order))
+            {
+                order = ReadRowOrder(dr);
+                orderDict[orderId] = order;
+            }
+
+            OrderItem orderItem = ReadRowOrderItem(dr);
+            order.OrderItems.Add(orderItem);
         }
     }
 }

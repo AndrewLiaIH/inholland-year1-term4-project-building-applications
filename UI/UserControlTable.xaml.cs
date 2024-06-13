@@ -59,6 +59,8 @@ namespace UI
 
         private void ButtonPay_Click(object sender, RoutedEventArgs e)
         {
+            FinishAllOrders();
+
             ButtonPay.Visibility = Visibility.Hidden;
             ButtonFree.Visibility = Visibility.Visible;
             ButtonEditOrder.IsEnabled = false;
@@ -67,7 +69,7 @@ namespace UI
         private void ButtonReserve_Click(object sender, RoutedEventArgs e)
         {
             UpdateTableOccupiedStatus(true);
-            tableViewModel.TableState = Status.Reserved;
+            tableViewModel.TableState = TableStatus.Reserved;
         }
 
         private void ButtonOrder_Click(object sender, RoutedEventArgs e)
@@ -79,7 +81,7 @@ namespace UI
         {
             SetOrderItemsToServed();
             tableViewModel.UpdateWaitingTime();
-            tableViewModel.TableState = Status.Occupied;
+            tableViewModel.TableState = TableStatus.Occupied;
         }
 
         private void ButtonEditOrder_Click(object sender, RoutedEventArgs e)
@@ -147,9 +149,9 @@ namespace UI
         {
             foreach (var orderItem in order.OrderItems)
             {
-                if (orderItem.ItemStatus == Status.ReadyToServe)
+                if (orderItem.ItemStatus == OrderStatus.Done)
                 {
-                    orderItem.SetItemStatus(Status.Served);
+                    orderItem.SetItemStatus(OrderStatus.Served);
                     changedOrderItems.Add(orderItem);
                 }
             }
@@ -174,7 +176,7 @@ namespace UI
 
         private void ResetTable()
         {
-            tableViewModel.TableState = Status.Free;
+            tableViewModel.TableState = TableStatus.Free;
             tableViewModel.RunningOrders.Clear();
             tableViewModel.UpdateWaitingTime();
         }
