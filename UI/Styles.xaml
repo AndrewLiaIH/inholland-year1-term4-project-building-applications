@@ -300,7 +300,13 @@
             <DataTrigger Binding="{Binding TableState}" Value="Occupied">
                 <Setter Property="Background" Value="{StaticResource Color6}"/>
             </DataTrigger>
-            <DataTrigger Binding="{Binding TableState}" Value="ReadyToServe">
+            <DataTrigger Binding="{Binding TableState}" Value="ReadyToServeFood">
+                <Setter Property="Background" Value="{StaticResource Color6}"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding TableState}" Value="ReadyToServeDrinks">
+                <Setter Property="Background" Value="{StaticResource Color6}"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding TableState}" Value="ReadyToServeAll">
                 <Setter Property="Background" Value="{StaticResource Color6}"/>
             </DataTrigger>
         </Style.Triggers>
@@ -393,7 +399,13 @@
             <DataTrigger Binding="{Binding TableState}" Value="Occupied">
                 <Setter Property="Visibility" Value="Visible"/>
             </DataTrigger>
-            <DataTrigger Binding="{Binding TableState}" Value="ReadyToServe">
+            <DataTrigger Binding="{Binding TableState}" Value="ReadyToServeFood">
+                <Setter Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding TableState}" Value="ReadyToServeDrinks">
+                <Setter Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding TableState}" Value="ReadyToServeAll">
                 <Setter Property="Visibility" Value="Visible"/>
             </DataTrigger>
         </Style.Triggers>
@@ -410,7 +422,13 @@
             <DataTrigger Binding="{Binding TableState}" Value="Occupied">
                 <Setter Property="Visibility" Value="Hidden"/>
             </DataTrigger>
-            <DataTrigger Binding="{Binding TableState}" Value="ReadyToServe">
+            <DataTrigger Binding="{Binding TableState}" Value="ReadyToServeFood">
+                <Setter Property="Visibility" Value="Hidden"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding TableState}" Value="ReadyToServeDrinks">
+                <Setter Property="Visibility" Value="Hidden"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding TableState}" Value="ReadyToServeAll">
                 <Setter Property="Visibility" Value="Hidden"/>
             </DataTrigger>
         </Style.Triggers>
@@ -427,7 +445,13 @@
             <DataTrigger Binding="{Binding TableState}" Value="Occupied">
                 <Setter Property="Visibility" Value="Visible"/>
             </DataTrigger>
-            <DataTrigger Binding="{Binding TableState}" Value="ReadyToServe">
+            <DataTrigger Binding="{Binding TableState}" Value="ReadyToServeFood">
+                <Setter Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding TableState}" Value="ReadyToServeDrinks">
+                <Setter Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding TableState}" Value="ReadyToServeAll">
                 <Setter Property="Visibility" Value="Visible"/>
             </DataTrigger>
         </Style.Triggers>
@@ -473,7 +497,13 @@
             <DataTrigger Binding="{Binding TableState}" Value="Occupied">
                 <Setter Property="Visibility" Value="Hidden"/>
             </DataTrigger>
-            <DataTrigger Binding="{Binding TableState}" Value="ReadyToServe">
+            <DataTrigger Binding="{Binding TableState}" Value="ReadyToServeFood">
+                <Setter Property="Visibility" Value="Hidden"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding TableState}" Value="ReadyToServeDrinks">
+                <Setter Property="Visibility" Value="Hidden"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding TableState}" Value="ReadyToServeAll">
                 <Setter Property="Visibility" Value="Hidden"/>
             </DataTrigger>
         </Style.Triggers>
@@ -490,7 +520,13 @@
             <DataTrigger Binding="{Binding TableState}" Value="Occupied">
                 <Setter Property="Visibility" Value="Hidden"/>
             </DataTrigger>
-            <DataTrigger Binding="{Binding TableState}" Value="ReadyToServe">
+            <DataTrigger Binding="{Binding TableState}" Value="ReadyToServeFood">
+                <Setter Property="Visibility" Value="Hidden"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding TableState}" Value="ReadyToServeDrinks">
+                <Setter Property="Visibility" Value="Hidden"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding TableState}" Value="ReadyToServeAll">
                 <Setter Property="Visibility" Value="Hidden"/>
             </DataTrigger>
         </Style.Triggers>
@@ -507,7 +543,13 @@
             <DataTrigger Binding="{Binding TableState}" Value="Occupied">
                 <Setter Property="Visibility" Value="Visible"/>
             </DataTrigger>
-            <DataTrigger Binding="{Binding TableState}" Value="ReadyToServe">
+            <DataTrigger Binding="{Binding TableState}" Value="ReadyToServeFood">
+                <Setter Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding TableState}" Value="ReadyToServeDrinks">
+                <Setter Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding TableState}" Value="ReadyToServeAll">
                 <Setter Property="Visibility" Value="Visible"/>
             </DataTrigger>
         </Style.Triggers>
@@ -526,7 +568,13 @@
                 <Setter Property="IsEnabled" Value="False"/>
                 <Setter Property="Opacity" Value="0.5"/>
             </DataTrigger>
-            <DataTrigger Binding="{Binding TableState}" Value="ReadyToServe">
+            <DataTrigger Binding="{Binding TableState}" Value="ReadyToServeFood">
+                <Setter Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding TableState}" Value="ReadyToServeDrinks">
+                <Setter Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding TableState}" Value="ReadyToServeAll">
                 <Setter Property="Visibility" Value="Visible"/>
             </DataTrigger>
         </Style.Triggers>
@@ -544,7 +592,13 @@
             <DataTrigger Binding="{Binding TableState}" Value="Occupied">
                 <Setter Property="Visibility" Value="Visible"/>
             </DataTrigger>
-            <DataTrigger Binding="{Binding TableState}" Value="ReadyToServe">
+            <DataTrigger Binding="{Binding TableState}" Value="ReadyToServeFood">
+                <Setter Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding TableState}" Value="ReadyToServeDrinks">
+                <Setter Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding TableState}" Value="ReadyToServeAll">
                 <Setter Property="Visibility" Value="Visible"/>
             </DataTrigger>
         </Style.Triggers>
@@ -561,7 +615,13 @@
             <DataTrigger Binding="{Binding TableState}" Value="Occupied">
                 <Setter Property="Visibility" Value="Hidden"/>
             </DataTrigger>
-            <DataTrigger Binding="{Binding TableState}" Value="ReadyToServe">
+            <DataTrigger Binding="{Binding TableState}" Value="ReadyToServeFood">
+                <Setter Property="Visibility" Value="Hidden"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding TableState}" Value="ReadyToServeDrinks">
+                <Setter Property="Visibility" Value="Hidden"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding TableState}" Value="ReadyToServeAll">
                 <Setter Property="Visibility" Value="Hidden"/>
             </DataTrigger>
         </Style.Triggers>
@@ -585,7 +645,13 @@
             <DataTrigger Binding="{Binding TableState}" Value="Occupied">
                 <Setter Property="Visibility" Value="Visible"/>
             </DataTrigger>
-            <DataTrigger Binding="{Binding TableState}" Value="ReadyToServe">
+            <DataTrigger Binding="{Binding TableState}" Value="ReadyToServeFood">
+                <Setter Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding TableState}" Value="ReadyToServeDrinks">
+                <Setter Property="Visibility" Value="Visible"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding TableState}" Value="ReadyToServeAll">
                 <Setter Property="Visibility" Value="Visible"/>
             </DataTrigger>
         </Style.Triggers>

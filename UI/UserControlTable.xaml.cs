@@ -53,7 +53,6 @@ namespace UI
         private void ButtonFree_Click(object sender, RoutedEventArgs e)
         {
             UpdateTableOccupiedStatus(false);
-            FinishAllOrders();
             ResetTable();
         }
 

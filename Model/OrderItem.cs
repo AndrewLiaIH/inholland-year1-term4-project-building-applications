@@ -18,7 +18,7 @@
             }
         }
 
-        public OrderItem(int databaseId, int orderId, MenuItem item, DateTime? placementTime, OrderStatus? status, DateTime? changeOfStatus, int? quantity, string? comment)
+        public OrderItem(int databaseId, MenuItem item, DateTime? placementTime, OrderStatus? status, DateTime? changeOfStatus, int? quantity, string? comment)
         {
             DatabaseId = databaseId;
             Item = item;

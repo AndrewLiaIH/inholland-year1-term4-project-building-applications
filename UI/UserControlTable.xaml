@@ -22,7 +22,8 @@
                     </Grid.ColumnDefinitions>
                     <Button Grid.Column="0" x:Name="ButtonFree" Content="Free" Style="{StaticResource FreeButtonStyle}" Click="ButtonFree_Click" Margin="9,0,31,0"/>
                     <Button Grid.Column="0" x:Name="ButtonPay" Content="Pay" Style="{StaticResource PayButtonStyle}" Click="ButtonPay_Click" Margin="9,0,31,0"/>
-                    <Image x:Name="BellIcon" Grid.Row="0" Grid.Column="1" Source="{StaticResource BellIcon}" Style="{StaticResource TableBellIcon}" Height="24" Margin="89,6,9,5"/>
+                    <Image x:Name="DrinkIcon" Grid.Row="0" Grid.Column="1" Source="{StaticResource DrinkIcon}" Style="{StaticResource TableDrinkIcon}" Margin="94,10,10,10"/>
+                    <Image x:Name="FoodIcon" Grid.Row="0" Grid.Column="1" Source="{StaticResource FoodIcon}" Style="{StaticResource TableFoodIcon}" Margin="54,8,37,8"/>
                 </Grid>
                 <Grid Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
                     <TextBlock Grid.Column="0" Text="{Binding Table.TableNumber, StringFormat='Table {0}'}" Style="{StaticResource TableNameStyle}"/>

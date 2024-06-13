@@ -59,10 +59,11 @@ namespace UI
 
         internal void SetTableState()
         {
-            if (ReadyToBeServed())
-                TableState = TableStatus.ReadyToServe;
-            else if (TableHasRunningOrder())
+            if (TableHasRunningOrder())
+            {
                 TableState = TableStatus.Occupied;
+                TableStatusReadyToServe();
+            }
             else if (Table.Occupied)
                 TableState = TableStatus.Reserved;
             else
@@ -74,10 +75,33 @@ namespace UI
             return !RunningOrders.IsNullOrEmpty();
         }
 
-        private bool ReadyToBeServed()
+        private HashSet<MenuType> GetDoneMenuTypes()
         {
-            List<OrderItem> orderItems = RunningOrders.SelectMany(order => order.OrderItems).ToList();
-            return orderItems.Any(orderItem => orderItem.ItemStatus == OrderStatus.Done);
+            HashSet<MenuType> statuses = new();
+
+            foreach (Order order in RunningOrders)
+            {
+                List<OrderItem> doneOrderItems = order.OrderItems.Where(orderItem => orderItem.ItemStatus == OrderStatus.Done).ToList();
+                statuses.UnionWith(doneOrderItems.Select(orderItem => orderItem.Item.Category.MenuCard.MenuType));
+            }
+
+            return statuses;
+        }
+
+        private void TableStatusReadyToServe()
+        {
+            HashSet<MenuType> statuses = GetDoneMenuTypes();
+
+            bool containsDrinks = statuses.Contains(MenuType.Drinks);
+            bool containsDinner = statuses.Contains(MenuType.Dinner);
+            bool containsLunch = statuses.Contains(MenuType.Lunch);
+
+            if (containsDrinks && (containsDinner || containsLunch))
+                TableState = TableStatus.ReadyToServeAll;
+            else if (containsDinner || containsLunch)
+                TableState = TableStatus.ReadyToServeFood;
+            else if (containsDrinks)
+                TableState = TableStatus.ReadyToServeDrinks;
         }
 
         private void CalculateWaitingTime(OrderItem orderItem)

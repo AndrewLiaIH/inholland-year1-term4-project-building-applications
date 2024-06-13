@@ -33,9 +33,7 @@ namespace UI
 
         private void ShowTableViewTables()
         {
-            if (userControlTableViewTables == null)
-                userControlTableViewTables = new();
-
+            userControlTableViewTables ??= new();
             TableViewContentControl.Content = userControlTableViewTables;
         }
     }

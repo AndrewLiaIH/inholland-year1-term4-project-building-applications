@@ -230,14 +230,14 @@ namespace DAL
             return new(id, menuItem, placementTime, status, changeOfStatus, quantity, comment);
         }
 
-        private void ReadCombinedRow(DataRow dr, Dictionary<int, Order> orderDict)
+        private void ReadCombinedRow(DataRow dr, Dictionary<int, Order> orderDictionary)
         {
             int orderId = (int)dr[ColumnOrderId];
 
-            if (!orderDict.TryGetValue(orderId, out Order order))
+            if (!orderDictionary.TryGetValue(orderId, out Order order))
             {
                 order = ReadRowOrder(dr);
-                orderDict[orderId] = order;
+                orderDictionary[orderId] = order;
             }
 
             OrderItem orderItem = ReadRowOrderItem(dr);

@@ -81,8 +81,10 @@
 
                 if (status == null)
                     status = item.ItemStatus;
+                else if (item.ItemStatus == Model.OrderStatus.Preparing)
                 else if (item.ItemStatus == OrderStatus.Preparing)
                     status = item.ItemStatus;
+                else if (item.ItemStatus == Model.OrderStatus.Waiting && status != Model.OrderStatus.Preparing)
                 else if (item.ItemStatus == OrderStatus.Waiting && status != OrderStatus.Preparing)
                     status = item.ItemStatus;
             }

@@ -52,24 +52,6 @@
         </DrawingImage.Drawing>
     </DrawingImage>
 
-
-    <DrawingImage x:Key="BellIcon">
-        <DrawingImage.Drawing>
-            <DrawingGroup>
-                <GeometryDrawing Geometry="M8.0598 9.96177C8.45273 6.4254 11.4419 3.75 15 3.75V3.75C18.5581 3.75 21.5473 6.4254 21.9402 9.96177L22.2549 12.7945C22.3069 13.2623 22.3329 13.4962 22.3721 13.7258C22.5128 14.5511 22.7822 15.3493 23.1705 16.0911C23.2785 16.2975 23.3995 16.4992 23.6417 16.9028L24.4326 18.221C25.2384 19.5639 25.6412 20.2354 25.354 20.7427C25.0668 21.25 24.2837 21.25 22.7176 21.25H7.28238C5.71627 21.25 4.93322 21.25 4.64599 20.7427C4.35876 20.2354 4.76164 19.5639 5.5674 18.221L6.35832 16.9028C6.60046 16.4992 6.72153 16.2975 6.82954 16.0911C7.21781 15.3493 7.48722 14.5511 7.62794 13.7258C7.66709 13.4962 7.69308 13.2623 7.74505 12.7945L8.0598 9.96177Z">
-                    <GeometryDrawing.Pen>
-                        <Pen Brush="{StaticResource Color3}" Thickness="2" EndLineCap="Round" StartLineCap="Round" LineJoin="Round" />
-                    </GeometryDrawing.Pen>
-                </GeometryDrawing>
-                <GeometryDrawing Geometry="M10 21.25C10 21.9066 10.1293 22.5568 10.3806 23.1634C10.6319 23.77 11.0002 24.3212 11.4645 24.7855C11.9288 25.2498 12.48 25.6181 13.0866 25.8694C13.6932 26.1207 14.3434 26.25 15 26.25C15.6566 26.25 16.3068 26.1207 16.9134 25.8694C17.52 25.6181 18.0712 25.2498 18.5355 24.7855C18.9998 24.3212 19.3681 23.77 19.6194 23.1634C19.8707 22.5568 20 21.9066 20 21.25">
-                    <GeometryDrawing.Pen>
-                        <Pen Brush="{StaticResource Color3}" Thickness="2" EndLineCap="Round" StartLineCap="Round" LineJoin="Round" />
-                    </GeometryDrawing.Pen>
-                </GeometryDrawing>
-            </DrawingGroup>
-        </DrawingImage.Drawing>
-    </DrawingImage>
-
     <DrawingImage x:Key="FoodIcon">
         <DrawingImage.Drawing>
             <DrawingGroup>
