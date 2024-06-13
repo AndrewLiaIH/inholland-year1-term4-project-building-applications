@@ -10,8 +10,8 @@
         public bool Finished {get; private set; }
         public decimal TotalPrice { get; private set; }
         public List<OrderItem> OrderItems { get; private set; }
-        private Status? orderStatus;
-        public Status? OrderStatus
+        private OrderStatus? orderStatus;
+        public OrderStatus? OrderStatus
         {
             get
             {
@@ -69,26 +69,26 @@
             OrderItems = items;
         }
 
-        private Status? GetOrderStatus()
+        private OrderStatus? GetOrderStatus()
         {
-            Status? status = null;
+            OrderStatus? status = null;
             bool isNotDone = false;
 
             foreach (OrderItem item in OrderItems)
             {
-                if (item.ItemStatus != Status.Done)
+                if (item.ItemStatus != OrderStatus.Done)
                     isNotDone = true;
 
                 if (status == null)
                     status = item.ItemStatus;
-                else if (item.ItemStatus == Status.Preparing)
+                else if (item.ItemStatus == OrderStatus.Preparing)
                     status = item.ItemStatus;
-                else if (item.ItemStatus == Status.Waiting && status != Status.Preparing)
+                else if (item.ItemStatus == OrderStatus.Waiting && status != OrderStatus.Preparing)
                     status = item.ItemStatus;
             }
 
             if (!isNotDone)
-                status = Status.Done;
+                status = OrderStatus.Done;
 
             return status;
         }

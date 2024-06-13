@@ -6,7 +6,7 @@
         public int DatabaseId { get; private set; }
         public MenuItem Item { get; private set; }
         public DateTime? PlacementTime { get; private set; }
-        public Status? ItemStatus { get; private set; }
+        public OrderStatus? ItemStatus { get; private set; }
         public DateTime? ChangeOfStatus { get; private set; }
         public int? Quantity { get; private set; }
         public string? Comment { get; private set; }
@@ -18,7 +18,7 @@
             }
         }
 
-        public OrderItem(int databaseId, MenuItem item, DateTime? placementTime, Status? status, DateTime? changeOfStatus, int? quantity, string? comment)
+        public OrderItem(int databaseId, int orderId, MenuItem item, DateTime? placementTime, OrderStatus? status, DateTime? changeOfStatus, int? quantity, string? comment)
         {
             DatabaseId = databaseId;
             Item = item;
@@ -39,7 +39,7 @@
             Quantity++;
         }
 
-        public void SetItemStatus(Status status)
+        public void SetItemStatus(OrderStatus status)
         {
             ItemStatus = status;
         }

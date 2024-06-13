@@ -32,6 +32,11 @@ namespace Service
             return orderDao.GetAllRunningOrders();
         }
 
+        public List<Order> GetAllFinishedOrders()
+        {
+            return orderDao.GetAllRunningOrders();
+        }
+
         public List<Order> GetAllRunningOrdersForTables()
         {
             return orderDao.GetAllRunningOrdersForTables();
