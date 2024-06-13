@@ -13,7 +13,15 @@ namespace DAL
         private const string QueryGetAlFinishedOrders = $"{QueryGetAllOrders} WHERE {ColumnFinished} = 1";
         private const string QueryGetAllRunningOrdersPerTable = $"{QueryGetAllRunningOrders} AND {ColumnTableId} = {ParameterTableId}";
         private const string QueryUpdateOrderStatus = $"UPDATE [order] SET {ColumnFinished} = {ParameterNameOrderStatus} WHERE {ColumnOrderId} = {ParameterNameOrderId}";
-        private const string QueryGetAllWaitingOrPreparingOrders = $"SELECT DISTINCT O.{ColumnOrderId}, {ColumnTableId}, {ColumnPlacedById}, O.{ColumnOrderNumber}, {ColumnServingNumber}, {ColumnFinished}, {ColumnTotalPrice}, {ColumnStatus} FROM [order] AS O JOIN order_item AS OI ON O.{ColumnOrderId} = OI.{ColumnOrderItemNumber} WHERE {ColumnStatus} = 'Preparing' OR ({ColumnStatus} = 'Waiting' AND O.{ColumnOrderId} NOT IN (SELECT DISTINCT O.{ColumnOrderId} FROM [order] AS O JOIN order_item AS OI ON O.{ColumnOrderId} = OI.{ColumnOrderItemNumber} WHERE {ColumnStatus} = 'Preparing'))";
+        private const string QueryGetAllWaitingOrPreparingOrders = 
+            $"SELECT DISTINCT O.{ColumnOrderId}, {ColumnTableId}, {ColumnPlacedById}, O.{ColumnOrderNumber}, {ColumnServingNumber}, {ColumnFinished}, {ColumnTotalPrice}, {ColumnStatus} FROM [order] AS O " +
+            $"JOIN order_item AS OI ON O.{ColumnOrderId} = OI.{ColumnOrderItemNumber} " +
+            $"WHERE {ColumnStatus} = 'Preparing' OR " +
+            $"({ColumnStatus} = 'Waiting' AND " +
+            $"O.{ColumnOrderId} NOT IN " +
+            $"(SELECT DISTINCT O.{ColumnOrderId} " +
+            $"FROM [order] AS O JOIN order_item AS OI ON O.{ColumnOrderId} = OI.{ColumnOrderItemNumber} " +
+            $"WHERE {ColumnStatus} = 'Preparing'))";
 
         private const string ColumnOrderId = "order_id";
         private const string ColumnTableId = "table_number";
@@ -33,7 +41,12 @@ namespace DAL
         private const string QueryGetAllItemsOfOrder = $"{QueryGetAllOrderItems} WHERE {ColumnOrderItemNumber} = {ParameterNameOrderNumber}";
         private const string QueryUpdateAllOrderItemStatus = $"UPDATE order_item SET {ColumnStatus} = {ParameterNameOrderItemStatus} WHERE {ColumnOrderItemNumber} = {ParameterNameOrderNumber}";
         private const string QueryUpdateOrderItemStatusByCategory = $"UPDATE order_item SET {ColumnStatus} = {ParameterNameOrderItemStatus} WHERE {ColumnOrderItemId} = {ParameterNameOrderItemId}";
-        private const string QueryGetAllWaitingOrPreparingOrderItems = $"{QueryGetAllOrderItems} WHERE {ColumnStatus} = 'Waiting' OR {ColumnStatus} = 'Preparing'";
+        private const string QueryGetAllWaitingOrPreparingOrderItems = 
+            $"SELECT OI.{ColumnOrderItemId}, OI.{ColumnOrderItemNumber}, OI.{ColumnItemNumber}, {ColumnPlacementTime}, {ColumnStatus}, {ColumnChangeOfStatus}, {ColumnQuantity}, {ColumnComment} FROM order_item AS OI " +
+            $"JOIN menu_item AS MI ON OI.{ColumnItemNumber} = MI.item_id " +
+            $"JOIN category AS C ON MI.category_id = C.category_id " +
+            $"JOIN menu_card AS MC ON C.menu_id = MC.card_id " +
+            $"WHERE ({ColumnStatus} = 'Waiting' OR {ColumnStatus} = 'Preparing') AND menu_type != 'Drinks'";
 
         private const string ColumnOrderItemId = "order_id";
         private const string ColumnOrderItemNumber = "order_number";
