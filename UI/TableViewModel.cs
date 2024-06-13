@@ -90,9 +90,21 @@ namespace UI
 
         private void SetWaitingTime()
         {
-            List<OrderItem> allOrderItems = RunningOrders.SelectMany(order => order.OrderItems).ToList();
-            List<OrderItem> waitingOrderItems = allOrderItems.Where(orderItem => orderItem.ItemStatus != Status.Served).ToList();
-            OrderItem orderItemLongestWaiting = waitingOrderItems.OrderBy(orderItem => orderItem.PlacementTime).FirstOrDefault();
+            OrderItem orderItemLongestWaiting = null;
+
+            foreach (var order in RunningOrders)
+            {
+                foreach (var orderItem in order.OrderItems)
+                {
+                    if (orderItem.ItemStatus != Status.Served || order.OrderStatus != Status.Free || order.OrderStatus != Status.Reserved)
+                    {
+                        if (orderItemLongestWaiting == null || orderItem.PlacementTime < orderItemLongestWaiting.PlacementTime)
+                        {
+                            orderItemLongestWaiting = orderItem;
+                        }
+                    }
+                }
+            }
 
             CalculateWaitingTime(orderItemLongestWaiting);
         }

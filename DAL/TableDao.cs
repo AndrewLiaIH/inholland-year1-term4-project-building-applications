@@ -55,5 +55,16 @@ namespace DAL
 
             return new(id, host, occupied, tableNumber);
         }
+
+        private Table ReadRowTest(SqlDataReader reader)
+        {
+            int id = reader.GetInt32(reader.GetOrdinal(ColumnTableId));
+            int hostId = reader.GetInt32(reader.GetOrdinal(ColumnHostId));
+            Employee host = employeeDao.GetEmployeeById(hostId);
+            bool occupied = reader.GetBoolean(reader.GetOrdinal(ColumnOccupied));
+            int tableNumber = reader.GetInt32(reader.GetOrdinal(ColumnTableNumber));
+
+            return new Table(id, host, occupied, tableNumber);
+        }
     }
 }

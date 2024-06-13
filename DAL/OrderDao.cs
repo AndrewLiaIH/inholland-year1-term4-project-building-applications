@@ -32,6 +32,7 @@ namespace DAL
         private const string QueryGetAllItemsOfOrder = $"{QueryGetAllOrderItems} WHERE {ColumnOrderItemNumber} = {ParameterNameOrderNumber}";
         private const string QueryUpdateAllOrderItemStatus = $"UPDATE order_item SET {ColumnStatus} = {ParameterNameOrderItemStatus} WHERE {ColumnOrderItemNumber} = {ParameterNameOrderNumber}";
         private const string QueryUpdateOrderItemStatusByCategory = $"UPDATE order_item SET {ColumnStatus} = {ParameterNameOrderItemStatus} WHERE {ColumnOrderItemId} = {ParameterNameOrderItemId}";
+        private const string QueryGetAllItemsOfOrders = $"{QueryGetAllOrderItems} WHERE {ColumnOrderItemNumber} " + "IN ({0})";
 
         private const string ColumnOrderItemId = "order_id";
         private const string ColumnOrderItemNumber = "order_number";
@@ -87,13 +88,31 @@ namespace DAL
             return order;
         }
 
+        /*        public List<Order> GetAllRunningOrders()
+                {
+                    List<Order> orders = GetAll(QueryGetAllRunningOrders, ReadRowOrder);
+
+                    foreach (Order order in orders)
+                    {
+                        GetAndSetAllItemsForOrder(order);
+                    }
+
+                    return orders;
+                }*/
+
         public List<Order> GetAllRunningOrders()
         {
             List<Order> orders = GetAll(QueryGetAllRunningOrders, ReadRowOrder);
 
+            List<int> orderIds = orders.Select(order => order.DatabaseId).ToList();
+            string orderIdList = string.Join(",", orderIds);
+            string query = string.Format(QueryGetAllItemsOfOrders, orderIdList);
+
+            List<OrderItem> orderItems = GetAll(query, ReadRowOrderItem);
+
             foreach (Order order in orders)
             {
-                GetAndSetAllItemsForOrder(order);
+                order.SetOrderItems(orderItems.FindAll(orderItem => orderItem.OrderId == order.DatabaseId));
             }
 
             return orders;
@@ -201,6 +220,7 @@ namespace DAL
         private OrderItem ReadRowOrderItem(DataRow dr)
         {
             int id = (int)dr[ColumnOrderItemId];
+            int orderId = (int)dr[ColumnOrderItemNumber];
             MenuItem menuItem = menuDao.GetMenuItemById((int)dr[ColumnItemNumber]);
             DateTime? placementTime = dr[ColumnPlacementTime] as DateTime?;
             Status? status = (Status)Enum.Parse(typeof(Status), (string)dr[ColumnStatus]);
@@ -208,7 +228,7 @@ namespace DAL
             int? quantity = dr[ColumnQuantity] as int?;
             string? comment = dr[ColumnComment] as string;
 
-            return new(id, menuItem, placementTime, status, changeOfStatus, quantity, comment);
+            return new(id, orderId, menuItem, placementTime, status, changeOfStatus, quantity, comment);
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using Model;
-using System.Windows;
 using System.Windows.Controls;
 
 namespace UI
@@ -33,8 +32,7 @@ namespace UI
 
         private void ShowTableViewTables()
         {
-            if (userControlTableViewTables == null)
-                userControlTableViewTables = new();
+            userControlTableViewTables ??= new();
 
             TableViewContentControl.Content = userControlTableViewTables;
         }
