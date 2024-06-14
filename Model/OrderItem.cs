@@ -7,7 +7,7 @@
         public int OrderId { get; private set; }
         public MenuItem Item { get; private set; }
         public DateTime? PlacementTime { get; private set; }
-        public OrderStatus? ItemStatus { get; private set; }
+        public OrderStatus? ItemStatus { get; set; }
         public DateTime? ChangeOfStatus { get; private set; }
         public int? Quantity { get; private set; }
         public string? Comment { get; set; }
@@ -39,11 +39,6 @@
         public void IncreaseQuantity()
         {
             Quantity++;
-        }
-
-        public void SetItemStatus(OrderStatus status)
-        {
-            ItemStatus = status;
         }
     }
 }

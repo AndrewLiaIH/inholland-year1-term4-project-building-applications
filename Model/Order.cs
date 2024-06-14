@@ -98,26 +98,26 @@
             return status;
         }
 
-        private Status? GetCategoryStatus(List<OrderItem> items)
+        private OrderStatus? GetCategoryStatus(List<OrderItem> items)
         {
-            Status? status = null;
+            OrderStatus? status = null;
             bool isNotDone = false;
 
             foreach (OrderItem item in items)
             {
-                if (item.ItemStatus != Status.Done)
+                if (item.ItemStatus != OrderStatus.Done)
                     isNotDone = true;
 
                 if (status == null)
                     status = item.ItemStatus;
-                else if (item.ItemStatus == Status.Preparing)
+                else if (item.ItemStatus == OrderStatus.Preparing)
                     status = item.ItemStatus;
-                else if (item.ItemStatus == Status.Waiting && status != Status.Preparing)
+                else if (item.ItemStatus == OrderStatus.Waiting && status != OrderStatus.Preparing)
                     status = item.ItemStatus;
             }
 
             if (!isNotDone)
-                status = Status.Done;
+                status = OrderStatus.Done;
 
             return status;
         }

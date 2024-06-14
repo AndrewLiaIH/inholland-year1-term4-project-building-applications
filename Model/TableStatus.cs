@@ -7,6 +7,10 @@
         Occupied,
         ReadyToServeDrinks,
         ReadyToServeFood,
-        ReadyToServeAll
+        ReadyToServeAll,
+        OccupiedPaid,
+        ReadyToServeDrinksPaid,
+        ReadyToServeFoodPaid,
+        ReadyToServeAllPaid
     }
 }

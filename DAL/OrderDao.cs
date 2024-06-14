@@ -9,7 +9,6 @@ namespace DAL
         // Order
         private const string QueryGetAllOrders = $"SELECT {ColumnOrderId}, {ColumnTableId}, {ColumnPlacedById}, {ColumnOrderNumber}, {ColumnServingNumber}, {ColumnFinished}, {ColumnTotalPrice} FROM [order]";
         private const string QueryGetOrderById = $"{QueryGetAllOrders} WHERE {ColumnOrderId} = {ParameterNameOrderId}";
-        private const string QueryGetAllRunningOrdersPerTable = ""; //$"{QueryGetAllRunningOrders} AND {ColumnTableId} = {ParameterTableId}";
         private const string QueryUpdateOrderStatus = $"UPDATE [order] SET {ColumnFinished} = {ParameterNameOrderStatus} WHERE {ColumnOrderId} = {ParameterNameOrderId}";
         private const string QueryGetAllKitchenBarOrders = 
             $"SELECT DISTINCT O.{ColumnOrderId}, {ColumnTableId}, {ColumnPlacedById}, O.{ColumnOrderNumber}, {ColumnServingNumber}, {ColumnFinished}, {ColumnTotalPrice}, {ColumnStatus} FROM [order] AS O " +
@@ -23,6 +22,12 @@ namespace DAL
             $"(SELECT DISTINCT O.{ColumnOrderId} " +
             $"FROM [order] AS O JOIN order_item AS OI ON O.{ColumnOrderId} = OI.{ColumnOrderItemNumber} " +
             $"WHERE {ColumnStatus} = {ParameterStatus2})) AND menu_type";
+        private const string QueryGetAllRunningOrdersTables =
+            $"SELECT O.{ColumnOrderId} AS ColumnOrderId, O.{ColumnTableId}, O.{ColumnPlacedById}, O.{ColumnOrderNumber}, O.{ColumnServingNumber}, O.{ColumnFinished}, O.{ColumnTotalPrice}, " +
+            $"OI.{ColumnOrderItemId} ColumnOrderItemId, OI.{ColumnOrderItemNumber}, OI.{ColumnItemNumber}, OI.{ColumnPlacementTime}, OI.{ColumnStatus}, OI.{ColumnChangeOfStatus}, OI.{ColumnQuantity}, OI.{ColumnComment} " +
+            $"FROM [order] O INNER JOIN order_item OI ON O.{ColumnOrderId} = OI.{ColumnOrderItemNumber} WHERE (O.{ColumnFinished} = 0 OR EXISTS " +
+            $"(SELECT 1 FROM order_item oi WHERE oi.{ColumnOrderItemNumber} = O.{ColumnOrderId} AND oi.{ColumnStatus} <> 'Served'))";
+        private const string QueryGetAllRunningOrdersPerTable = $"{QueryGetAllRunningOrdersTables} AND O.{ColumnTableId} = {ParameterTableId}";
 
         private const string ColumnOrderId = "order_id";
         private const string ColumnTableId = "table_number";
@@ -43,20 +48,15 @@ namespace DAL
         private const string QueryGetOrderItemById = $"{QueryGetAllOrderItems} WHERE {ColumnOrderItemId} = {ParameterNameOrderItemId}";
         private const string QueryGetAllItemsOfOrder = $"{QueryGetAllOrderItems} WHERE {ColumnOrderItemNumber} = {ParameterNameOrderNumber}";
         private const string QueryUpdateAllOrderItemStatus = $"UPDATE order_item SET {ColumnStatus} = {ParameterNameOrderItemStatus} WHERE {ColumnOrderItemNumber} = {ParameterNameOrderNumber}";
-        private const string QueryUpdateOrderItemStatusByCategory = $"UPDATE order_item SET {ColumnStatus} = {ParameterNameOrderItemStatus} WHERE {ColumnOrderItemId} = {ParameterNameOrderItemId}";
+        private const string QueryUpdateOrderItemStatusByCategory = $"UPDATE order_item SET [{ColumnStatus}] = {ParameterNameOrderItemStatus} WHERE {ColumnOrderItemId} = {ParameterNameOrderItemId}";
         private const string QueryGetAllKitchenBarOrderItems = 
-            $"SELECT OI.{ColumnOrderItemId}, OI.{ColumnOrderItemNumber}, OI.{ColumnItemNumber}, {ColumnPlacementTime}, {ColumnStatus}, {ColumnChangeOfStatus}, {ColumnQuantity}, {ColumnComment} FROM order_item AS OI " +
+            $"SELECT OI.{ColumnOrderItemId} AS ColumnOrderItemId, OI.{ColumnOrderItemNumber}, OI.{ColumnItemNumber}, {ColumnPlacementTime}, {ColumnStatus}, {ColumnChangeOfStatus}, {ColumnQuantity}, {ColumnComment} FROM order_item AS OI " +
             $"JOIN menu_item AS MI ON OI.{ColumnItemNumber} = MI.item_id " +
             $"JOIN category AS C ON MI.category_id = C.category_id " +
             $"JOIN menu_card AS MC ON C.menu_id = MC.card_id " +
             $"WHERE ({ColumnStatus} = {ParameterStatus1} OR {ColumnStatus} = {ParameterStatus2}) AND menu_type";
         private const string EqualDrinks = " = 'Drinks'";
         private const string NotEqualDrinks = " != 'Drinks'";
-        private const string QueryGetAllRunningOrderItemsTable = 
-            $"SELECT O.{ColumnOrderId}, O.{ColumnTableId}, O.{ColumnPlacedById}, O.{ColumnOrderNumber}, O.{ColumnServingNumber}, O.{ColumnFinished}, O.{ColumnTotalPrice}, " +
-            $"OI.{ColumnOrderItemId}, OI.{ColumnOrderItemNumber}, OI.{ColumnItemNumber}, OI.{ColumnPlacementTime}, OI.{ColumnStatus}, OI.{ColumnChangeOfStatus}, OI.{ColumnQuantity}, OI.{ColumnComment} " +
-            $"FROM [order] O INNER JOIN order_item OI ON O.{ColumnOrderId} = OI.{ColumnOrderItemNumber} WHERE O.{ColumnFinished} = 0 OR EXISTS " +
-            $"(SELECT 1 FROM order_item oi WHERE oi.{ColumnOrderItemNumber} = O.{ColumnOrderId} AND oi.{ColumnStatus} <> 'Served')";
 
         private const string ColumnOrderItemId = "order_id";
         private const string ColumnOrderItemNumber = "order_number";
@@ -141,27 +141,27 @@ namespace DAL
 
         public List<Order> GetAllRunningOrdersForTable(Table table)
         {
-            SqlParameter[] parameters = new SqlParameter[]
+            Dictionary<int, Order> ordersDictionary = new();
+            SqlParameter[] sqlParameters = new SqlParameter[]
             {
                 new(ParameterTableId, table.DatabaseId)
             };
 
-            DataTable ordersTable = ExecuteSelectQuery(QueryGetAllRunningOrdersPerTable, parameters);
-            List<Order> orders = ReadTable(ordersTable, ReadRowOrder);
+            DataTable dataTabel = ExecuteSelectQuery(QueryGetAllRunningOrdersPerTable, sqlParameters);
 
-            foreach (Order order in orders)
+            foreach (DataRow row in dataTabel.Rows)
             {
-                GetAndSetAllItemsForOrder(order);
+                ReadCombinedRow(row, ordersDictionary);
             }
 
-            return orders;
+            return ordersDictionary.Values.ToList();
         }
 
         public List<Order> GetAllRunningOrdersForTables()
         {
             Dictionary<int, Order> ordersDictionary = new();
 
-            DataTable dataTabel = ExecuteSelectQuery(QueryGetAllRunningOrderItemsTable);
+            DataTable dataTabel = ExecuteSelectQuery(QueryGetAllRunningOrdersTables);
 
             foreach (DataRow row in dataTabel.Rows) 
             {
@@ -229,7 +229,7 @@ namespace DAL
 
         private Order ReadRowOrder(DataRow dr)
         {
-            int id = (int)dr[ColumnOrderId];
+            int id = (int)dr["ColumnOrderId"];
             Table table = tableDao.GetTableById((int)dr[ColumnTableId]);
             Employee employee = employeeDao.GetEmployeeById((int)dr[ColumnPlacedById]);
             int orderNumber = (int)dr[ColumnOrderNumber];
@@ -256,7 +256,7 @@ namespace DAL
 
         private OrderItem ReadRowOrderItem(DataRow dr)
         {
-            int id = (int)dr[ColumnOrderItemId];
+            int id = (int)dr["ColumnOrderItemId"];
             int orderId = (int)dr[ColumnOrderItemNumber];
             MenuItem menuItem = menuDao.GetMenuItemById((int)dr[ColumnItemNumber]);
             DateTime? placementTime = dr[ColumnPlacementTime] as DateTime?;
@@ -270,7 +270,7 @@ namespace DAL
 
         private void ReadCombinedRow(DataRow dr, Dictionary<int, Order> orderDictionary)
         {
-            int orderId = (int)dr[ColumnOrderId];
+            int orderId = (int)dr["ColumnOrderId"];
 
             if (!orderDictionary.TryGetValue(orderId, out Order order))
             {

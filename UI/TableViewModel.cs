@@ -40,6 +40,34 @@ namespace UI
             }
         }
 
+        private bool _isButtonEnabled;
+        public bool IsButtonEnabled
+        {
+            get { return _isButtonEnabled; }
+            set
+            {
+                if (_isButtonEnabled != value)
+                {
+                    _isButtonEnabled = value;
+                    OnPropertyChanged(nameof(IsButtonEnabled));
+                }
+            }
+        }
+
+        private double _buttonOpacity;
+        public double ButtonOpacity
+        {
+            get { return _buttonOpacity; }
+            set
+            {
+                if (_buttonOpacity != value)
+                {
+                    _buttonOpacity = value;
+                    OnPropertyChanged(nameof(ButtonOpacity));
+                }
+            }
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected void OnPropertyChanged(string propertyName)
@@ -61,13 +89,27 @@ namespace UI
         {
             if (TableHasRunningOrder())
             {
-                TableState = TableStatus.Occupied;
-                TableStatusReadyToServe();
+                if (Paid())
+                {
+                    TableState = TableStatus.OccupiedPaid;
+                    TableStatusReadyToServePaid();
+                }
+                else
+                {
+                    TableState = TableStatus.Occupied;
+                    TableStatusReadyToServe();
+                }
             }
             else if (Table.Occupied)
+            {
                 TableState = TableStatus.Reserved;
+            }
             else
+            {
                 TableState = TableStatus.Free;
+            }
+
+            UpdateButtonState();
         }
 
         private bool TableHasRunningOrder()
@@ -104,6 +146,22 @@ namespace UI
                 TableState = TableStatus.ReadyToServeDrinks;
         }
 
+        private void TableStatusReadyToServePaid()
+        {
+            HashSet<MenuType> statuses = GetDoneMenuTypes();
+
+            bool containsDrinks = statuses.Contains(MenuType.Drinks);
+            bool containsDinner = statuses.Contains(MenuType.Dinner);
+            bool containsLunch = statuses.Contains(MenuType.Lunch);
+
+            if (containsDrinks && (containsDinner || containsLunch))
+                TableState = TableStatus.ReadyToServeAllPaid;
+            else if (containsDinner || containsLunch)
+                TableState = TableStatus.ReadyToServeFoodPaid;
+            else if (containsDrinks)
+                TableState = TableStatus.ReadyToServeDrinksPaid;
+        }
+
         private void CalculateWaitingTime(OrderItem orderItem)
         {
             if (orderItem != null)
@@ -126,5 +184,22 @@ namespace UI
             if (RunningOrders.Count > 0)
                 SetWaitingTime();
         }
+
+        public bool Paid()
+        {
+            return RunningOrders.All(order => order.Finished == true);
+        }
+
+        public void UpdateButtonState()
+        {
+            IsButtonEnabled = NoOrders();
+            ButtonOpacity = IsButtonEnabled ? 1.0 : 0.6;
+        }
+
+        private bool NoOrders()
+        {
+            return RunningOrders.IsNullOrEmpty();
+        }
+
     }
 }

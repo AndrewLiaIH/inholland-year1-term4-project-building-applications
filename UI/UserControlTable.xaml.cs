@@ -59,10 +59,7 @@ namespace UI
         private void ButtonPay_Click(object sender, RoutedEventArgs e)
         {
             FinishAllOrders();
-
-            ButtonPay.Visibility = Visibility.Hidden;
-            ButtonFree.Visibility = Visibility.Visible;
-            ButtonEditOrder.IsEnabled = false;
+            UpdateRunningOrders();
         }
 
         private void ButtonReserve_Click(object sender, RoutedEventArgs e)
@@ -80,7 +77,6 @@ namespace UI
         {
             SetOrderItemsToServed();
             tableViewModel.UpdateWaitingTime();
-            tableViewModel.TableState = TableStatus.Occupied;
         }
 
         private void ButtonEditOrder_Click(object sender, RoutedEventArgs e)
@@ -97,22 +93,16 @@ namespace UI
         {
             List<Order> ordersPerTable = orderService.GetAllRunningOrdersForTable(tableViewModel.Table);
 
-            if (!orderService.EqualRunningOrders(ordersPerTable, tableViewModel.RunningOrders))
-            {
-                tableViewModel.RunningOrders = ordersPerTable;
-                tableViewModel.SetTableState();
-            }
+            tableViewModel.RunningOrders = ordersPerTable;
+            tableViewModel.SetTableState();
         }
 
         private void OnTableOccupiedChanged()
         {
             Table updatedTable = tableService.GetTableById(tableViewModel.Table.DatabaseId);
 
-            if (!tableService.EqualTableoccupation(updatedTable, tableViewModel.Table))
-            {
-                tableViewModel.Table.SetOccupied(updatedTable.Occupied);
-                tableViewModel.SetTableState();
-            }
+            tableViewModel.Table.SetOccupied(updatedTable.Occupied);
+            tableViewModel.SetTableState();
         }
 
         private void OnWaitingTimeChanged()
@@ -136,7 +126,7 @@ namespace UI
         {
             List<OrderItem> changedOrderItems = new();
 
-            foreach (var order in tableViewModel.RunningOrders)
+            foreach (Order order in tableViewModel.RunningOrders)
             {
                 ProcessOrderItemsToServed(order, changedOrderItems);
             }
@@ -150,7 +140,7 @@ namespace UI
             {
                 if (orderItem.ItemStatus == OrderStatus.Done)
                 {
-                    orderItem.SetItemStatus(OrderStatus.Served);
+                    orderItem.ItemStatus = OrderStatus.Served;
                     changedOrderItems.Add(orderItem);
                 }
             }
@@ -169,7 +159,6 @@ namespace UI
             {
                 order.SetFinished(true);
                 UpdateOrderStatus(order);
-                orderService.UpdateAllOrderItemStatus(order);
             }
         }
 
