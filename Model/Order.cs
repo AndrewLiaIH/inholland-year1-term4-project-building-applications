@@ -35,7 +35,9 @@
                     .Select(group => new CategoryGroup
                     {
                         Category = group.Key,
+                        CategoryStatus = GetCategoryStatus(group.ToList()),
                         Items = group.ToList()
+
                     })
                     .ToList();
             }
@@ -78,6 +80,30 @@
             bool isNotDone = false;
 
             foreach (OrderItem item in OrderItems)
+            {
+                if (item.ItemStatus != Status.Done)
+                    isNotDone = true;
+
+                if (status == null)
+                    status = item.ItemStatus;
+                else if (item.ItemStatus == Status.Preparing)
+                    status = item.ItemStatus;
+                else if (item.ItemStatus == Status.Waiting && status != Status.Preparing)
+                    status = item.ItemStatus;
+            }
+
+            if (!isNotDone)
+                status = Status.Done;
+
+            return status;
+        }
+
+        private Status? GetCategoryStatus(List<OrderItem> items)
+        {
+            Status? status = null;
+            bool isNotDone = false;
+
+            foreach (OrderItem item in items)
             {
                 if (item.ItemStatus != Status.Done)
                     isNotDone = true;
