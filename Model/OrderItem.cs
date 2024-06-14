@@ -10,7 +10,7 @@
         public Status? ItemStatus { get; private set; }
         public DateTime? ChangeOfStatus { get; private set; }
         public int? Quantity { get; private set; }
-        public string? Comment { get; private set; }
+        public string? Comment { get; set; }
         public TimeSpan RunningTime
         {
             get
