@@ -450,16 +450,16 @@
                 <Setter Property="Visibility" Value="Hidden"/>
             </DataTrigger>
             <DataTrigger Binding="{Binding TableState}" Value="OccupiedPaid">
-                <Setter Property="Visibility" Value="Visible"/>
+                <Setter Property="Visibility" Value="Hidden"/>
             </DataTrigger>
             <DataTrigger Binding="{Binding TableState}" Value="ReadyToServeFoodPaid">
-                <Setter Property="Visibility" Value="Visible"/>
+                <Setter Property="Visibility" Value="Hidden"/>
             </DataTrigger>
             <DataTrigger Binding="{Binding TableState}" Value="ReadyToServeDrinksPaid">
-                <Setter Property="Visibility" Value="Visible"/>
+                <Setter Property="Visibility" Value="Hidden"/>
             </DataTrigger>
             <DataTrigger Binding="{Binding TableState}" Value="ReadyToServeAllPaid">
-                <Setter Property="Visibility" Value="Visible"/>
+                <Setter Property="Visibility" Value="Hidden"/>
             </DataTrigger>
         </Style.Triggers>
     </Style>

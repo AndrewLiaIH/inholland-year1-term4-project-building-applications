@@ -7,7 +7,7 @@
         public Employee PlacedBy { get; private set; }
         public int OrderNumber { get; private set; }
         public int? ServingNumber { get; private set; }
-        public bool Finished {get; private set; }
+        public bool Finished {get; set; }
         public decimal TotalPrice { get; private set; }
         public List<OrderItem> OrderItems { get; private set; }
         private OrderStatus? orderStatus;
@@ -120,11 +120,6 @@
                 status = OrderStatus.Done;
 
             return status;
-        }
-
-        public void SetFinished(bool finished)
-        {
-            Finished = finished;
         }
     }
 }

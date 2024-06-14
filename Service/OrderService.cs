@@ -1,4 +1,5 @@
 ﻿using DAL;
+using Microsoft.IdentityModel.Tokens;
 using Model;
 
 namespace Service
@@ -11,6 +12,7 @@ namespace Service
         public event Action RunningOrdersChanged;
         public event Action WaitingTimeChanged;
 
+        // Methods for OrderDao
         protected override void CheckForChanges(object sender, EventArgs e)
         {
             RunningOrdersChanged?.Invoke();
@@ -67,44 +69,60 @@ namespace Service
             return orderDao.GetAllRunningOrdersForTable(table);
         }
 
-        public bool EqualRunningOrders(List<Order> updatedOrders, List<Order> currentOrders)
+        //Service logic
+        public bool Paid(List<Order> orders)
         {
-            if (updatedOrders == null || currentOrders == null)
-                return updatedOrders == currentOrders;
-            
-            if (updatedOrders.Count != currentOrders.Count)
-                return false;
-
-            for (int i = 0; i < updatedOrders.Count; i++)
-            {
-                if (!EqualOrdersAndItems(updatedOrders[i], currentOrders[i]))
-                    return false;
-            }
-            
-            return true;
+            return orders.All(order => order.Finished == true);
         }
 
-        private bool EqualOrdersAndItems(Order updatedOrder, Order currentOrder)
+        public bool HasRunningOrders(List<Order> orders)
         {
-            return updatedOrder.Table.DatabaseId == currentOrder.Table.DatabaseId &&
-                   EqualOrderItemsStatus(updatedOrder.OrderItems, currentOrder.OrderItems);
+            return !orders.IsNullOrEmpty();
         }
 
-        private bool EqualOrderItemsStatus(List<OrderItem> updatedOrderItems, List<OrderItem> currentOrderItems)
+        public OrderItem GetLongestWaitingTime(List<Order>  runningOrders)
         {
-            if (updatedOrderItems == null || currentOrderItems == null)
-                return updatedOrderItems == currentOrderItems;
+            List<OrderItem> allOrderItems = runningOrders.SelectMany(order => order.OrderItems).ToList();
+            List<OrderItem> waitingOrderItems = allOrderItems.Where(orderItem => orderItem.ItemStatus != OrderStatus.Served).ToList();
+            OrderItem orderItemLongestWaiting = waitingOrderItems.OrderBy(orderItem => orderItem.PlacementTime).FirstOrDefault();
 
-            if (updatedOrderItems.Count != currentOrderItems.Count)
-                return false;
+            return orderItemLongestWaiting;
+        }
 
-            for (int i = 0; i < updatedOrderItems.Count; i++)
+        public void FinishAllOrders(List<Order> orders)
+        {
+            orders.ForEach(order => order.Finished = true);
+            orders.ForEach(order => UpdateOrderStatus(order));
+        }
+
+        private List<OrderItem> OrderItemsToServed(List<Order> runningOrders)
+        {
+            List<OrderItem> changedOrderItems = new();
+
+            foreach (Order order in runningOrders)
             {
-                if (updatedOrderItems[i].ItemStatus != currentOrderItems[i].ItemStatus)
-                    return false;
+                ProcessOrderItemsToServed(order, changedOrderItems);
             }
 
-            return true;
+            return changedOrderItems;
+        }
+
+        private void ProcessOrderItemsToServed(Order order, List<OrderItem> changedOrderItems)
+        {
+            foreach (var orderItem in order.OrderItems)
+            {
+                if (orderItem.ItemStatus == OrderStatus.Done)
+                {
+                    orderItem.ItemStatus = OrderStatus.Served;
+                    changedOrderItems.Add(orderItem);
+                }
+            }
+        }
+
+        public void SetOrderItemsToServed(List<Order> runningOrders)
+        {
+            List<OrderItem> servedOrderItems = OrderItemsToServed(runningOrders);
+            UpdateOrderCategoryStatus(servedOrderItems);
         }
     }
 }

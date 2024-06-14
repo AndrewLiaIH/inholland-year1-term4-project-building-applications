@@ -22,8 +22,8 @@
                     </Grid.ColumnDefinitions>
                     <Button Grid.Column="0" x:Name="ButtonFree" IsEnabled="{Binding IsButtonEnabled}" Opacity="{Binding ButtonOpacity}" Content="Free" Style="{StaticResource FreeButtonStyle}" Click="ButtonFree_Click" Margin="9,0,31,0"/>
                     <Button Grid.Column="0" x:Name="ButtonPay" Content="Pay" Style="{StaticResource PayButtonStyle}" Click="ButtonPay_Click" Margin="9,0,31,0"/>
-                    <Image x:Name="DrinkIcon" Grid.Row="0" Grid.Column="1" Source="{StaticResource DrinkIcon}" Style="{StaticResource TableDrinkIcon}" Margin="94,10,10,10"/>
-                    <Image x:Name="FoodIcon" Grid.Row="0" Grid.Column="1" Source="{StaticResource FoodIcon}" Style="{StaticResource TableFoodIcon}" Margin="54,8,37,8"/>
+                    <Image x:Name="DrinkIcon" Grid.Row="0" Grid.Column="1" Source="{StaticResource drinkIcon}" Style="{StaticResource TableDrinkIcon}" Margin="94,10,10,10"/>
+                    <Image x:Name="FoodIcon" Grid.Row="0" Grid.Column="1" Source="{StaticResource foodIcon}" Style="{StaticResource TableFoodIcon}" Margin="54,8,37,8"/>
                 </Grid>
                 <Grid Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
                     <TextBlock Grid.Column="0" Text="{Binding Table.TableNumber, StringFormat='Table {0}'}" Style="{StaticResource TableNameStyle}"/>
@@ -39,7 +39,7 @@
                     <Button x:Name="ButtonReserve" Grid.Column="0" Content="Reserve" Style="{StaticResource ButtonReserveStyle}" Click="ButtonReserve_Click"/>
                     <Button x:Name="ButtonOrderFreeTable" Content="Order" Style="{StaticResource ButtonOrderStyle}" Click="ButtonOrder_Click"/>
                     <Button x:Name="ButtonServed" Grid.Column="1" Content="Served" Style="{StaticResource ButtonServedStyle}" Click="ButtonServed_Click"/>
-                    <Button x:Name="ButtonEditOrder" Grid.Column="0" Content="Edit Order" Style="{StaticResource ButtonEditOrderStyle}" Click="ButtonEditOrder_Click"/>
+                    <Button x:Name="ButtonEditOrder" Grid.Column="0" Content="Edit Order" Style="{StaticResource ButtonEditOrderStyle}" Click="ButtonOrder_Click"/>
                 </Grid>
                 <Grid Grid.Row="3" Style="{StaticResource OrderButtonGrid}">
                     <Button x:Name="ButtonOrderReservedTable" Grid.Column="0" Content="Order" Style="{StaticResource ButtonOrderStyle}" Click="ButtonOrder_Click"/>

@@ -1,5 +1,5 @@
-﻿using Microsoft.IdentityModel.Tokens;
-using Model;
+﻿using Model;
+using Service;
 using System.ComponentModel;
 
 namespace UI
@@ -7,6 +7,8 @@ namespace UI
     //Created by Orest Pokotylenko
     public class TableViewModel : INotifyPropertyChanged
     {
+        private OrderService orderService = new();
+
         public Table Table { get; set; }
         public int RowIndex { get; set; }
         public int ColumnIndex { get; set; }
@@ -21,7 +23,7 @@ namespace UI
                 if (waitingTime != value)
                 {
                     waitingTime = value;
-                    OnPropertyChanged("WaitingTime");
+                    OnPropertyChanged(nameof(WaitingTime));
                 }
             }
         }
@@ -35,7 +37,7 @@ namespace UI
                 if (tableState != value)
                 {
                     tableState = value;
-                    OnPropertyChanged("TableState");
+                    OnPropertyChanged(nameof(TableState));
                 }
             }
         }
@@ -87,34 +89,18 @@ namespace UI
 
         internal void SetTableState()
         {
-            if (TableHasRunningOrder())
-            {
-                if (Paid())
-                {
-                    TableState = TableStatus.OccupiedPaid;
-                    TableStatusReadyToServePaid();
-                }
-                else
-                {
-                    TableState = TableStatus.Occupied;
-                    TableStatusReadyToServe();
-                }
-            }
-            else if (Table.Occupied)
-            {
-                TableState = TableStatus.Reserved;
-            }
+            if (orderService.HasRunningOrders(RunningOrders))
+                UpdateTableStatusReadyToServe(orderService.Paid(RunningOrders));
             else
-            {
-                TableState = TableStatus.Free;
-            }
+                TableState = Table.Occupied ? TableStatus.Reserved : TableStatus.Free;
 
-            UpdateButtonState();
+            UpdateFreeButtonState();
         }
 
-        private bool TableHasRunningOrder()
+        private void UpdateTableStatusReadyToServe(bool paid)
         {
-            return !RunningOrders.IsNullOrEmpty();
+            TableState = paid ? TableStatus.OccupiedPaid : TableStatus.Occupied;
+            TableStatusReadyToServe(paid);
         }
 
         private HashSet<MenuType> GetDoneMenuTypes()
@@ -130,7 +116,7 @@ namespace UI
             return statuses;
         }
 
-        private void TableStatusReadyToServe()
+        private void TableStatusReadyToServe(bool paid)
         {
             HashSet<MenuType> statuses = GetDoneMenuTypes();
 
@@ -139,27 +125,11 @@ namespace UI
             bool containsLunch = statuses.Contains(MenuType.Lunch);
 
             if (containsDrinks && (containsDinner || containsLunch))
-                TableState = TableStatus.ReadyToServeAll;
+                TableState = !paid ? TableStatus.ReadyToServeAll : TableStatus.ReadyToServeAllPaid;
             else if (containsDinner || containsLunch)
-                TableState = TableStatus.ReadyToServeFood;
+                TableState = !paid ? TableStatus.ReadyToServeFood : TableStatus.ReadyToServeFoodPaid;
             else if (containsDrinks)
-                TableState = TableStatus.ReadyToServeDrinks;
-        }
-
-        private void TableStatusReadyToServePaid()
-        {
-            HashSet<MenuType> statuses = GetDoneMenuTypes();
-
-            bool containsDrinks = statuses.Contains(MenuType.Drinks);
-            bool containsDinner = statuses.Contains(MenuType.Dinner);
-            bool containsLunch = statuses.Contains(MenuType.Lunch);
-
-            if (containsDrinks && (containsDinner || containsLunch))
-                TableState = TableStatus.ReadyToServeAllPaid;
-            else if (containsDinner || containsLunch)
-                TableState = TableStatus.ReadyToServeFoodPaid;
-            else if (containsDrinks)
-                TableState = TableStatus.ReadyToServeDrinksPaid;
+                TableState = !paid ? TableStatus.ReadyToServeDrinks : TableStatus.ReadyToServeDrinksPaid;
         }
 
         private void CalculateWaitingTime(OrderItem orderItem)
@@ -172,11 +142,8 @@ namespace UI
 
         private void SetWaitingTime()
         {
-            List<OrderItem> allOrderItems = RunningOrders.SelectMany(order => order.OrderItems).ToList();
-            List<OrderItem> waitingOrderItems = allOrderItems.Where(orderItem => orderItem.ItemStatus != OrderStatus.Served).ToList();
-            OrderItem orderItemLongestWaiting = waitingOrderItems.OrderBy(orderItem => orderItem.PlacementTime).FirstOrDefault();
-
-            CalculateWaitingTime(orderItemLongestWaiting);
+            OrderItem longestWaitingTimeItem = orderService.GetLongestWaitingTime(RunningOrders);
+            CalculateWaitingTime(longestWaitingTimeItem);
         }
 
         internal void UpdateWaitingTime()
@@ -185,21 +152,10 @@ namespace UI
                 SetWaitingTime();
         }
 
-        public bool Paid()
+        private void UpdateFreeButtonState()
         {
-            return RunningOrders.All(order => order.Finished == true);
-        }
-
-        public void UpdateButtonState()
-        {
-            IsButtonEnabled = NoOrders();
+            IsButtonEnabled = !orderService.HasRunningOrders(RunningOrders);
             ButtonOpacity = IsButtonEnabled ? 1.0 : 0.6;
         }
-
-        private bool NoOrders()
-        {
-            return RunningOrders.IsNullOrEmpty();
-        }
-
     }
 }
