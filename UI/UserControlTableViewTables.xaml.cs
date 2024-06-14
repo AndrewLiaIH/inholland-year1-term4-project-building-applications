@@ -12,8 +12,6 @@ namespace UI
     public partial class UserControlTableViewTables : UserControl
     {
         public ObservableCollection<TableViewModel> Tables { get; } = new();
-        private OrderService orderService = new();
-        private TableService tableService = new();
 
         public UserControlTableViewTables()
         {
@@ -24,12 +22,15 @@ namespace UI
 
         private void GetAllTables()
         {
+            TableService tableService = new();
             List<Table> tables = tableService.GetAllTables();
             SetTables(tables);
         }
 
         private void SetTables(List<Table> tables)
         {
+            OrderService orderService = new();
+
             for (int tableIndex = 0; tableIndex < tables.Count; tableIndex++)
             {
                 int row = tableIndex / 5;

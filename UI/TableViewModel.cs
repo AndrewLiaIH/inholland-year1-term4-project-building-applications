@@ -42,34 +42,6 @@ namespace UI
             }
         }
 
-        private bool _isButtonEnabled;
-        public bool IsButtonEnabled
-        {
-            get { return _isButtonEnabled; }
-            set
-            {
-                if (_isButtonEnabled != value)
-                {
-                    _isButtonEnabled = value;
-                    OnPropertyChanged(nameof(IsButtonEnabled));
-                }
-            }
-        }
-
-        private double _buttonOpacity;
-        public double ButtonOpacity
-        {
-            get { return _buttonOpacity; }
-            set
-            {
-                if (_buttonOpacity != value)
-                {
-                    _buttonOpacity = value;
-                    OnPropertyChanged(nameof(ButtonOpacity));
-                }
-            }
-        }
-
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected void OnPropertyChanged(string propertyName)
@@ -93,8 +65,6 @@ namespace UI
                 UpdateTableStatusReadyToServe(orderService.Paid(RunningOrders));
             else
                 TableState = Table.Occupied ? TableStatus.Reserved : TableStatus.Free;
-
-            UpdateFreeButtonState();
         }
 
         private void UpdateTableStatusReadyToServe(bool paid)
@@ -150,12 +120,6 @@ namespace UI
         {
             if (RunningOrders.Count > 0)
                 SetWaitingTime();
-        }
-
-        private void UpdateFreeButtonState()
-        {
-            IsButtonEnabled = !orderService.HasRunningOrders(RunningOrders);
-            ButtonOpacity = IsButtonEnabled ? 1.0 : 0.6;
         }
     }
 }
