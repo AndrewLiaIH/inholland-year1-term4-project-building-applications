@@ -26,9 +26,4 @@
     </Compile>
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Model\Model.csproj" />
-    <ProjectReference Include="..\Service\Service.csproj" />
-  </ItemGroup>
-
 </Project>

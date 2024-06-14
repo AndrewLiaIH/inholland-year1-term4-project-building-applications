@@ -11,7 +11,7 @@
         public decimal TotalPrice { get; private set; }
         public List<OrderItem> OrderItems { get; private set; }
         private OrderStatus? orderStatus;
-        public OrderStatus? OrderStatus
+        public OrderStatus? Status
         {
             get
             {
@@ -24,6 +24,8 @@
                 orderStatus = value;
             }
         }
+        public OrderStatus? StatusFromDB { get; private set; }
+
         public List<CategoryGroup> OrderItemsByCategory
         {
             get
@@ -39,7 +41,7 @@
             }
         }
 
-        public Order(int databaseId, Table table, Employee placedBy, int orderNumber, int? servingNumber, bool finished, decimal totalPrice)
+        public Order(int databaseId, Table table, Employee placedBy, int orderNumber, int? servingNumber, bool finished, decimal totalPrice, OrderStatus? status = null)
         {
             DatabaseId = databaseId;
             Table = table;
@@ -48,6 +50,7 @@
             ServingNumber = servingNumber;
             Finished = finished;
             TotalPrice = totalPrice;
+            StatusFromDB = status;
             OrderItems = new();
         }
 
@@ -81,10 +84,8 @@
 
                 if (status == null)
                     status = item.ItemStatus;
-                else if (item.ItemStatus == Model.OrderStatus.Preparing)
                 else if (item.ItemStatus == OrderStatus.Preparing)
                     status = item.ItemStatus;
-                else if (item.ItemStatus == Model.OrderStatus.Waiting && status != Model.OrderStatus.Preparing)
                 else if (item.ItemStatus == OrderStatus.Waiting && status != OrderStatus.Preparing)
                     status = item.ItemStatus;
             }

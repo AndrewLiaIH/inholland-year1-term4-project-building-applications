@@ -4,6 +4,7 @@ using System.Windows.Shapes;
 using System.Windows.Controls;
 using System.Windows.Threading;
 using System.Windows.Media;
+using Microsoft.IdentityModel.Tokens;
 
 namespace UI
 {
@@ -19,14 +20,13 @@ namespace UI
         public UserControlKitchenViewRunning()
         {
             InitializeComponent();
-            LoadOrders();
             InitializeTimer();
             DataContext = this;
         }
 
-        private void LoadOrders()
+        public void LoadOrders(bool forKitchen)
         {
-            Orders = orderService.GetAllRunningOrders();
+            Orders = orderService.GetAllKitchenBarOrders(forKitchen, true);
         }
 
         private void InitializeTimer()
@@ -41,15 +41,15 @@ namespace UI
 
         private void Timer_Tick(object sender, EventArgs e)
         {
-            foreach (var item in OrdersItemsControl.Items)
+            foreach (Order order in OrdersItemsControl.Items)
             {
-                ContentPresenter container = OrdersItemsControl.ItemContainerGenerator.ContainerFromItem(item) as ContentPresenter;
+                ContentPresenter container = OrdersItemsControl.ItemContainerGenerator.ContainerFromItem(order) as ContentPresenter;
                 TextBlock textBlock = container?.ContentTemplate.FindName("RunningTimeTextBlock", container) as TextBlock;
                 Rectangle headerBackground = (Rectangle)container?.ContentTemplate.FindName("CardHeaderBackground", container);
 
-                if (textBlock != null && item is Order order)
+                if (textBlock != null)
                 {
-                    TimeSpan runningTime = order.OrderItems[0].RunningTime;
+                    TimeSpan runningTime = order.OrderItems.IsNullOrEmpty() ? TimeSpan.Zero : order.OrderItems[0].RunningTime;
                     textBlock.Text = $"{runningTime.Minutes:D2}:{runningTime.Seconds:D2}";
 
                     switch (runningTime.Minutes)

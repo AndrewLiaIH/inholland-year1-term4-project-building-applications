@@ -57,10 +57,11 @@ namespace UI
 
         private void ShowKitchenView()
         {
-            if (userControlKitchenView == null)
-                userControlKitchenView = new();
+            userControlKitchenView = new();
 
             SetHeader(userControlKitchenView);
+            bool forKitchen = userControlLoginView.LoggedInEmployee.Type == EmployeeType.Chef ? true : false;
+            userControlKitchenView.userControlKitchenViewRunning.LoadOrders(forKitchen);
 
             MainContentControl.Content = userControlKitchenView;
         }

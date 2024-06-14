@@ -27,19 +27,14 @@ namespace Service
             return orderDao.GetOrderById(orderId);
         }
 
-        public List<Order> GetAllRunningOrders()
+        public List<Order> GetAllKitchenBarOrders(bool forKitchen, bool isRunning)
         {
-            return orderDao.GetAllRunningOrders();
+            return orderDao.GetAllKitchenBarOrders(forKitchen, isRunning);
         }
 
         public List<Order> GetAllRunningOrdersForTables()
         {
             return orderDao.GetAllRunningOrdersForTables();
-        }
-
-        public List<Order> GetAllFinishedOrders()
-        {
-            return orderDao.GetAllFinishedOrders();
         }
 
         public List<OrderItem> GetAllOrderItems()

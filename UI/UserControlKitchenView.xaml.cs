@@ -11,8 +11,8 @@ namespace UI
     {
         public List<Folder> FoldersKitchen;
         public UserControlHeader UserControlHeader => userControlHeader;
-        private UserControlKitchenViewRunning userControlKitchenViewRunning;
-        private UserControlKitchenViewFinished userControlKitchenViewFinished;
+        public UserControlKitchenViewRunning userControlKitchenViewRunning;
+        public UserControlKitchenViewFinished userControlKitchenViewFinished;
 
         public UserControlKitchenView()
         {
@@ -48,6 +48,9 @@ namespace UI
         {
             if (userControlKitchenViewFinished == null)
                 userControlKitchenViewFinished = new();
+
+            bool forKitchen = userControlHeader.LoggedInEmployee.Type == EmployeeType.Chef ? false : true;
+            userControlKitchenViewFinished.LoadOrders(forKitchen);
 
             userControlHeader.CounterWaiting.Visibility = Visibility.Collapsed;
             userControlHeader.CounterPreparing.Visibility = Visibility.Collapsed;

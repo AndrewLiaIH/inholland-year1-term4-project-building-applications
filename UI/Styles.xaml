@@ -727,7 +727,7 @@
                         </TextBlock.Foreground>
                     </TextBlock>
 
-                    <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Text="{Binding OrderStatus}" VerticalAlignment="Bottom" HorizontalAlignment="Center" FontSize="20">
+                    <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Text="{Binding StatusFromDB}" VerticalAlignment="Bottom" HorizontalAlignment="Center" FontSize="20">
                         <TextBlock.Foreground>
                             <MultiBinding Converter="{StaticResource BackgroundToForegroundMultiConverter}">
                                 <Binding ElementName="CardHeaderBackground" Path="Fill"/>
