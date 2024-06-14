@@ -677,22 +677,56 @@
 
     <!-- DataTemplate for OrderItem -->
     <DataTemplate x:Key="OrderItemTemplate">
-        <Border CornerRadius="5" BorderBrush="DarkGray" BorderThickness="1" Padding="5" Margin="2">
-            <StackPanel>
-                <TextBlock Text="{Binding Item.Name}" FontWeight="Bold"/>
-                <TextBlock Text="{Binding Status}" FontStyle="Italic"/>
-                <TextBlock Text="{Binding Quantity, StringFormat=Quantity: {0}}" Foreground="Blue"/>
-                <TextBlock Text="{Binding Comment}" Foreground="Gray"/>
-            </StackPanel>
-        </Border>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding Quantity}" FontSize="16" Margin="0 0 16 0" Foreground="{StaticResource TextDark}" />
+            <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Item.ShortName}" FontSize="16" Foreground="{StaticResource TextDark}" />
+            <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding Comment}" Foreground="{StaticResource TextDark}" FontSize="16" Margin="36 0 0 0" />
+        </Grid>
     </DataTemplate>
 
     <!-- DataTemplate for Category -->
     <DataTemplate x:Key="CategoryTemplate">
-        <Border CornerRadius="5" BorderBrush="Gray" BorderThickness="1" Padding="5" Margin="5">
+        <Border CornerRadius="5" BorderBrush="{StaticResource Color1}" BorderThickness="1" Margin="0 0 0 16">
             <StackPanel>
-                <TextBlock Text="{Binding Category}" FontWeight="Bold" FontSize="16" Foreground="{StaticResource TextDark}" Margin="5"/>
-                <ItemsControl ItemsSource="{Binding Items}" ItemTemplate="{StaticResource OrderItemTemplate}" />
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Rectangle Grid.Row="0" Grid.Column="0" Grid.RowSpan="3" Grid.ColumnSpan="2" Fill="{StaticResource Color4}" />
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding Category}" FontSize="20" Foreground="{StaticResource TextDark}" Margin="16 16 0 8" />
+                    <Grid Grid.Row="1" Grid.Column="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Ellipse Grid.Column="0" Width="12" Height="12" Fill="{StaticResource Color6}" HorizontalAlignment="Left" Margin="24 0 16 16" />
+                        <TextBlock Grid.Column="1" Text="{Binding CategoryStatus}" FontSize="16" Foreground="{StaticResource TextDark}" VerticalAlignment="Top" Margin="0 0 0 16" />
+                    </Grid>
+                    <Button Name="editStatus" Grid.Column="1" Grid.Row="0" Style="{DynamicResource ButtonEditStatus}" Margin="16 16 16 0" HorizontalAlignment="Right">
+                        Edit status
+                    </Button>
+                    <Button Name="changeStatus" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" Style="{DynamicResource ButtonChangeStatus}" Margin="16 0 16 16" >
+                        Start preparing
+                    </Button>
+                </Grid>
+                <ItemsControl ItemsSource="{Binding Items}" ItemTemplate="{StaticResource OrderItemTemplate}" Margin="16" />
             </StackPanel>
         </Border>
     </DataTemplate>
@@ -781,4 +815,50 @@
         </Border>
     </DataTemplate>
 
+    <Style x:Key="ButtonEditStatus" TargetType="Button">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border Background="{TemplateBinding Background}" CornerRadius="5" Padding="{TemplateBinding Padding}">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Background" Value="{StaticResource Color10}"/>
+        <Setter Property="Foreground" Value="{StaticResource White}"/>
+        <Setter Property="BorderBrush" Value="Transparent"/>
+        <Setter Property="Padding" Value="16 8"/>
+        <Setter Property="FontSize" Value="16"/>
+        <Style.Triggers>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Background" Value="Gray"/>
+                <Setter Property="Foreground" Value="{StaticResource TextDark}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="ButtonChangeStatus" TargetType="Button">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border Background="{TemplateBinding Background}" CornerRadius="5" Padding="{TemplateBinding Padding}">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Background" Value="{StaticResource Color2}"/>
+        <Setter Property="Foreground" Value="{StaticResource White}"/>
+        <Setter Property="BorderBrush" Value="Transparent"/>
+        <Setter Property="Padding" Value="16 8"/>
+        <Setter Property="FontSize" Value="16"/>
+        <Style.Triggers>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Background" Value="Gray"/>
+                <Setter Property="Foreground" Value="{StaticResource TextDark}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    
 </ResourceDictionary>
