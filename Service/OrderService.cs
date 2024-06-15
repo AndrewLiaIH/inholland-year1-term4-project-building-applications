@@ -49,19 +49,19 @@ namespace Service
             return orderDao.GetOrderItemById(orderId);
         }
 
-        public void UpdateOrderCategoryStatus(List<OrderItem> orderItems)
+        public void UpdateOrderItemsStatus(List<OrderItem> orderItems)
         {
-            orderDao.UpdateOrderCategoryStatus(orderItems);
+            orderDao.UpdateOrderItemsStatus(orderItems);
         }
 
-        public void UpdateOrderStatus(Order order)
+        public void UpdateOrderFinishedStatus(Order order)
         {
-            orderDao.UpdateOrderStatus(order);
+            orderDao.UpdateOrderFinishedStatus(order);
         }
 
-        public void UpdateAllOrderItemStatus(Order order)
+        public void UpdateAllOrderItemsStatus(Order order)
         {
-            orderDao.UpdateAllOrderItemStatus(order);
+            orderDao.UpdateAllOrderItemsStatus(order);
         }
 
         public List<Order> GetAllRunningOrdersForTable(Table table)
@@ -92,7 +92,7 @@ namespace Service
         public void FinishAllOrders(List<Order> orders)
         {
             orders.ForEach(order => order.Finished = true);
-            orders.ForEach(order => UpdateOrderStatus(order));
+            orders.ForEach(order => UpdateOrderFinishedStatus(order));
         }
 
         private List<OrderItem> OrderItemsToServed(List<Order> runningOrders)
@@ -122,7 +122,7 @@ namespace Service
         public void SetOrderItemsToServed(List<Order> runningOrders)
         {
             List<OrderItem> servedOrderItems = OrderItemsToServed(runningOrders);
-            UpdateOrderCategoryStatus(servedOrderItems);
+            UpdateOrderItemsStatus(servedOrderItems);
         }
     }
 }

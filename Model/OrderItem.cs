@@ -40,5 +40,11 @@
         {
             Quantity++;
         }
+
+        public void SetItemStatus(OrderStatus status)
+        {
+            ItemStatus = status;
+            ChangeOfStatus = DateTime.Now;
+        }
     }
 }

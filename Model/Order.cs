@@ -7,31 +7,17 @@
         public Employee PlacedBy { get; private set; }
         public int OrderNumber { get; private set; }
         public int? ServingNumber { get; private set; }
-        public bool Finished {get; set; }
+        public bool Finished { get; set; }
         public decimal TotalPrice { get; private set; }
         public List<OrderItem> OrderItems { get; private set; }
-        private OrderStatus? orderStatus;
-        public OrderStatus? Status
-        {
-            get
-            {
-                orderStatus = GetOrderStatus();
-                return orderStatus;
-            }
-
-            set
-            {
-                orderStatus = value;
-            }
-        }
-        public OrderStatus? StatusFromDB { get; private set; }
+        public OrderStatus? OrderStatus { get; set; }
 
         public List<CategoryGroup> OrderItemsByCategory
         {
             get
             {
                 return OrderItems
-                    .GroupBy(item => item.Item.Category.CategoryType.ToString())
+                    .GroupBy(item => item.Item.Category)
                     .Select(group => new CategoryGroup
                     {
                         Category = group.Key,
@@ -52,7 +38,7 @@
             ServingNumber = servingNumber;
             Finished = finished;
             TotalPrice = totalPrice;
-            StatusFromDB = status;
+            OrderStatus = status;
             OrderItems = new();
         }
 
@@ -61,7 +47,7 @@
             return $"#{OrderNumber}: ${TotalPrice}";
         }
 
-        public void AddOrderItem(OrderItem item) 
+        public void AddOrderItem(OrderItem item)
         {
             if (OrderItems.Contains(item))
                 item.IncreaseQuantity();
@@ -74,30 +60,6 @@
             OrderItems = items;
         }
 
-        private OrderStatus? GetOrderStatus()
-        {
-            OrderStatus? status = null;
-            bool isNotDone = false;
-
-            foreach (OrderItem item in OrderItems)
-            {
-                if (item.ItemStatus != OrderStatus.Done)
-                    isNotDone = true;
-
-                if (status == null)
-                    status = item.ItemStatus;
-                else if (item.ItemStatus == OrderStatus.Preparing)
-                    status = item.ItemStatus;
-                else if (item.ItemStatus == OrderStatus.Waiting && status != OrderStatus.Preparing)
-                    status = item.ItemStatus;
-            }
-
-            if (!isNotDone)
-                status = OrderStatus.Done;
-
-            return status;
-        }
-
         private OrderStatus? GetCategoryStatus(List<OrderItem> items)
         {
             OrderStatus? status = null;
@@ -105,19 +67,19 @@
 
             foreach (OrderItem item in items)
             {
-                if (item.ItemStatus != OrderStatus.Done)
+                if (item.ItemStatus != Model.OrderStatus.Done)
                     isNotDone = true;
 
                 if (status == null)
                     status = item.ItemStatus;
-                else if (item.ItemStatus == OrderStatus.Preparing)
+                else if (item.ItemStatus == Model.OrderStatus.Preparing)
                     status = item.ItemStatus;
-                else if (item.ItemStatus == OrderStatus.Waiting && status != OrderStatus.Preparing)
+                else if (item.ItemStatus == Model.OrderStatus.Waiting && status != Model.OrderStatus.Preparing)
                     status = item.ItemStatus;
             }
 
             if (!isNotDone)
-                status = OrderStatus.Done;
+                status = Model.OrderStatus.Done;
 
             return status;
         }

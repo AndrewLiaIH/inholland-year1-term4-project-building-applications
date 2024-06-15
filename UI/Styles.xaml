@@ -842,7 +842,7 @@
                     </Grid.ColumnDefinitions>
 
                     <Rectangle Grid.Row="0" Grid.Column="0" Grid.RowSpan="3" Grid.ColumnSpan="2" Fill="{StaticResource Color4}" />
-                    <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding Category}" FontSize="20" Foreground="{StaticResource TextDark}" Margin="16 16 0 8" />
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding Category.CategoryType}" FontSize="20" Foreground="{StaticResource TextDark}" Margin="16 16 0 8" />
                     <Grid Grid.Row="1" Grid.Column="0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
@@ -855,7 +855,7 @@
                     <Button Name="editStatus" Grid.Column="1" Grid.Row="0" Style="{DynamicResource ButtonEditStatus}" Margin="16 16 16 0" HorizontalAlignment="Right">
                         Edit status
                     </Button>
-                    <Button Name="changeStatus" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" Style="{DynamicResource ButtonChangeStatus}" Margin="16 0 16 16" >
+                    <Button Name="changeStatus" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" Style="{DynamicResource ButtonChangeStatus}" Margin="16 0 16 16">
                         Start preparing
                     </Button>
                 </Grid>
@@ -863,6 +863,7 @@
             </StackPanel>
         </Border>
     </DataTemplate>
+
 
     <!-- DataTemplate for Order -->
     <DataTemplate x:Key="OrderCardTemplate">
@@ -894,7 +895,7 @@
                         </TextBlock.Foreground>
                     </TextBlock>
 
-                    <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Text="{Binding StatusFromDB}" VerticalAlignment="Bottom" HorizontalAlignment="Center" FontSize="20">
+                    <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Text="{Binding OrderStatus}" VerticalAlignment="Bottom" HorizontalAlignment="Center" FontSize="20">
                         <TextBlock.Foreground>
                             <MultiBinding Converter="{StaticResource BackgroundToForegroundMultiConverter}">
                                 <Binding ElementName="CardHeaderBackground" Path="Fill"/>
