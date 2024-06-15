@@ -1,14 +1,10 @@
 ﻿namespace Model
 {
-    public enum Status
+    public enum OrderStatus
     {
         Waiting,
         Preparing,
         Done,
-        Free,
-        Reserved,
-        Occupied,
-        ReadyToServe,
         Served
     }
 }

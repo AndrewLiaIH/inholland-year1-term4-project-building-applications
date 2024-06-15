@@ -1,5 +1,5 @@
-﻿using Microsoft.IdentityModel.Tokens;
-using Model;
+﻿using Model;
+using Service;
 using System.ComponentModel;
 
 namespace UI
@@ -7,6 +7,8 @@ namespace UI
     //Created by Orest Pokotylenko
     public class TableViewModel : INotifyPropertyChanged
     {
+        private OrderService orderService = new();
+
         public Table Table { get; set; }
         public int RowIndex { get; set; }
         public int ColumnIndex { get; set; }
@@ -21,13 +23,13 @@ namespace UI
                 if (waitingTime != value)
                 {
                     waitingTime = value;
-                    OnPropertyChanged("WaitingTime");
+                    OnPropertyChanged(nameof(WaitingTime));
                 }
             }
         }
 
-        private Status tableState;
-        public Status TableState
+        private TableStatus tableState;
+        public TableStatus TableState
         {
             get { return tableState; }
             set
@@ -35,7 +37,7 @@ namespace UI
                 if (tableState != value)
                 {
                     tableState = value;
-                    OnPropertyChanged("TableState");
+                    OnPropertyChanged(nameof(TableState));
                 }
             }
         }
@@ -59,25 +61,45 @@ namespace UI
 
         internal void SetTableState()
         {
-            if (ReadyToBeServed())
-                TableState = Status.ReadyToServe;
-            else if (TableHasRunningOrder())
-                TableState = Status.Occupied;
-            else if (Table.Occupied)
-                TableState = Status.Reserved;
+            if (orderService.HasRunningOrders(RunningOrders))
+                UpdateTableStatusReadyToServe(orderService.Paid(RunningOrders));
             else
-                TableState = Status.Free;
+                TableState = Table.Occupied ? TableStatus.Reserved : TableStatus.Free;
         }
 
-        private bool TableHasRunningOrder()
+        private void UpdateTableStatusReadyToServe(bool paid)
         {
-            return !RunningOrders.IsNullOrEmpty();
+            TableState = paid ? TableStatus.OccupiedPaid : TableStatus.Occupied;
+            TableStatusReadyToServe(paid);
         }
 
-        private bool ReadyToBeServed()
+        private HashSet<MenuType> GetDoneMenuTypes()
         {
-            List<OrderItem> orderItems = RunningOrders.SelectMany(order => order.OrderItems).ToList();
-            return orderItems.Any(orderItem => orderItem.ItemStatus == Status.ReadyToServe);
+            HashSet<MenuType> statuses = new();
+
+            foreach (Order order in RunningOrders)
+            {
+                List<OrderItem> doneOrderItems = order.OrderItems.Where(orderItem => orderItem.ItemStatus == OrderStatus.Done).ToList();
+                statuses.UnionWith(doneOrderItems.Select(orderItem => orderItem.Item.Category.MenuCard.MenuType));
+            }
+
+            return statuses;
+        }
+
+        private void TableStatusReadyToServe(bool paid)
+        {
+            HashSet<MenuType> statuses = GetDoneMenuTypes();
+
+            bool containsDrinks = statuses.Contains(MenuType.Drinks);
+            bool containsDinner = statuses.Contains(MenuType.Dinner);
+            bool containsLunch = statuses.Contains(MenuType.Lunch);
+
+            if (containsDrinks && (containsDinner || containsLunch))
+                TableState = !paid ? TableStatus.ReadyToServeAll : TableStatus.ReadyToServeAllPaid;
+            else if (containsDinner || containsLunch)
+                TableState = !paid ? TableStatus.ReadyToServeFood : TableStatus.ReadyToServeFoodPaid;
+            else if (containsDrinks)
+                TableState = !paid ? TableStatus.ReadyToServeDrinks : TableStatus.ReadyToServeDrinksPaid;
         }
 
         private void CalculateWaitingTime(OrderItem orderItem)
@@ -90,11 +112,8 @@ namespace UI
 
         private void SetWaitingTime()
         {
-            List<OrderItem> allOrderItems = RunningOrders.SelectMany(order => order.OrderItems).ToList();
-            List<OrderItem> waitingOrderItems = allOrderItems.Where(orderItem => orderItem.ItemStatus != Status.Served).ToList();
-            OrderItem orderItemLongestWaiting = waitingOrderItems.OrderBy(orderItem => orderItem.PlacementTime).FirstOrDefault();
-
-            CalculateWaitingTime(orderItemLongestWaiting);
+            OrderItem longestWaitingTimeItem = orderService.GetLongestWaitingTime(RunningOrders);
+            CalculateWaitingTime(longestWaitingTimeItem);
         }
 
         internal void UpdateWaitingTime()

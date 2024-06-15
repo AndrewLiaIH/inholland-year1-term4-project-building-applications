@@ -5,7 +5,9 @@ using System.Windows.Controls;
 
 namespace UI
 {
-    // This class is created by Orest Pokotylenko
+    /// <summary>
+    /// This class was created by Orest Pokotylenko. It is a user control that represents a table in the restaurant.
+    /// </summary>
     public partial class UserControlTable : UserControl
     {
         private TableViewModel tableViewModel;
@@ -13,22 +15,13 @@ namespace UI
         private TableService tableService = new();
         private OrderService orderService = new();
 
-        internal static readonly RoutedEvent EditOrderClickedEvent = EventManager.RegisterRoutedEvent(
-        "EditOrderClicked", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(UserControlTable));
+        internal static readonly RoutedEvent OrderClickedEvent = EventManager.RegisterRoutedEvent(
+        "OrderClicked", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(UserControlTable));
 
-        internal event RoutedEventHandler EditOrderClicked
+        internal event RoutedEventHandler OrderClicked
         {
-            add { AddHandler(EditOrderClickedEvent, value); }
-            remove { RemoveHandler(EditOrderClickedEvent, value); }
-        }
-
-        internal static readonly RoutedEvent AddOrderClickedEvent = EventManager.RegisterRoutedEvent(
-        "AddOrderClicked", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(UserControlTable));
-
-        internal event RoutedEventHandler AddOrderClicked
-        {
-            add { AddHandler(AddOrderClickedEvent, value); }
-            remove { RemoveHandler(AddOrderClickedEvent, value); }
+            add { AddHandler(OrderClickedEvent, value); }
+            remove { RemoveHandler(OrderClickedEvent, value); }
         }
 
         public UserControlTable()
@@ -53,38 +46,31 @@ namespace UI
         private void ButtonFree_Click(object sender, RoutedEventArgs e)
         {
             UpdateTableOccupiedStatus(false);
-            FinishAllOrders();
             ResetTable();
         }
 
         private void ButtonPay_Click(object sender, RoutedEventArgs e)
         {
-            ButtonPay.Visibility = Visibility.Hidden;
-            ButtonFree.Visibility = Visibility.Visible;
-            ButtonEditOrder.IsEnabled = false;
+            FinishAllOrders();
+            UpdateRunningOrders();
         }
 
         private void ButtonReserve_Click(object sender, RoutedEventArgs e)
         {
             UpdateTableOccupiedStatus(true);
-            tableViewModel.TableState = Status.Reserved;
+            tableViewModel.TableState = TableStatus.Reserved;
         }
 
         private void ButtonOrder_Click(object sender, RoutedEventArgs e)
         {
-            RaiseEvent(new RoutedEventArgs(AddOrderClickedEvent));
+            RaiseEvent(new RoutedEventArgs(OrderClickedEvent));
         }
 
         private void ButtonServed_Click(object sender, RoutedEventArgs e)
         {
             SetOrderItemsToServed();
+            UpdateRunningOrders();
             tableViewModel.UpdateWaitingTime();
-            tableViewModel.TableState = Status.Occupied;
-        }
-
-        private void ButtonEditOrder_Click(object sender, RoutedEventArgs e)
-        {
-            RaiseEvent(new RoutedEventArgs(EditOrderClickedEvent));
         }
 
         private void OnRunningOrdersChanged()
@@ -92,26 +78,11 @@ namespace UI
             UpdateRunningOrders();
         }
 
-        private void UpdateRunningOrders()
-        {
-            List<Order> ordersPerTable = orderService.GetAllRunningOrdersForTable(tableViewModel.Table);
-
-            if (!orderService.EqualRunningOrders(ordersPerTable, tableViewModel.RunningOrders))
-            {
-                tableViewModel.RunningOrders = ordersPerTable;
-                tableViewModel.SetTableState();
-            }
-        }
-
         private void OnTableOccupiedChanged()
         {
             Table updatedTable = tableService.GetTableById(tableViewModel.Table.DatabaseId);
-
-            if (!tableService.EqualTableoccupation(updatedTable, tableViewModel.Table))
-            {
-                tableViewModel.Table.SetOccupied(updatedTable.Occupied);
-                tableViewModel.SetTableState();
-            }
+            tableViewModel.Table.Occupied = updatedTable.Occupied;
+            tableViewModel.SetTableState();
         }
 
         private void OnWaitingTimeChanged()
@@ -122,7 +93,7 @@ namespace UI
         //Methods
         private void UpdateTableOccupiedStatus(bool status)
         {
-            tableViewModel.Table.SetOccupied(status);
+            tableViewModel.Table.Occupied = status;
             tableService.UpdateTableStatus(tableViewModel.Table);
         }
 
@@ -131,52 +102,28 @@ namespace UI
             orderService.UpdateOrderStatus(order);
         }
 
-        private List<OrderItem> OrderItemsToServed()
-        {
-            List<OrderItem> changedOrderItems = new();
-
-            foreach (var order in tableViewModel.RunningOrders)
-            {
-                ProcessOrderItemsToServed(order, changedOrderItems);
-            }
-
-            return changedOrderItems;
-        }
-
-        private void ProcessOrderItemsToServed(Order order, List<OrderItem> changedOrderItems)
-        {
-            foreach (var orderItem in order.OrderItems)
-            {
-                if (orderItem.ItemStatus == Status.ReadyToServe)
-                {
-                    orderItem.SetItemStatus(Status.Served);
-                    changedOrderItems.Add(orderItem);
-                }
-            }
-        }
-
         private void SetOrderItemsToServed()
         {
-            List<OrderItem> servedOrderItems = OrderItemsToServed();
-            orderService.UpdateOrderCategoryStatus(servedOrderItems);
+            orderService.SetOrderItemsToServed(tableViewModel.RunningOrders);
             UpdateRunningOrders();
         }
 
         private void FinishAllOrders()
         {
-            foreach (Order order in tableViewModel.RunningOrders)
-            {
-                order.SetFinished(true);
-                UpdateOrderStatus(order);
-                orderService.UpdateAllOrderItemStatus(order);
-            }
+            orderService.FinishAllOrders(tableViewModel.RunningOrders);
         }
 
         private void ResetTable()
         {
-            tableViewModel.TableState = Status.Free;
+            tableViewModel.TableState = TableStatus.Free;
             tableViewModel.RunningOrders.Clear();
             tableViewModel.UpdateWaitingTime();
+        }
+
+        private void UpdateRunningOrders()
+        {
+            tableViewModel.RunningOrders = orderService.GetAllRunningOrdersForTable(tableViewModel.Table);
+            tableViewModel.SetTableState();
         }
     }
 }

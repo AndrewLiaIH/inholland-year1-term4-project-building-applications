@@ -7,11 +7,11 @@
         public Employee PlacedBy { get; private set; }
         public int OrderNumber { get; private set; }
         public int? ServingNumber { get; private set; }
-        public bool Finished {get; private set; }
+        public bool Finished {get; set; }
         public decimal TotalPrice { get; private set; }
         public List<OrderItem> OrderItems { get; private set; }
-        private Status? orderStatus;
-        public Status? OrderStatus
+        private OrderStatus? orderStatus;
+        public OrderStatus? Status
         {
             get
             {
@@ -24,7 +24,7 @@
                 orderStatus = value;
             }
         }
-        public Status? StatusFromDB { get; private set; }
+        public OrderStatus? StatusFromDB { get; private set; }
 
         public List<CategoryGroup> OrderItemsByCategory
         {
@@ -43,7 +43,7 @@
             }
         }
 
-        public Order(int databaseId, Table table, Employee placedBy, int orderNumber, int? servingNumber, bool finished, decimal totalPrice, Status? status = null)
+        public Order(int databaseId, Table table, Employee placedBy, int orderNumber, int? servingNumber, bool finished, decimal totalPrice, OrderStatus? status = null)
         {
             DatabaseId = databaseId;
             Table = table;
@@ -74,57 +74,52 @@
             OrderItems = items;
         }
 
-        private Status? GetOrderStatus()
+        private OrderStatus? GetOrderStatus()
         {
-            Status? status = null;
+            OrderStatus? status = null;
             bool isNotDone = false;
 
             foreach (OrderItem item in OrderItems)
             {
-                if (item.ItemStatus != Status.Done)
+                if (item.ItemStatus != OrderStatus.Done)
                     isNotDone = true;
 
                 if (status == null)
                     status = item.ItemStatus;
-                else if (item.ItemStatus == Status.Preparing)
+                else if (item.ItemStatus == OrderStatus.Preparing)
                     status = item.ItemStatus;
-                else if (item.ItemStatus == Status.Waiting && status != Status.Preparing)
+                else if (item.ItemStatus == OrderStatus.Waiting && status != OrderStatus.Preparing)
                     status = item.ItemStatus;
             }
 
             if (!isNotDone)
-                status = Status.Done;
+                status = OrderStatus.Done;
 
             return status;
         }
 
-        private Status? GetCategoryStatus(List<OrderItem> items)
+        private OrderStatus? GetCategoryStatus(List<OrderItem> items)
         {
-            Status? status = null;
+            OrderStatus? status = null;
             bool isNotDone = false;
 
             foreach (OrderItem item in items)
             {
-                if (item.ItemStatus != Status.Done)
+                if (item.ItemStatus != OrderStatus.Done)
                     isNotDone = true;
 
                 if (status == null)
                     status = item.ItemStatus;
-                else if (item.ItemStatus == Status.Preparing)
+                else if (item.ItemStatus == OrderStatus.Preparing)
                     status = item.ItemStatus;
-                else if (item.ItemStatus == Status.Waiting && status != Status.Preparing)
+                else if (item.ItemStatus == OrderStatus.Waiting && status != OrderStatus.Preparing)
                     status = item.ItemStatus;
             }
 
             if (!isNotDone)
-                status = Status.Done;
+                status = OrderStatus.Done;
 
             return status;
-        }
-
-        public void SetFinished(bool finished)
-        {
-            Finished = finished;
         }
     }
 }
