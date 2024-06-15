@@ -6,9 +6,8 @@ using System.Windows.Controls;
 
 namespace UI
 {
-    // This class is created by Orest Pokotylenko
     /// <summary>
-    /// Interaction logic for UserControlLogin.xaml
+    /// This class is created by Orest Pokotylenko. It is used to login employees to the system.
     /// </summary>
     public partial class UserControlLoginView : UserControl
     {
@@ -69,16 +68,19 @@ namespace UI
             if (InputEmptyValidation())
             {
                 LoginUnsuccessful(EmptyBoxExceptionMessage);
+                return;
             }
-            else
-            {
-                LoggedInEmployee = GetEmployee();
 
-                if (LoggedInEmployee == null)
-                {
-                    LoginUnsuccessful(WrongLoginOrPasswordMessage);
-                }
+            if (InputToLongValidation())
+            {
+                LoginUnsuccessful(WrongLoginOrPasswordMessage);
+                return;
             }
+
+            LoggedInEmployee = GetEmployee();
+
+            if (LoggedInEmployee == null)
+                LoginUnsuccessful(WrongLoginOrPasswordMessage);
         }
 
         private void LoginUnsuccessful(string errorMessage)
@@ -86,11 +88,6 @@ namespace UI
             SetTextBoxesToError();
             LoginErrorMessage.Text = errorMessage;
             activeTextBox = null;
-        }
-
-        private bool InputEmptyValidation()
-        {
-            return LoginTextBox.Text.IsNullOrEmpty() || PasswordTextBox.Text.IsNullOrEmpty();
         }
 
         private Employee GetEmployee()
@@ -110,15 +107,20 @@ namespace UI
             string input = (sender as Button).Tag.ToString();
 
             if (activeTextBox != null && activeTextBox.IsReadOnly)
-                if (activeTextBox == LoginTextBox)
-                {
-                    activeTextBox.Text += input;
-                }
-                else
-                {
-                    activeTextBox.Text += "•";
-                    activeTextBox.Tag += input;
-                }
+                FillTextBox(input);
+        }
+
+        private void FillTextBox(string input)
+        {
+            if (activeTextBox == LoginTextBox)
+            {
+                activeTextBox.Text += input;
+            }
+            else
+            {
+                activeTextBox.Text += "•";
+                activeTextBox.Tag += input;
+            }
         }
 
         private void NumPadBackSpace_Click(object sender, RoutedEventArgs e)
@@ -130,7 +132,6 @@ namespace UI
                 if (activeTextBox == PasswordTextBox)
                     activeTextBox.Tag = activeTextBox.Tag.ToString().Remove(activeTextBox.Tag.ToString().Length - 1);
             }
-
         }
 
         private void NumPadClear_Click(object sender, RoutedEventArgs e)
@@ -189,6 +190,19 @@ namespace UI
                 textBox.Text = string.Empty;
                 textBox.Tag = string.Empty;
             }
+        }
+
+        /// <summary>
+        /// Validation methods
+        /// </summary>
+        private bool InputEmptyValidation()
+        {
+            return LoginTextBox.Text.IsNullOrEmpty() || PasswordTextBox.Text.IsNullOrEmpty();
+        }
+
+        private bool InputToLongValidation()
+        {
+            return LoginTextBox.Text.Length > 6 || PasswordTextBox.Text.Length > 6;
         }
     }
 }

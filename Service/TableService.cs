@@ -9,6 +9,7 @@ namespace Service
         private TableDao tableDao = new();
         public event Action TableOccupiedChanged;
 
+        // Methods for TableDao
         public List<Table> GetAllTables()
         {
             return tableDao.GetAllTables();
@@ -26,12 +27,7 @@ namespace Service
 
         protected override void CheckForChanges(object sender, EventArgs e)
         {
-            //TableOccupiedChanged?.Invoke();
-        }
-
-        public bool EqualTableoccupation(Table updatedTable,  Table currentTable)
-        {
-            return updatedTable.Occupied.Equals(currentTable.Occupied);
+            TableOccupiedChanged?.Invoke();
         }
     }
 }

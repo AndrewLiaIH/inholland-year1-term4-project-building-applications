@@ -7,19 +7,16 @@ using Model;
 namespace UI
 {
     /// <summary>
-    /// Interaction logic for UserControlTableViewTables.xaml
+    /// This class was created by Orest Pokotylenko. It handles the creation and displaying of tables
     /// </summary>
     public partial class UserControlTableViewTables : UserControl
     {
         public ObservableCollection<TableViewModel> Tables { get; } = new();
-        private OrderService orderService = new();
 
         public UserControlTableViewTables()
         {
             InitializeComponent();
-
             GetAllTables();
-            UpdateWaitingTime();
             DataContext = this;
         }
 
@@ -30,38 +27,24 @@ namespace UI
             SetTables(tables);
         }
 
-        private List<Order> GetAllRunningOrders()
-        {
-            return new();
-        }
-
         private void SetTables(List<Table> tables)
         {
-            List<Order> runningOrders = GetAllRunningOrders();
+            OrderService orderService = new();
 
             for (int tableIndex = 0; tableIndex < tables.Count; tableIndex++)
             {
                 int row = tableIndex / 5;
                 int col = tableIndex % 5;
 
-                List<Order> ordersPerTable = RunningOrderPerTable(tables[tableIndex], runningOrders);
+                List<Order> ordersPerTable = orderService.GetAllRunningOrdersForTable(tables[tableIndex]);
                 Tables.Add(new TableViewModel(tables[tableIndex], row, col, ordersPerTable));
+                Tables[tableIndex].UpdateWaitingTime();
             }
         }
 
-        private void UpdateWaitingTime()
-        {
-            foreach (TableViewModel table in Tables)
-            {
-                table.UpdateWaitingTime();
-            }
-        }
-
-        private List<Order> RunningOrderPerTable(Table table, List<Order> runningOrders)
-        {
-            return runningOrders.FindAll(order => order.Table.DatabaseId == table.DatabaseId);
-        }
-
+        /// <summary>
+        /// This event creates the grid on load to make it possible to display tables dynamically
+        /// </summary>
         private void ItemsControlGrid_Loaded(object sender, RoutedEventArgs e)
         {
             Grid grid = sender as Grid;
@@ -78,6 +61,9 @@ namespace UI
             {
                 grid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
             }
+
+            //The grid won't be recreated again
+            (sender as FrameworkElement).Loaded -= ItemsControlGrid_Loaded;
         }
     }
 }

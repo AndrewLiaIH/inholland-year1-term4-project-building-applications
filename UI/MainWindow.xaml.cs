@@ -46,8 +46,7 @@ namespace UI
             if (userControlTableView == null)
             {
                 userControlTableView = new();
-                userControlTableView.AddHandler(UserControlTable.EditOrderClickedEvent, new RoutedEventHandler(UserControlTable_EditOrderClicked));
-                userControlTableView.AddHandler(UserControlTable.AddOrderClickedEvent, new RoutedEventHandler(UserControlTable_AddOrderClicked));
+                userControlTableView.AddHandler(UserControlTable.OrderClickedEvent, new RoutedEventHandler(UserControlTable_OrderClicked));
             }
 
             SetHeader(userControlTableView);
@@ -87,12 +86,7 @@ namespace UI
             showView();
         }
 
-        private void UserControlTable_EditOrderClicked(object sender, RoutedEventArgs e)
-        {
-            ShowOrderView();
-        }
-
-        private void UserControlTable_AddOrderClicked(object sender, RoutedEventArgs e)
+        private void UserControlTable_OrderClicked(object sender, RoutedEventArgs e)
         {
             ShowOrderView();
         }
