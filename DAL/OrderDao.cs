@@ -47,8 +47,8 @@ namespace DAL
         private const string QueryGetAllOrderItems = $"SELECT {ColumnOrderItemId}, {ColumnOrderItemNumber}, {ColumnItemNumber}, {ColumnPlacementTime}, {ColumnStatus}, {ColumnChangeOfStatus}, {ColumnQuantity}, {ColumnComment} FROM order_item";
         private const string QueryGetOrderItemById = $"{QueryGetAllOrderItems} WHERE {ColumnOrderItemId} = {ParameterNameOrderItemId}";
         private const string QueryGetAllItemsOfOrder = $"{QueryGetAllOrderItems} WHERE {ColumnOrderItemNumber} = {ParameterNameOrderNumber}";
-        private const string QueryUpdateAllOrderItemStatus = $"UPDATE order_item SET {ColumnStatus} = {ParameterNameOrderItemStatus} WHERE {ColumnOrderItemNumber} = {ParameterNameOrderNumber}";
-        private const string QueryUpdateOrderItemStatusByCategory = $"UPDATE order_item SET [{ColumnStatus}] = {ParameterNameOrderItemStatus} WHERE {ColumnOrderItemId} = {ParameterNameOrderItemId}";
+        private const string QueryUpdateAllOrderItemsStatus = $"UPDATE order_item SET {ColumnStatus} = {ParameterNameOrderItemStatus} WHERE {ColumnOrderItemNumber} = {ParameterNameOrderNumber}";
+        private const string QueryUpdateOrderItemStatus = $"UPDATE order_item SET [{ColumnStatus}] = {ParameterNameOrderItemStatus} WHERE {ColumnOrderItemId} = {ParameterNameOrderItemId}";
         private const string QueryGetAllKitchenBarOrderItems = 
             $"SELECT OI.{ColumnOrderItemId} AS ColumnOrderItemId, OI.{ColumnOrderItemNumber}, OI.{ColumnItemNumber}, {ColumnPlacementTime}, {ColumnStatus}, {ColumnChangeOfStatus}, {ColumnQuantity}, {ColumnComment} FROM order_item AS OI " +
             $"JOIN menu_item AS MI ON OI.{ColumnItemNumber} = MI.item_id " +
@@ -87,7 +87,7 @@ namespace DAL
             return orders;
         }
 
-        public void UpdateOrderStatus(Order order)
+        public void UpdateOrderFinishedStatus(Order order)
         {
             SqlParameter[] parameters = new SqlParameter[]
             {
@@ -192,7 +192,7 @@ namespace DAL
             return GetByIntParameters(QueryGetOrderItemById, ReadRowOrderItem, parameters);
         }
 
-        public void UpdateOrderCategoryStatus(List<OrderItem> orderItems)
+        public void UpdateOrderItemsStatus(List<OrderItem> orderItems)
         {
             foreach (OrderItem orderItem in orderItems)
             {
@@ -202,11 +202,11 @@ namespace DAL
                     new(ParameterNameOrderItemStatus, orderItem.ItemStatus.ToString())
                 };
 
-                ExecuteEditQuery(QueryUpdateOrderItemStatusByCategory, parameters);
+                ExecuteEditQuery(QueryUpdateOrderItemStatus, parameters);
             }
         }
 
-        public void UpdateAllOrderItemStatus(Order order)
+        public void UpdateAllOrderItemsStatus(Order order)
         {
             SqlParameter[] parameters = new SqlParameter[]
             {
@@ -214,7 +214,7 @@ namespace DAL
                 new(ParameterNameOrderItemStatus, OrderStatus.Served.ToString())
             };
 
-            ExecuteEditQuery(QueryUpdateAllOrderItemStatus, parameters);
+            ExecuteEditQuery(QueryUpdateAllOrderItemsStatus, parameters);
         }
 
         private List<OrderItem> GetAllItemsForOrder(int orderNumber)

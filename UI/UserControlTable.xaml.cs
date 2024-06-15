@@ -99,7 +99,7 @@ namespace UI
 
         private void UpdateOrderStatus(Order order)
         {
-            orderService.UpdateOrderStatus(order);
+            orderService.UpdateOrderFinishedStatus(order);
         }
 
         private void SetOrderItemsToServed()

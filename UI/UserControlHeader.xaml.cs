@@ -13,7 +13,7 @@ namespace UI
         public static DependencyProperty FoldersProperty =
             DependencyProperty.Register("Folders", typeof(List<Folder>), typeof(UserControlHeader), new PropertyMetadata(null));
 
-        public static readonly DependencyProperty SelectedFolderProperty =
+        public static DependencyProperty SelectedFolderProperty =
             DependencyProperty.Register("SelectedFolder", typeof(Folder), typeof(UserControlHeader), new PropertyMetadata(null, OnSelectedFolderChanged));
 
         public static DependencyProperty LoggedInEmployeeProperty =
