@@ -14,6 +14,7 @@ namespace UI
         private UserControlTableView userControlTableView;
         private UserControlOrderView userControlOrderView;
         private UserControlKitchenView userControlKitchenView;
+        private UserControlNetworkError userControlNetworkError;
 
         public MainWindow()
         {
