@@ -9,6 +9,7 @@ namespace DAL
     {
         private const string ConnectionStringName = "ChapeauDatabase";
         private const string DatabaseErrorMessage = "Database operation failed.";
+        public static event Action NetworkExceptionOccurredDao;
 
         private SqlConnection OpenConnection()
         {
@@ -45,19 +46,20 @@ namespace DAL
                     }
                 }
             }
-            catch (SqlException ex)
+            catch
             {
-                HandleSqlException(ex);
+                NetworkExceptionHandler();
             }
         }
 
         /// <summary>
         /// For Select Queries.
         /// </summary>
-        protected DataTable ExecuteSelectQuery(string query, params SqlParameter[] sqlParameters)
+        protected DataTable ExecuteSelectQuery(string query, out bool error, params SqlParameter[] sqlParameters)
         {
             DataTable dataTable = new();
             DataSet dataSet = new();
+            error = false;
 
             try
             {
@@ -75,19 +77,18 @@ namespace DAL
                     }
                 }
             }
-            catch (SqlException e)
+            catch
             {
-                HandleSqlException(e);
+                NetworkExceptionHandler();
+                error = true;
             }
 
             return dataTable;
         }
 
-
-        private void HandleSqlException(SqlException ex)
+        private void NetworkExceptionHandler()
         {
-            // Preserve the original exception as an inner exception
-            throw new Exception(DatabaseErrorMessage, ex);
+            NetworkExceptionOccurredDao?.Invoke();
         }
 
         private SqlCommand CreateCommand(SqlConnection connection, string query, params SqlParameter[] sqlParameters)
@@ -99,19 +100,25 @@ namespace DAL
 
         protected T GetByIntParameters<T>(string query, Func<DataRow, T> readRow, Dictionary<string, int> parameters)
         {
-            return GetAllByIntParameters(query, readRow, parameters).First();
+            List<T> list = GetAllByIntParameters(query, readRow, parameters, out bool nError);
+
+            if (nError)
+                return list.FirstOrDefault();
+            return list.First();
         }
 
-        protected List<T> GetAllByIntParameters<T>(string query, Func<DataRow, T> readRow, Dictionary<string, int> parameters)
+        protected List<T> GetAllByIntParameters<T>(string query, Func<DataRow, T> readRow, Dictionary<string, int> parameters, out bool Nerror)
         {
             SqlParameter[] sqlParameters = CreateSqlParameters(parameters);
-            DataTable dataTable = ExecuteSelectQuery(query, sqlParameters);
+            DataTable dataTable = ExecuteSelectQuery(query, out bool error, sqlParameters);
+            Nerror = error;
+
             return ReadTable(dataTable, readRow);
         }
 
         protected List<T> GetAll<T>(string query, Func<DataRow, T> readRow, params SqlParameter[] sqlParameters)
         {
-            DataTable dataTable = ExecuteSelectQuery(query, sqlParameters);
+            DataTable dataTable = ExecuteSelectQuery(query, out bool error, sqlParameters);
             return ReadTable(dataTable, readRow);
         }
         

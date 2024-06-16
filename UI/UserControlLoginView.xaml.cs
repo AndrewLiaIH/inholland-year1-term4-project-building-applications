@@ -13,6 +13,7 @@ namespace UI
     {
         public Employee LoggedInEmployee { get; private set; }
         private TextBox activeTextBox;
+        private EmployeeService employeeService = new();
 
         private const string EmptyBoxExceptionMessage = "Please, fill in all fields.";
         private const string WrongLoginOrPasswordMessage = "Wrong password or ID. Please, try again.";
@@ -41,7 +42,7 @@ namespace UI
         internal void Refresh()
         {
             ClearTextBoxes();
-            SetTextBoxToNormal();
+            SetAllTextBoxesToNormal();
             SetCurrentTextBox(LoginTextBox);
             LoggedInEmployee = null;
             LoginErrorMessage.Text = string.Empty;
@@ -53,14 +54,14 @@ namespace UI
         private void LoginButton_Click(object sender, RoutedEventArgs e)
         {
             Login();
+        }
+
+        internal void Login()
+        {
+            ValidateLogin();
 
             if (LoggedInEmployee != null)
                 RaiseEvent(new RoutedEventArgs(LoginEvent));
-        }
-
-        private void Login()
-        {
-            ValidateLogin();
         }
 
         private void ValidateLogin()
@@ -94,7 +95,6 @@ namespace UI
         {
             int login = int.Parse(LoginTextBox.Text);
             string password = PasswordTextBox.Tag.ToString();
-            EmployeeService employeeService = new();
 
             return employeeService.GetEmployeeByLoginAndPassword(login, password);
         }
@@ -175,6 +175,13 @@ namespace UI
 
             LoginTextBox.Style = errorFieldState;
             PasswordTextBox.Style = errorFieldState;
+        }
+
+        private void SetAllTextBoxesToNormal()
+        {
+            var normalFieldState = (Style)FindResource("LoginTextBoxStyle");
+            foreach (TextBox textBox in LoginStackPanel.Children.OfType<TextBox>())
+                textBox.Style = normalFieldState;
         }
 
         private void SetTextBoxToNormal()

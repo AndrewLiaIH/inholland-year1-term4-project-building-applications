@@ -1,4 +1,6 @@
-﻿using Model;
+﻿using DAL;
+using Model;
+using Service;
 using System.Windows;
 
 namespace UI
@@ -15,6 +17,16 @@ namespace UI
         private UserControlOrderView userControlOrderView;
         private UserControlKitchenView userControlKitchenView;
         private UserControlNetworkError userControlNetworkError;
+        private EmployeeService employeeService;
+
+        internal static readonly RoutedEvent RemoveEventsEvent = EventManager.RegisterRoutedEvent(
+        "RemoveEvents", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(UserControlTable));
+
+        internal event RoutedEventHandler RemoveEvents
+        {
+            add { AddHandler(RemoveEventsEvent, value); }
+            remove { RemoveHandler(RemoveEventsEvent, value); }
+        }
 
         public MainWindow()
         {
@@ -29,6 +41,30 @@ namespace UI
             };
 
             ShowLoginView();
+            BaseService.NetworkExceptionOccurred += EmployeeService_NetworkExceptionOccurred;
+            employeeService = new();
+        }
+
+        private void EmployeeService_NetworkExceptionOccurred()
+        {
+            Dispatcher.Invoke(() =>
+            { 
+            userControlNetworkError ??= new();
+            MainContentControl.Content = userControlNetworkError;
+            employeeService.RetryLogin += RetryLogin;
+            });
+        }
+
+        private void RetryLogin()
+        {
+            Dispatcher.Invoke(() =>
+            {
+                userControlLoginView.Login();
+                employeeService.RetryLogin -= RetryLogin;
+
+                if (userControlLoginView.LoggedInEmployee == null)
+                    ShowLoginView();
+            });
         }
 
         private void ShowLoginView()
@@ -106,7 +142,14 @@ namespace UI
                 userControlKitchenView.userControlHeader.Logout -= UserControlHeader_Logout;
 
             if (userControlTableView != null)
+            {
                 userControlTableView.userControlHeader.Logout -= UserControlHeader_Logout;
+            }
+
+            if (userControlTableView != null)
+            {
+                userControlTableView.userControlHeader.Logout -= UserControlHeader_Logout;
+            }
         }
 
         private void SetHeader(ILoggedInEmployeeHandler employeeHandler)
