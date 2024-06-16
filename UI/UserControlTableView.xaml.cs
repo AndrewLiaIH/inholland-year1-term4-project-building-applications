@@ -29,7 +29,6 @@ namespace UI
 
             userControlHeader.Folders = FoldersTables;
             userControlHeader.SelectedFolder = FoldersTables.First();
-            orderService.NetworkExceptionOccurred += NetworkExceptionOccurred;
             tableService.NetworkExceptionOccurred += NetworkExceptionOccurred;
         }
 
@@ -39,7 +38,6 @@ namespace UI
             {
                 ShowNetworkErrorView();
                 tableService.TableOccupiedChanged += UpdateTables;
-                orderService.RunningOrdersChanged += UpdateTables;
             });
         }
 
@@ -48,7 +46,6 @@ namespace UI
             Dispatcher.Invoke(async () =>
             {
                 tableService.TableOccupiedChanged -= UpdateTables;
-                orderService.RunningOrdersChanged -= UpdateTables;
 
                 if (tableService.ConnectionAvalible())
                 {

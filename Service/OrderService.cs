@@ -25,6 +25,11 @@ namespace Service
             WaitingTimeChanged?.Invoke();
         }
 
+        public bool ConnectionAvalible()
+        {
+            return orderDao.ConnectionAvalible();
+        }
+
         protected void NetworkExceptionHandler()
         {
             NetworkExceptionOccurred?.Invoke();
