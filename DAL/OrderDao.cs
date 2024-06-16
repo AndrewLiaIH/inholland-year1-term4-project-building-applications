@@ -9,7 +9,7 @@ namespace DAL
         // Order
         private const string QueryGetAllOrders = $"SELECT {ColumnOrderId}, {ColumnTableId}, {ColumnPlacedById}, {ColumnOrderNumber}, {ColumnServingNumber}, {ColumnFinished}, {ColumnTotalPrice} FROM [order]";
         private const string QueryGetOrderById = $"{QueryGetAllOrders} WHERE {ColumnOrderId} = {ParameterNameOrderId}";
-        private const string QueryUpdateOrderStatus = $"UPDATE [order] SET {ColumnFinished} = {ParameterNameOrderStatus} WHERE {ColumnOrderId} = {ParameterNameOrderId}";
+        private const string QueryUpdateOrderFinishedStatus = $"UPDATE [order] SET {ColumnFinished} = {ParameterNameOrderStatus} WHERE {ColumnOrderId} = {ParameterNameOrderId}";
         private const string QueryGetAllKitchenBarOrders = 
             $"SELECT DISTINCT O.{ColumnOrderId}, {ColumnTableId}, {ColumnPlacedById}, O.{ColumnOrderNumber}, {ColumnServingNumber}, {ColumnFinished}, {ColumnTotalPrice}, {ColumnStatus} FROM [order] AS O " +
             $"JOIN order_item AS OI ON O.{ColumnOrderId} = OI.{ColumnOrderItemNumber} " +
@@ -43,20 +43,32 @@ namespace DAL
         private const string ParameterStatus1 = "@status1";
         private const string ParameterStatus2 = "@status2";
 
+        private const string EqualDrinks = " = 'Drinks'";
+        private const string NotEqualDrinks = " != 'Drinks'";
+
         // OrderItem
         private const string QueryGetAllOrderItems = $"SELECT {ColumnOrderItemId}, {ColumnOrderItemNumber}, {ColumnItemNumber}, {ColumnPlacementTime}, {ColumnStatus}, {ColumnChangeOfStatus}, {ColumnQuantity}, {ColumnComment} FROM order_item";
         private const string QueryGetOrderItemById = $"{QueryGetAllOrderItems} WHERE {ColumnOrderItemId} = {ParameterNameOrderItemId}";
         private const string QueryGetAllItemsOfOrder = $"{QueryGetAllOrderItems} WHERE {ColumnOrderItemNumber} = {ParameterNameOrderNumber}";
-        private const string QueryUpdateAllOrderItemsStatus = $"UPDATE order_item SET {ColumnStatus} = {ParameterNameOrderItemStatus} WHERE {ColumnOrderItemNumber} = {ParameterNameOrderNumber}";
-        private const string QueryUpdateOrderItemStatus = $"UPDATE order_item SET [{ColumnStatus}] = {ParameterNameOrderItemStatus} WHERE {ColumnOrderItemId} = {ParameterNameOrderItemId}";
+        private const string QueryUpdateOrderItemsStatus = $"UPDATE order_item SET [{ColumnStatus}] = {ParameterNameOrderItemStatus}, {ColumnChangeOfStatus} = {ParameterNameOrderItemChangeOfStatus} WHERE {ColumnOrderItemId} = {ParameterNameOrderItemId}";
         private const string QueryGetAllKitchenBarOrderItems = 
             $"SELECT OI.{ColumnOrderItemId} AS ColumnOrderItemId, OI.{ColumnOrderItemNumber}, OI.{ColumnItemNumber}, {ColumnPlacementTime}, {ColumnStatus}, {ColumnChangeOfStatus}, {ColumnQuantity}, {ColumnComment} FROM order_item AS OI " +
             $"JOIN menu_item AS MI ON OI.{ColumnItemNumber} = MI.item_id " +
             $"JOIN category AS C ON MI.category_id = C.category_id " +
             $"JOIN menu_card AS MC ON C.menu_id = MC.card_id " +
-            $"WHERE ({ColumnStatus} = {ParameterStatus1} OR {ColumnStatus} = {ParameterStatus2}) AND menu_type";
-        private const string EqualDrinks = " = 'Drinks'";
-        private const string NotEqualDrinks = " != 'Drinks'";
+            $"WHERE OI.{ColumnOrderItemNumber} IN ({QueryGetAllKitchenBarOrderItemsSubquery}";
+        private const string QueryGetAllKitchenBarOrderItemsSubquery =
+            $"SELECT DISTINCT O.{ColumnOrderId} FROM [order] AS O " +
+            $"JOIN order_item AS OI ON O.{ColumnOrderId} = OI.{ColumnOrderItemNumber} " +
+            $"JOIN menu_item AS MI ON OI.{ColumnItemNumber} = MI.item_id " +
+            $"JOIN category AS C ON MI.category_id = C.category_id " +
+            $"JOIN menu_card AS MC ON C.menu_id = MC.card_id " +
+            $"WHERE {ColumnStatus} = {ParameterStatus2} OR " +
+            $"({ColumnStatus} = {ParameterStatus1} AND " +
+            $"O.{ColumnOrderId} NOT IN " +
+            $"(SELECT DISTINCT O.{ColumnOrderId} " +
+            $"FROM [order] AS O JOIN order_item AS OI ON O.{ColumnOrderId} = OI.{ColumnOrderItemNumber} " +
+            $"WHERE {ColumnStatus} = {ParameterStatus2})) AND menu_type";
 
         private const string ColumnOrderItemId = "order_id";
         private const string ColumnOrderItemNumber = "order_number";
@@ -70,6 +82,10 @@ namespace DAL
         private const string ParameterNameOrderItemId = "@orderItemId";
         private const string ParameterNameOrderNumber = "@orderNumber";
         private const string ParameterNameOrderItemStatus = "@orderItemStatus";
+        private const string ParameterNameOrderItemChangeOfStatus = "@orderItemChangeOfStatus";
+
+        private const string EqualDrinksOrderItems = " = 'Drinks') AND menu_type = 'Drinks'";
+        private const string NotEqualDrinksOrderItems = " != 'Drinks') AND menu_type != 'Drinks'";
 
         private TableDao tableDao = new();
         private EmployeeDao employeeDao = new();
@@ -85,17 +101,6 @@ namespace DAL
             }
 
             return orders;
-        }
-
-        public void UpdateOrderFinishedStatus(Order order)
-        {
-            SqlParameter[] parameters = new SqlParameter[]
-            {
-                new(ParameterNameOrderId, order.DatabaseId),
-                new(ParameterNameOrderStatus, order.Finished.ToString())
-            };
-
-            ExecuteEditQuery(QueryUpdateOrderStatus, parameters);
         }
 
         public Order GetOrderById(int orderId)
@@ -114,7 +119,8 @@ namespace DAL
 
         public List<Order> GetAllKitchenBarOrders(bool forKitchen, bool isRunning)
         {
-            string queryEnd = forKitchen ? NotEqualDrinks : EqualDrinks;
+            string queryEndOrders = forKitchen ? NotEqualDrinks : EqualDrinks;
+            string queryEndOrderItems = forKitchen ? NotEqualDrinksOrderItems : EqualDrinksOrderItems;
             string status1 = isRunning ? "Waiting" : "Done";
             string status2 = isRunning ? "Preparing" : "Served";
 
@@ -130,8 +136,8 @@ namespace DAL
                 new(ParameterStatus2, status2)
             };
 
-            List<OrderItem> orderItems = GetAll(QueryGetAllKitchenBarOrderItems + queryEnd, ReadRowOrderItem, parameters1);
-            List<Order> orders = GetAll(QueryGetAllKitchenBarOrders + queryEnd, ReadRowOrderWithStatus, parameters2);
+            List<Order> orders = GetAll(QueryGetAllKitchenBarOrders + queryEndOrders, ReadRowOrderWithStatus, parameters1);
+            List<OrderItem> orderItems = GetAll(QueryGetAllKitchenBarOrderItems + queryEndOrderItems, ReadRowOrderItem, parameters2);
 
             foreach (OrderItem item in orderItems)
                 orders.Find(i => i.DatabaseId == item.OrderId).OrderItems.Add(item);
@@ -199,22 +205,23 @@ namespace DAL
                 SqlParameter[] parameters = new SqlParameter[]
                 {
                     new(ParameterNameOrderItemId, orderItem.DatabaseId),
-                    new(ParameterNameOrderItemStatus, orderItem.ItemStatus.ToString())
+                    new(ParameterNameOrderItemStatus, orderItem.ItemStatus.ToString()),
+                    new(ParameterNameOrderItemChangeOfStatus, orderItem.ChangeOfStatus)
                 };
 
-                ExecuteEditQuery(QueryUpdateOrderItemStatus, parameters);
+                ExecuteEditQuery(QueryUpdateOrderItemsStatus, parameters);
             }
         }
 
-        public void UpdateAllOrderItemsStatus(Order order)
+        public void UpdateOrderFinishedStatus(Order order)
         {
             SqlParameter[] parameters = new SqlParameter[]
             {
-                new(ParameterNameOrderNumber, order.DatabaseId),
-                new(ParameterNameOrderItemStatus, OrderStatus.Served.ToString())
+                new(ParameterNameOrderId, order.DatabaseId),
+                new(ParameterNameOrderStatus, order.Finished.ToString())
             };
 
-            ExecuteEditQuery(QueryUpdateAllOrderItemsStatus, parameters);
+            ExecuteEditQuery(QueryUpdateOrderFinishedStatus, parameters);
         }
 
         private List<OrderItem> GetAllItemsForOrder(int orderNumber)
