@@ -797,17 +797,6 @@
         <Setter Property="Margin" Value="24" />
     </Style>
 
-    <!-- DataTemplate for MenuItem -->
-    <DataTemplate x:Key="MenuItemTemplate">
-        <Border CornerRadius="5" BorderBrush="Gray" BorderThickness="1" Padding="5" Margin="2">
-            <StackPanel>
-                <TextBlock Text="{Binding Name}" FontWeight="Bold"/>
-                <TextBlock Text="{Binding Description}" FontStyle="Italic"/>
-                <TextBlock Text="{Binding Price, StringFormat={}{0:C}}" Foreground="Green"/>
-            </StackPanel>
-        </Border>
-    </DataTemplate>
-
     <!-- DataTemplate for OrderItem -->
     <DataTemplate x:Key="OrderItemTemplate">
         <Grid>
@@ -855,19 +844,25 @@
                     <Button Name="editStatus" Grid.Column="1" Grid.Row="0" Style="{DynamicResource ButtonEditStatus}" Margin="16 16 16 0" HorizontalAlignment="Right">
                         Edit status
                     </Button>
-                    <Button Name="changeStatus" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" Style="{DynamicResource ButtonChangeStatus}" Margin="16 0 16 16">
-                        Start preparing
-                    </Button>
+                    <Button Name="changeStatus" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" Style="{DynamicResource ButtonChangeStatus}" Margin="16 0 16 16" />
                 </Grid>
                 <ItemsControl ItemsSource="{Binding Items}" ItemTemplate="{StaticResource OrderItemTemplate}" Margin="16" />
             </StackPanel>
         </Border>
     </DataTemplate>
 
-
-    <!-- DataTemplate for Order -->
-    <DataTemplate x:Key="OrderCardTemplate">
-        <Border CornerRadius="5" BorderBrush="{StaticResource Color10}" BorderThickness="1" Margin="0 0 24 24" Background="{StaticResource White}">
+    <!-- DataTemplate for Running Orders -->
+    <DataTemplate x:Key="RunningOrderCardTemplate">
+        <Border x:Name="OrderCardBorder" CornerRadius="5" BorderBrush="{StaticResource Color10}" BorderThickness="1" Margin="0 0 24 24" Background="{StaticResource White}">
+            <Border.Style>
+                <Style TargetType="Border">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Status}" Value="Done">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Border.Style>
             <StackPanel>
                 <Grid MinWidth="350">
                     <Grid.Resources>
@@ -895,7 +890,7 @@
                         </TextBlock.Foreground>
                     </TextBlock>
 
-                    <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Text="{Binding OrderStatus}" VerticalAlignment="Bottom" HorizontalAlignment="Center" FontSize="20">
+                    <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Text="{Binding Status}" VerticalAlignment="Bottom" HorizontalAlignment="Center" FontSize="20">
                         <TextBlock.Foreground>
                             <MultiBinding Converter="{StaticResource BackgroundToForegroundMultiConverter}">
                                 <Binding ElementName="CardHeaderBackground" Path="Fill"/>
@@ -944,11 +939,111 @@
                         </TextBlock.Foreground>
                     </TextBlock>
                 </Grid>
-                <ItemsControl Padding="16" ItemsSource="{Binding OrderItemsByCategory}" ItemTemplate="{StaticResource CategoryTemplate}" />
+                <ItemsControl Padding="16" x:Name="CategoriesItemsControl" ItemsSource="{Binding OrderItemsByCategory}" ItemTemplate="{StaticResource CategoryTemplate}" />
             </StackPanel>
         </Border>
     </DataTemplate>
 
+    <!-- DataTemplate for Finished Orders -->
+    <DataTemplate x:Key="FinishedOrderCardTemplate">
+        <Border x:Name="OrderCardBorder" CornerRadius="5" BorderBrush="{StaticResource Color10}" BorderThickness="1" Margin="0 0 24 24" Background="{StaticResource White}">
+            <Border.Style>
+                <Style TargetType="Border">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Status}" Value="Done">
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding Status}" Value="Preparing">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding Status}" Value="Waiting">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Border.Style>
+            <StackPanel>
+                <Grid MinWidth="350">
+                    <Grid.Resources>
+                        <ui:BackgroundToForegroundMultiConverter x:Key="BackgroundToForegroundMultiConverter"/>
+                    </Grid.Resources>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <Rectangle x:Name="CardHeaderBackground" Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="3" Fill="{StaticResource Color6}" />
+
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding ServingNumber, StringFormat=#{0:D2}}" Margin="24 16 0 0" FontSize="24">
+                        <TextBlock.Foreground>
+                            <MultiBinding Converter="{StaticResource BackgroundToForegroundMultiConverter}">
+                                <Binding ElementName="CardHeaderBackground" Path="Fill"/>
+                                <Binding Source="{StaticResource White}"/>
+                                <Binding Source="{StaticResource TextDark}"/>
+                            </MultiBinding>
+                        </TextBlock.Foreground>
+                    </TextBlock>
+
+                    <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Text="{Binding Status}" VerticalAlignment="Bottom" HorizontalAlignment="Center" FontSize="20">
+                        <TextBlock.Foreground>
+                            <MultiBinding Converter="{StaticResource BackgroundToForegroundMultiConverter}">
+                                <Binding ElementName="CardHeaderBackground" Path="Fill"/>
+                                <Binding Source="{StaticResource White}"/>
+                                <Binding Source="{StaticResource TextDark}"/>
+                            </MultiBinding>
+                        </TextBlock.Foreground>
+                    </TextBlock>
+
+                    <TextBlock Grid.Row="0" Grid.Column="2" Text="{Binding Table.TableNumber, StringFormat=Table {0}}" FontSize="16" VerticalAlignment="Bottom" Margin="0 0 16 0">
+                        <TextBlock.Foreground>
+                            <MultiBinding Converter="{StaticResource BackgroundToForegroundMultiConverter}">
+                                <Binding ElementName="CardHeaderBackground" Path="Fill"/>
+                                <Binding Source="{StaticResource White}"/>
+                                <Binding Source="{StaticResource TextDark}"/>
+                            </MultiBinding>
+                        </TextBlock.Foreground>
+                    </TextBlock>
+
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="{Binding OrderItems[0].PlacementTime, StringFormat=Placed at: {0:HH:mm}}" Margin="16 0 0 16" FontSize="16" VerticalAlignment="Bottom">
+                        <TextBlock.Foreground>
+                            <MultiBinding Converter="{StaticResource BackgroundToForegroundMultiConverter}">
+                                <Binding ElementName="CardHeaderBackground" Path="Fill"/>
+                                <Binding Source="{StaticResource White}"/>
+                                <Binding Source="{StaticResource TextDark}"/>
+                            </MultiBinding>
+                        </TextBlock.Foreground>
+                    </TextBlock>
+
+                    <Image Grid.Row="1" Grid.Column="1" Height="24" Width="24" Margin="0 16 8 16" HorizontalAlignment="Right">
+                        <Image.Source>
+                            <MultiBinding Converter="{StaticResource BackgroundToForegroundMultiConverter}">
+                                <Binding ElementName="CardHeaderBackground" Path="Fill"/>
+                                <Binding Source="{StaticResource sandClockIcon}"/>
+                            </MultiBinding>
+                        </Image.Source>
+                    </Image>
+
+                    <TextBlock x:Name="RunningTimeTextBlock" Grid.Row="1" Grid.Column="2" FontSize="24" VerticalAlignment="Center" Margin="0 0 16 0">
+                        <TextBlock.Foreground>
+                            <MultiBinding Converter="{StaticResource BackgroundToForegroundMultiConverter}">
+                                <Binding ElementName="CardHeaderBackground" Path="Fill"/>
+                                <Binding Source="{StaticResource White}"/>
+                                <Binding Source="{StaticResource TextDark}"/>
+                            </MultiBinding>
+                        </TextBlock.Foreground>
+                    </TextBlock>
+                </Grid>
+                <ItemsControl Padding="16" x:Name="CategoriesItemsControl" ItemsSource="{Binding OrderItemsByCategory}" ItemTemplate="{StaticResource CategoryTemplate}" />
+            </StackPanel>
+        </Border>
+    </DataTemplate>
+
+    <!-- DataTemplate for Edit Button -->
     <Style x:Key="ButtonEditStatus" TargetType="Button">
         <Setter Property="Template">
             <Setter.Value>
@@ -972,6 +1067,7 @@
         </Style.Triggers>
     </Style>
 
+    <!-- DataTemplate for Change Button -->
     <Style x:Key="ButtonChangeStatus" TargetType="Button">
         <Setter Property="Template">
             <Setter.Value>
@@ -992,7 +1088,25 @@
                 <Setter Property="Background" Value="Gray"/>
                 <Setter Property="Foreground" Value="{StaticResource TextDark}"/>
             </Trigger>
+            <DataTrigger Binding="{Binding CategoryStatus}" Value="Waiting">
+                <Setter Property="Background" Value="{StaticResource Color2}"/>
+                <Setter Property="Foreground" Value="{StaticResource White}"/>
+                <Setter Property="IsEnabled" Value="True"/>
+                <Setter Property="Content" Value="Start preparing"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding CategoryStatus}" Value="Preparing">
+                <Setter Property="Background" Value="{StaticResource Color12}"/>
+                <Setter Property="Foreground" Value="{StaticResource White}"/>
+                <Setter Property="IsEnabled" Value="True"/>
+                <Setter Property="Content" Value="Finish preparing"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding CategoryStatus}" Value="Done">
+                <Setter Property="Background" Value="{StaticResource Color11}"/>
+                <Setter Property="Foreground" Value="{StaticResource TextDark}"/>
+                <Setter Property="IsEnabled" Value="False"/>
+                <Setter Property="Content" Value="Done"/>
+            </DataTrigger>
         </Style.Triggers>
     </Style>
-    
+
 </ResourceDictionary>

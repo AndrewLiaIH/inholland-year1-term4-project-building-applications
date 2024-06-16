@@ -1,6 +1,8 @@
-﻿namespace Model
+﻿using System.ComponentModel;
+
+namespace Model
 {
-    public class Order
+    public class Order : INotifyPropertyChanged
     {
         public int DatabaseId { get; private set; }
         public Table Table { get; private set; }
@@ -10,24 +12,37 @@
         public bool Finished { get; set; }
         public decimal TotalPrice { get; private set; }
         public List<OrderItem> OrderItems { get; private set; }
-        public OrderStatus? OrderStatus { get; set; }
+        private OrderStatus? status;
+        public OrderStatus? Status
+        {
+            get { return status; }
+            set
+            {
+                if (status != value)
+                {
+                    status = value;
+                    OnPropertyChanged(nameof(Status));
+                }
+            }
+        }
 
         public List<CategoryGroup> OrderItemsByCategory
         {
             get
             {
                 return OrderItems
-                    .GroupBy(item => item.Item.Category)
+                    .GroupBy(item => item.Item.Category.CategoryType)
                     .Select(group => new CategoryGroup
                     {
-                        Category = group.Key,
+                        Category = group.ToList().First().Item.Category,
                         CategoryStatus = GetCategoryStatus(group.ToList()),
                         Items = group.ToList()
-
                     })
                     .ToList();
             }
         }
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public Order(int databaseId, Table table, Employee placedBy, int orderNumber, int? servingNumber, bool finished, decimal totalPrice, OrderStatus? status = null)
         {
@@ -38,7 +53,7 @@
             ServingNumber = servingNumber;
             Finished = finished;
             TotalPrice = totalPrice;
-            OrderStatus = status;
+            Status = status;
             OrderItems = new();
         }
 
@@ -67,21 +82,26 @@
 
             foreach (OrderItem item in items)
             {
-                if (item.ItemStatus != Model.OrderStatus.Done)
+                if (item.ItemStatus != OrderStatus.Done)
                     isNotDone = true;
 
                 if (status == null)
                     status = item.ItemStatus;
-                else if (item.ItemStatus == Model.OrderStatus.Preparing)
+                else if (item.ItemStatus == OrderStatus.Preparing)
                     status = item.ItemStatus;
-                else if (item.ItemStatus == Model.OrderStatus.Waiting && status != Model.OrderStatus.Preparing)
+                else if (item.ItemStatus == OrderStatus.Waiting && status != OrderStatus.Preparing)
                     status = item.ItemStatus;
             }
 
             if (!isNotDone)
-                status = Model.OrderStatus.Done;
+                status = OrderStatus.Done;
 
             return status;
+        }
+
+        protected virtual void OnPropertyChanged(string propertyName)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

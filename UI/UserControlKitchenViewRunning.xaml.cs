@@ -1,16 +1,15 @@
-﻿using Model;
+﻿using Microsoft.IdentityModel.Tokens;
+using Model;
 using Service;
-using System.Windows.Shapes;
-using System.Windows.Threading;
-using System.Windows.Media;
-using Microsoft.IdentityModel.Tokens;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
+using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace UI
 {
     /// <summary>
-    /// Interaction logic for UserControlKitchenView.xaml
     /// </summary>
     public partial class UserControlKitchenViewRunning : UserControl
     {
@@ -23,7 +22,6 @@ namespace UI
             InitializeComponent();
             Loaded += UserControlKitchenView_Loaded;
             InitializeTimer();
-            DataContext = this;
         }
 
         private void UserControlKitchenView_Loaded(object sender, RoutedEventArgs e)
@@ -33,25 +31,40 @@ namespace UI
 
         private void AttachEventHandlers()
         {
-            // Find the ItemsControl that uses the CategoryTemplate
-            ItemsControl itemsControl = FindName("OrdersItemsControl") as ItemsControl;
-            if (itemsControl != null)
+            foreach (Order item in OrdersItemsControl.Items)
             {
-                foreach (var item in itemsControl.Items)
-                {
-                    ContentPresenter container = itemsControl.ItemContainerGenerator.ContainerFromItem(item) as ContentPresenter;
-                    if (container != null)
-                    {
-                        Button editButton = FindVisualChild<Button>(container, "editStatus");
-                        Button changeButton = FindVisualChild<Button>(container, "changeStatus");
+                ContentPresenter container = OrdersItemsControl.ItemContainerGenerator.ContainerFromItem(item) as ContentPresenter;
+                AttachHandlersToContainer(container);
+            }
+        }
 
-                        if (editButton != null)
+        private void AttachHandlersToContainer(ContentPresenter container)
+        {
+            if (container != null)
+            {
+                ItemsControl categoriesItemsControl = FindVisualChild<ItemsControl>(container, "CategoriesItemsControl");
+
+                if (categoriesItemsControl != null)
+                {
+                    foreach (CategoryGroup categoryItem in categoriesItemsControl.Items)
+                    {
+                        ContentPresenter categoryContainer = categoriesItemsControl.ItemContainerGenerator.ContainerFromItem(categoryItem) as ContentPresenter;
+
+                        if (categoryContainer != null)
                         {
-                            editButton.Click += EditStatus_Click;
-                        }
-                        if (changeButton != null)
-                        {
-                            changeButton.Click += ChangeStatus_Click;
+                            Button editButton = FindVisualChild<Button>(categoryContainer, "editStatus");
+                            Button changeButton = FindVisualChild<Button>(categoryContainer, "changeStatus");
+
+                            if (editButton != null)
+                            {
+                                editButton.Click -= EditStatus_Click;
+                                editButton.Click += EditStatus_Click;
+                            }
+                            if (changeButton != null)
+                            {
+                                changeButton.Click -= ChangeStatus_Click;
+                                changeButton.Click += ChangeStatus_Click;
+                            }
                         }
                     }
                 }
@@ -61,6 +74,7 @@ namespace UI
         public void LoadOrders(bool forKitchen)
         {
             Orders = orderService.GetAllKitchenBarOrders(forKitchen, true);
+            DataContext = this;
         }
 
         private void InitializeTimer()
@@ -132,14 +146,12 @@ namespace UI
             {
                 CategoryGroup categoryGroup = button.DataContext as CategoryGroup;
                 OrderStatus currentStatus = (OrderStatus)categoryGroup?.CategoryStatus;
+                OrderStatus nextStatus = GetNextStatus(currentStatus);
 
                 if (currentStatus != OrderStatus.Done)
-                {
-                    OrderStatus nextStatus = GetNextStatus(currentStatus);
                     ChangeStatus(nextStatus, button);
-                }
 
-                UpdateButtonStyles(button, currentStatus);
+                UpdateButtonStyles(button, nextStatus);
             }
         }
 
@@ -154,6 +166,7 @@ namespace UI
         private void ChangeStatus(OrderStatus newStatus, Button button)
         {
             CategoryGroup categoryGroup = button.DataContext as CategoryGroup;
+            Order order = FindOrderForCategoryGroup(categoryGroup);
 
             if (categoryGroup != null)
             {
@@ -162,22 +175,89 @@ namespace UI
                 foreach (OrderItem item in categoryGroup.Items)
                     item.SetItemStatus(newStatus);
 
-                UpdateStatusesInDatabase(categoryGroup.Items, newStatus);
+                order.Status = GetOrderStatus(order);
+
+                orderService.UpdateOrderItemsStatus(categoryGroup.Items);
+
+                // Traverse the visual tree to find the parent container
+                DependencyObject parent = button;
+                while (parent != null && !(parent is ContentPresenter))
+                {
+                    parent = VisualTreeHelper.GetParent(parent);
+                }
+
+                ContentPresenter container = parent as ContentPresenter;
+                Button changeStatusButton = FindVisualChild<Button>(container, "changeStatus");
+
+                if (changeStatusButton != null)
+                {
+                    UpdateButtonStyles(changeStatusButton, newStatus);
+                }
             }
         }
 
-        private void UpdateStatusesInDatabase(List<OrderItem> items, OrderStatus? newStatus)
+        private OrderStatus? GetOrderStatus(Order order)
         {
-            orderService.UpdateOrderItemsStatus(items);
+            OrderStatus? status = null;
+            bool isNotDone = false;
+
+            foreach (OrderItem item in order.OrderItems)
+            {
+                if (item.ItemStatus != OrderStatus.Done)
+                    isNotDone = true;
+
+                if (status == null)
+                    status = item.ItemStatus;
+                else if (item.ItemStatus == OrderStatus.Preparing)
+                    status = item.ItemStatus;
+                else if (item.ItemStatus == OrderStatus.Waiting && status != OrderStatus.Preparing)
+                    status = item.ItemStatus;
+            }
+
+            if (!isNotDone)
+                status = OrderStatus.Done;
+
+            return status;
         }
 
         private void UpdateButtonStyles(Button button, OrderStatus newStatus)
         {
-            button.Content = newStatus == OrderStatus.Done ? OrderStatus.Done : $"Finish {OrderStatus.Preparing.ToString().ToLower()}";
-            button.Background = newStatus == OrderStatus.Done ? (SolidColorBrush)FindResource("Color11") : (SolidColorBrush)FindResource("Color12");
+            button.Content = newStatus switch
+            {
+                OrderStatus.Done => OrderStatus.Done,
+                OrderStatus.Preparing => "Finish preparing",
+                _ => "Start preparing"
 
-            if (newStatus == OrderStatus.Done)
-                button.IsEnabled = false;
+            };
+
+            button.Background = newStatus switch
+            {
+                OrderStatus.Done => (SolidColorBrush)FindResource("Color11"),
+                OrderStatus.Preparing => (SolidColorBrush)FindResource("Color12"),
+                _ => (SolidColorBrush)FindResource("Color2")
+
+            };
+
+            button.IsEnabled = newStatus switch
+            {
+                OrderStatus.Done => false,
+                OrderStatus.Preparing => true,
+                _ => true
+
+            };
+        }
+
+        private Order FindOrderForCategoryGroup(CategoryGroup categoryGroup)
+        {
+            foreach (OrderItem item in categoryGroup.Items)
+            {
+                Order order = Orders.FirstOrDefault(o => o.OrderItems.Contains(item));
+
+                if (order != null)
+                    return order;
+            }
+
+            return null;
         }
 
         private static T FindVisualChild<T>(DependencyObject obj, string name) where T : DependencyObject

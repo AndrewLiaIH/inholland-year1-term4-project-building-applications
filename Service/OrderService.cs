@@ -59,11 +59,6 @@ namespace Service
             orderDao.UpdateOrderFinishedStatus(order);
         }
 
-        public void UpdateAllOrderItemsStatus(Order order)
-        {
-            orderDao.UpdateAllOrderItemsStatus(order);
-        }
-
         public List<Order> GetAllRunningOrdersForTable(Table table)
         {
             return orderDao.GetAllRunningOrdersForTable(table);
