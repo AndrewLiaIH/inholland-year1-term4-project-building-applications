@@ -41,11 +41,11 @@ namespace UI
             };
 
             ShowLoginView();
-            BaseService.NetworkExceptionOccurred += EmployeeService_NetworkExceptionOccurred;
             employeeService = new();
+            employeeService.NetworkExceptionOccurred += NetworkExceptionOccurred;
         }
 
-        private void EmployeeService_NetworkExceptionOccurred()
+        private void NetworkExceptionOccurred()
         {
             Dispatcher.Invoke(() =>
             { 
@@ -62,7 +62,7 @@ namespace UI
                 userControlLoginView.Login();
                 employeeService.RetryLogin -= RetryLogin;
 
-                if (userControlLoginView.LoggedInEmployee == null)
+                if (userControlLoginView.LoggedInEmployee == null) { }
                     ShowLoginView();
             });
         }
@@ -87,6 +87,7 @@ namespace UI
             }
 
             SetHeader(userControlTableView);
+            employeeService.NetworkExceptionOccurred -= NetworkExceptionOccurred;
 
             MainContentControl.Content = userControlTableView;
         }
@@ -134,6 +135,7 @@ namespace UI
 
         private void Logout()
         {
+            employeeService.NetworkExceptionOccurred += NetworkExceptionOccurred;
             userControlLoginView.Refresh();
             ShowLoginView();
 

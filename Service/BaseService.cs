@@ -6,19 +6,15 @@ namespace Service
     {
         protected const int TimerInterval = 10000;
         private Timer timer = new(TimerInterval);
-        public static event Action NetworkExceptionOccurred;
 
         public BaseService() 
         {
             timer.Elapsed += CheckForChanges;
+            timer.Elapsed += UpdateNetwork;
             timer.Start();
         }
 
         protected virtual void CheckForChanges(object sender, EventArgs e) { }
-
-        protected void NetworkExceptionHandler()
-        {
-            NetworkExceptionOccurred?.Invoke();
-        }
+        protected virtual void UpdateNetwork(object sender, EventArgs e) { }
     }
 }

@@ -81,6 +81,7 @@ namespace UI
         private void OnTableOccupiedChanged()
         {
             Table updatedTable = tableService.GetTableById(tableViewModel.Table.DatabaseId);
+
             if (updatedTable != null)
             {
                 tableViewModel.Table.Occupied = updatedTable.Occupied;

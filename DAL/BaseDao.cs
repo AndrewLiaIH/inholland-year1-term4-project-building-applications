@@ -126,5 +126,20 @@ namespace DAL
         {
             return parameters.Select(p => new SqlParameter(p.Key, p.Value)).ToArray();
         }
+
+        public bool ConnectionAvalible()
+        {
+            try
+            {
+                using (var connection = OpenConnection())
+                {
+                    return true;
+                }
+            }
+            catch
+            {
+                return false;
+            }
+        }
     }
 }

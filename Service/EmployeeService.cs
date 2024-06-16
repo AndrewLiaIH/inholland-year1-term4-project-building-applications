@@ -8,13 +8,13 @@ namespace Service
     // This class was written by Andrew Lia
     public class EmployeeService : BaseService
     {
-        private EmployeeDao employeeDao;
+        private EmployeeDao employeeDao = new();
+        public event Action NetworkExceptionOccurred;
         public event Action RetryLogin;
 
         public EmployeeService()
         {
             BaseDao.NetworkExceptionOccurredDao += NetworkExceptionHandler;
-            employeeDao = new();
         }
 
         public List<Employee> GetAllEmployees()
@@ -47,7 +47,12 @@ namespace Service
             return builder.ToString();
         }
 
-        protected override void CheckForChanges(object sender, EventArgs e)
+        protected void NetworkExceptionHandler()
+        {
+            NetworkExceptionOccurred?.Invoke();
+        }
+
+        protected override void UpdateNetwork(object sender, EventArgs e)
         {
             RetryLogin?.Invoke();
         }

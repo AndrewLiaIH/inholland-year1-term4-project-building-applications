@@ -7,7 +7,13 @@ namespace Service
     public class TableService : BaseService
     {
         private TableDao tableDao = new();
+        public event Action NetworkExceptionOccurred;
         public event Action TableOccupiedChanged;
+
+        public TableService()
+        {
+            BaseDao.NetworkExceptionOccurredDao += NetworkExceptionHandler;
+        }
 
         // Methods for TableDao
         public List<Table> GetAllTables()
@@ -25,9 +31,19 @@ namespace Service
             tableDao.UpdateTableStatus(table);
         }
 
+        protected void NetworkExceptionHandler()
+        {
+            NetworkExceptionOccurred?.Invoke();
+        }
+
         protected override void CheckForChanges(object sender, EventArgs e)
         {
             TableOccupiedChanged?.Invoke();
+        }
+
+        public bool ConnectionAvalible()
+        {
+            return tableDao.ConnectionAvalible();
         }
     }
 }
