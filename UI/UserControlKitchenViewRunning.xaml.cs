@@ -3,7 +3,6 @@ using Model;
 using Service;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Windows.Threading;
@@ -11,7 +10,6 @@ using System.Windows.Threading;
 namespace UI
 {
     /// <summary>
-    /// Interaction logic for UserControlKitchenView.xaml
     /// </summary>
     public partial class UserControlKitchenViewRunning : UserControl
     {
@@ -33,7 +31,7 @@ namespace UI
 
         private void AttachEventHandlers()
         {
-            foreach (var item in OrdersItemsControl.Items)
+            foreach (Order item in OrdersItemsControl.Items)
             {
                 ContentPresenter container = OrdersItemsControl.ItemContainerGenerator.ContainerFromItem(item) as ContentPresenter;
                 AttachHandlersToContainer(container);
@@ -44,11 +42,11 @@ namespace UI
         {
             if (container != null)
             {
-                var categoriesItemsControl = FindVisualChild<ItemsControl>(container, "CategoriesItemsControl");
+                ItemsControl categoriesItemsControl = FindVisualChild<ItemsControl>(container, "CategoriesItemsControl");
 
                 if (categoriesItemsControl != null)
                 {
-                    foreach (var categoryItem in categoriesItemsControl.Items)
+                    foreach (CategoryGroup categoryItem in categoriesItemsControl.Items)
                     {
                         ContentPresenter categoryContainer = categoriesItemsControl.ItemContainerGenerator.ContainerFromItem(categoryItem) as ContentPresenter;
 
@@ -59,13 +57,13 @@ namespace UI
 
                             if (editButton != null)
                             {
-                                editButton.Click -= EditStatus_Click; // Remove existing handler
-                                editButton.Click += EditStatus_Click; // Attach new handler
+                                editButton.Click -= EditStatus_Click;
+                                editButton.Click += EditStatus_Click;
                             }
                             if (changeButton != null)
                             {
-                                changeButton.Click -= ChangeStatus_Click; // Remove existing handler
-                                changeButton.Click += ChangeStatus_Click; // Attach new handler
+                                changeButton.Click -= ChangeStatus_Click;
+                                changeButton.Click += ChangeStatus_Click;
                             }
                         }
                     }
@@ -77,7 +75,6 @@ namespace UI
         {
             Orders = orderService.GetAllKitchenBarOrders(forKitchen, true);
             DataContext = this;
-            AttachEventHandlers();
         }
 
         private void InitializeTimer()
@@ -250,6 +247,19 @@ namespace UI
             };
         }
 
+        private Order FindOrderForCategoryGroup(CategoryGroup categoryGroup)
+        {
+            foreach (OrderItem item in categoryGroup.Items)
+            {
+                Order order = Orders.FirstOrDefault(o => o.OrderItems.Contains(item));
+
+                if (order != null)
+                    return order;
+            }
+
+            return null;
+        }
+
         private static T FindVisualChild<T>(DependencyObject obj, string name) where T : DependencyObject
         {
             for (int i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)
@@ -262,19 +272,6 @@ namespace UI
                 if (childOfChild != null)
                     return childOfChild;
             }
-            return null;
-        }
-
-        private Order FindOrderForCategoryGroup(CategoryGroup categoryGroup)
-        {
-            foreach (OrderItem item in categoryGroup.Items)
-            {
-                Order order = Orders.FirstOrDefault(o => o.OrderItems.Contains(item));
-
-                if (order != null)
-                    return order;
-            }
-
             return null;
         }
     }

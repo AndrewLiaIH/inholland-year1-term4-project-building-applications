@@ -49,13 +49,13 @@ namespace UI
             if (userControlKitchenViewFinished == null)
                 userControlKitchenViewFinished = new();
 
-            bool forKitchen = userControlHeader.LoggedInEmployee.Type == EmployeeType.Chef ? false : true;
-            userControlKitchenViewFinished.LoadOrders(forKitchen);
-
             userControlHeader.CounterWaiting.Visibility = Visibility.Collapsed;
             userControlHeader.CounterPreparing.Visibility = Visibility.Collapsed;
 
             KitchenViewContentControl.Content = userControlKitchenViewFinished;
+
+            bool forKitchen = userControlHeader.LoggedInEmployee.Type == EmployeeType.Chef ? true : false;
+            userControlKitchenViewFinished.LoadOrders(forKitchen);
         }
     }
 }

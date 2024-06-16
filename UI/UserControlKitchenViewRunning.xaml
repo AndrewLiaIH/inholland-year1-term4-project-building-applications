@@ -14,7 +14,7 @@
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
-                <StaticResource ResourceKey="OrderCardTemplate"/>
+                <StaticResource ResourceKey="RunningOrderCardTemplate"/>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
     </ScrollViewer>
