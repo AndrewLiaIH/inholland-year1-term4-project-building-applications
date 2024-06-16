@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="UI.Folder">
+    <Position X="10.5" Y="1.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAABAAAAAAMAAAABQAgAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Folder.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="UI.MainWindow" BaseTypeListCollapsed="true">
+    <Position X="1.75" Y="1.25" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAQgAABAAAAQAAAAAAChCIAAAAARBAAAAAAgAQAEAA=</HashCode>
+      <FileName>MainWindow.xaml.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="userControlKitchenView" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="UI.UserControlHeader" BaseTypeListCollapsed="true">
+    <Position X="13.75" Y="1.25" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAwAAAAAAIAAAQBAAAAAgQIEAFAAAAAEgAABAAACAAA=</HashCode>
+      <FileName>UserControlHeader.xaml.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="SelectedFolder" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Folders" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="UI.UserControlKitchenView" BaseTypeListCollapsed="true">
+    <Position X="6.5" Y="1.25" Width="2.5" />
+    <AssociationLine Name="userControlKitchenViewRunning" Type="UI.UserControlKitchenViewRunning">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.036" Y="2.302" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="userControlKitchenViewFinished" Type="UI.UserControlKitchenViewFinished">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-2.204" Y="0.529" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAQAAAAACAAAAAAAAAAEAEABAIAAAAAAAAAAAACAAA=</HashCode>
+      <FileName>UserControlKitchenView.xaml.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="userControlKitchenViewRunning" />
+      <Field Name="userControlKitchenViewFinished" />
+      <Property Name="UserControlHeader" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Field Name="FoldersKitchen" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="UI.UserControlKitchenViewFinished">
+    <Position X="8.5" Y="5.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAECIAACAQAABAAAAAACBAAAAAYAABAAAAAAAAAAAAA=</HashCode>
+      <FileName>UserControlKitchenViewFinished.xaml.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="UI.UserControlKitchenViewRunning">
+    <Position X="5" Y="5.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAUCIAACAQAABABAAAADBAAAAEYAEFAAAAAAAAAAAAA=</HashCode>
+      <FileName>UserControlKitchenViewRunning.xaml.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

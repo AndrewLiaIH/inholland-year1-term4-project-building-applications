@@ -96,14 +96,14 @@ namespace UI
 
             if (categoryGroup != null)
             {
-                categoryGroup.CategoryStatus = newStatus;
-
                 foreach (OrderItem item in categoryGroup.Items)
                     item.SetItemStatus(newStatus);
 
                 order.Status = GetOrderStatus(order);
 
                 orderService.UpdateOrderItemsStatus(categoryGroup.Items);
+
+                categoryGroup.CategoryStatus = newStatus;
             }
         }
 
