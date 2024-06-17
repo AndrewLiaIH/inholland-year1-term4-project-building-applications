@@ -264,7 +264,7 @@ namespace UI
         {
             foreach (OrderItem item in categoryGroup.Items)
             {
-                Order order = Orders.FirstOrDefault(o => o.OrderItems.Contains(item));
+                Order order = Orders.FirstOrDefault(o => o.OrderItems.Any(oi => oi.DatabaseId == item.DatabaseId));
 
                 if (order != null)
                     return order;
