@@ -39,7 +39,7 @@ namespace DAL
             $"JOIN menu_item AS MI ON OI.{ColumnItemNumber} = MI.item_id " +
             $"JOIN category AS C ON MI.category_id = C.category_id " +
             $"JOIN menu_card AS MC ON C.menu_id = MC.card_id " +
-            $"WHERE (OI.{ColumnStatus} = 'Done' OR OI.{ColumnStatus} = 'Served') AND MC.menu_type";
+            $"WHERE CAST(OI.{ColumnPlacementTime} AS DATE) = CAST(GETDATE() AS DATE) AND (OI.{ColumnStatus} = 'Done' OR OI.{ColumnStatus} = 'Served') AND MC.menu_type";
         private const string QueryGetAllRunningOrdersTables =
             $"SELECT O.{ColumnOrderId} AS ColumnOrderId, O.{ColumnTableId}, O.{ColumnPlacedById}, O.{ColumnOrderNumber}, O.{ColumnServingNumber}, O.{ColumnFinished}, O.{ColumnTotalPrice}, " +
             $"OI.{ColumnOrderItemId} ColumnOrderItemId, OI.{ColumnOrderItemNumber}, OI.{ColumnItemNumber}, OI.{ColumnPlacementTime}, OI.{ColumnStatus}, OI.{ColumnChangeOfStatus}, OI.{ColumnQuantity}, OI.{ColumnComment} " +
