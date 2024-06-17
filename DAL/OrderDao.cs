@@ -124,7 +124,7 @@ namespace DAL
 
             Dictionary<int, Order> ordersDictionary = new();
 
-            DataTable dataTable = ExecuteSelectQuery(query);
+            DataTable dataTable = ExecuteSelectQuery(query, out bool error);
 
             foreach (DataRow row in dataTable.Rows)
             {
