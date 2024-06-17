@@ -10,7 +10,7 @@ namespace UI
     {
         internal List<Folder> FoldersTables;
         public UserControlHeader UserControlHeader => userControlHeader;
-        private UserControlTableViewTables userControlTableViewTables;
+        public UserControlTableViewTables userControlTableViewTables; //changed to public
 
         public UserControlTableView()
         {

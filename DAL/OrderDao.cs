@@ -28,6 +28,8 @@ namespace DAL
             $"FROM [order] O INNER JOIN order_item OI ON O.{ColumnOrderId} = OI.{ColumnOrderItemNumber} WHERE (O.{ColumnFinished} = 0 OR EXISTS " +
             $"(SELECT 1 FROM order_item oi WHERE oi.{ColumnOrderItemNumber} = O.{ColumnOrderId} AND oi.{ColumnStatus} <> 'Served'))";
         private const string QueryGetAllRunningOrdersPerTable = $"{QueryGetAllRunningOrdersTables} AND O.{ColumnTableId} = {ParameterTableId}";
+        private const string QueryCreateOrder = $"INSERT INTO [order] VALUES ({ParameterNameOrderId}, {ParameterTableId}, {ParameterEmployeeId}, {ParameterOrderNumber}, {ParameterServingNumber}, {ParameterIsFinished}, {ParameterOrderStatus}); SELECT CAST(scope_identity() AS int);";
+        private const string QueryGetMostRecentOrder = $"SELECT {ColumnOrderId}, {ColumnTableId}, {ColumnPlacedById}, {ColumnOrderNumber}, {ColumnServingNumber}, {ColumnFinished}, {ColumnTotalPrice} FROM [order] WHERE {ColumnOrderNumber} = (SELECT MAX({ColumnOrderNumber}) FROM [order])";
 
         private const string ColumnOrderId = "order_id";
         private const string ColumnTableId = "table_number";
@@ -39,6 +41,11 @@ namespace DAL
 
         private const string ParameterNameOrderId = "@orderId";
         private const string ParameterTableId = "@table_number";
+        private const string ParameterEmployeeId = "@employee_id";
+        private const string ParameterOrderNumber = "@order_number";
+        private const string ParameterServingNumber = "@serving_number";
+        private const string ParameterIsFinished = "@is_finished";
+        private const string ParameterOrderStatus = "@status";
         private const string ParameterNameOrderStatus = "@finished";
         private const string ParameterStatus1 = "@status1";
         private const string ParameterStatus2 = "@status2";
@@ -85,6 +92,29 @@ namespace DAL
             }
 
             return orders;
+        }
+
+        public void CreateOrder(Order order)
+        {
+            SqlParameter[] sqlParameters = new SqlParameter[]
+            {
+                new SqlParameter(ParameterNameOrderId, order.DatabaseId),
+                new SqlParameter(ParameterTableId, order.Table.DatabaseId),
+                new SqlParameter(ParameterEmployeeId, order.PlacedBy.DatabaseId),
+                new SqlParameter(ParameterOrderNumber, order.OrderNumber),
+                new SqlParameter(ParameterServingNumber, order.ServingNumber),
+                new SqlParameter(ParameterIsFinished, order.Finished),
+                new SqlParameter(ParameterOrderStatus, order.OrderStatus)
+            };
+
+            ExecuteEditQuery(QueryCreateOrder, sqlParameters);
+        }
+
+        public Order GetMostRecentOrder()
+        {
+            SqlParameter[] sqlParameters = new SqlParameter[] { };
+            DataTable dataTable = ExecuteSelectQuery(QueryGetMostRecentOrder, sqlParameters);
+            return ReadTable(dataTable, ReadRowOrder).FirstOrDefault();
         }
 
         public void UpdateOrderFinishedStatus(Order order)
@@ -242,7 +272,7 @@ namespace DAL
 
         private Order ReadRowOrderWithStatus(DataRow dr)
         {
-            int id = (int)dr[ColumnOrderId];
+            int id = (int)dr["ColumnOrderId"];
             Table table = tableDao.GetTableById((int)dr[ColumnTableId]);
             Employee employee = employeeDao.GetEmployeeById((int)dr[ColumnPlacedById]);
             int orderNumber = (int)dr[ColumnOrderNumber];

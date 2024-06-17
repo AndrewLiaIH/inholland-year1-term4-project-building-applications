@@ -63,7 +63,8 @@ namespace UI
 
         private void ButtonOrder_Click(object sender, RoutedEventArgs e)
         {
-            RaiseEvent(new RoutedEventArgs(OrderClickedEvent));
+            OrderClickedEventArgs args = new OrderClickedEventArgs(OrderClickedEvent, tableViewModel.Table);
+            RaiseEvent(args);
         }
 
         private void ButtonServed_Click(object sender, RoutedEventArgs e)
@@ -124,6 +125,15 @@ namespace UI
         {
             tableViewModel.RunningOrders = orderService.GetAllRunningOrdersForTable(tableViewModel.Table);
             tableViewModel.SetTableState();
+        }
+    }
+    public class OrderClickedEventArgs : RoutedEventArgs
+    {
+        public Table Table { get; }
+
+        public OrderClickedEventArgs(RoutedEvent routedEvent, Table table) : base(routedEvent)
+        {
+            Table = table;
         }
     }
 }

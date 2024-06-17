@@ -1,5 +1,6 @@
 ﻿using DAL;
 using Model;
+using System.Collections.ObjectModel;
 
 namespace Service
 {
@@ -35,6 +36,12 @@ namespace Service
         public MenuItem GetMenuItemById(int itemId)
         {
             return menuDao.GetMenuItemById(itemId);
+        }
+
+        public void UpdateStock(ObservableCollection<OrderItem> orderItems)
+        {
+            foreach (OrderItem orderItem in orderItems)
+                menuDao.UpdateStock(orderItem.Item.ItemId, (int)(orderItem.Item.StockAmount - orderItem.Quantity));
         }
     }
 }

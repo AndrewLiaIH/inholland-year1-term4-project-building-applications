@@ -1,6 +1,7 @@
 ﻿using DAL;
 using Microsoft.IdentityModel.Tokens;
 using Model;
+using System.Collections.ObjectModel;
 
 namespace Service
 {
@@ -27,6 +28,16 @@ namespace Service
         public Order GetOrderById(int orderId)
         {
             return orderDao.GetOrderById(orderId);
+        }
+
+        public void CreateOrder(Order order) 
+        {
+            orderDao.CreateOrder(order);
+        }
+
+        public Order GetMostRecentOrder()
+        {
+            return orderDao.GetMostRecentOrder();
         }
 
         public List<Order> GetAllKitchenBarOrders(bool forKitchen, bool isRunning)
@@ -123,6 +134,14 @@ namespace Service
         {
             List<OrderItem> servedOrderItems = OrderItemsToServed(runningOrders);
             UpdateOrderItemsStatus(servedOrderItems);
+        }
+
+        public decimal GetTotalPrice(ObservableCollection<OrderItem> orderItems)
+        {
+            decimal totalPrice = 0;
+            foreach (OrderItem orderItem in orderItems)
+                totalPrice += (decimal)orderItem.TotalPrice;
+            return totalPrice;
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Model;
 using System.Data;
+using Microsoft.Data.SqlClient;
 
 namespace DAL
 {
@@ -28,6 +29,7 @@ namespace DAL
         // Menu Item
         private const string QueryGetAllMenuItems = $"SELECT {ColumnItemId}, {ColumnItemCategoryId}, {ColumnItemNumber}, {ColumnStockAmount}, {ColumnOnMenu}, {ColumnPrice}, {ColumnDescription}, {ColumnName}, {ColumnShortName} FROM menu_item";
         private const string QueryGetMenuItemById = $"{QueryGetAllMenuItems} WHERE {ColumnItemId} = {ParameterNameItemId}";
+        private const string QueryUpdateStock = $"UPDATE menu_item SET {ColumnStockAmount} = {ParameterStockAmount} WHERE {ColumnItemId} = {ParameterNameItemId}";
 
         private const string ColumnItemId = "item_id";
         private const string ColumnItemCategoryId = "category_id";
@@ -40,6 +42,7 @@ namespace DAL
         private const string ColumnShortName = "short_name";
 
         private const string ParameterNameItemId = "@itemId";
+        private const string ParameterStockAmount = "@stockAmount";
 
         public List<MenuCard> GetAllMenuCards()
         {
@@ -84,6 +87,17 @@ namespace DAL
             };
 
             return GetByIntParameters(QueryGetMenuItemById, ReadRowMenuItem, parameters);
+        }
+
+        public void UpdateStock(int itemId, int newStock)
+        {
+            SqlParameter[] parameters = new SqlParameter[]
+            {
+                new(ParameterNameItemId, itemId),
+                new(ParameterStockAmount, newStock)
+            };
+
+            ExecuteEditQuery(QueryUpdateStock, parameters);
         }
 
         private MenuCard ReadRowMenuCard(DataRow dr)

@@ -65,12 +65,12 @@ namespace UI
             MainContentControl.Content = userControlKitchenView;
         }
 
-        private void ShowOrderView()
+        private void ShowOrderView(Table table)
         {
             if (userControlOrderView == null)
-                userControlOrderView = new();
+                userControlOrderView = new(table);
 
-            // SetHeader(userControlOrderView);
+            SetHeader(userControlOrderView);
 
             MainContentControl.Content = userControlOrderView;
         }
@@ -88,7 +88,7 @@ namespace UI
 
         private void UserControlTable_OrderClicked(object sender, RoutedEventArgs e)
         {
-            ShowOrderView();
+            ShowOrderView((e as OrderClickedEventArgs).Table);
         }
 
         private void UserControlHeader_Logout(object sender, EventArgs e)

@@ -19,6 +19,14 @@
             }
         }
 
+        public decimal? TotalPrice 
+        { 
+            get 
+            { 
+                return Item.Price * Quantity; 
+            } 
+        }
+
         public OrderItem(int databaseId, int orderId, MenuItem item, DateTime? placementTime, OrderStatus? status, DateTime? changeOfStatus, int? quantity, string? comment)
         {
             DatabaseId = databaseId;
@@ -39,6 +47,11 @@
         public void IncreaseQuantity()
         {
             Quantity++;
+        }
+
+        public void DecreaseQuantity()
+        {
+            Quantity--;
         }
 
         public void SetItemStatus(OrderStatus status)

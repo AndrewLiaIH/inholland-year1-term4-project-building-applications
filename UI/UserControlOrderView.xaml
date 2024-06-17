@@ -3,9 +3,212 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:ui="clr-namespace:UI"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+
     <Grid>
-        <TextBox Text="Order" />
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <ui:UserControlHeader x:Name="userControlHeader" Grid.Row="0"/>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="2*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Menu Overview with TabControl -->
+            <TabControl Grid.Column="0" Margin="0,-21,20,41">
+                <TabItem Header="Drinks">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <StackPanel>
+                            <TextBlock Text="Soft Drinks" Style="{StaticResource HeaderTextBlockStyle}"/>
+                            <ListBox Name="DrinksSoftDrinksListBox" ItemsSource="{Binding softDrinks}">
+                                <ListBox.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel Orientation="Horizontal"/>
+                                    </ItemsPanelTemplate>
+                                </ListBox.ItemsPanel>
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Button Content="{Binding Name}" Style="{StaticResource MenuItemStyle}" Click="MenuItemButton_Click" Margin="5"/>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+
+                            <TextBlock Text="Beers" Style="{StaticResource HeaderTextBlockStyle}"/>
+                            <ListBox Name="DrinksBeersListBox" ItemsSource="{Binding beers}">
+                                <ListBox.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel Orientation="Horizontal"/>
+                                    </ItemsPanelTemplate>
+                                </ListBox.ItemsPanel>
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Button Content="{Binding Name}" Style="{StaticResource MenuItemStyle}" Click="MenuItemButton_Click" Margin="5"/>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+
+                            <TextBlock Text="Wines" Style="{StaticResource HeaderTextBlockStyle}"/>
+                            <ListBox Name="DrinksWinesListBox" ItemsSource="{Binding wines}">
+                                <ListBox.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel Orientation="Horizontal"/>
+                                    </ItemsPanelTemplate>
+                                </ListBox.ItemsPanel>
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Button Content="{Binding Name}" Style="{StaticResource MenuItemStyle}" Click="MenuItemButton_Click" Margin="5"/>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+
+                            <TextBlock Text="Spirits" Style="{StaticResource HeaderTextBlockStyle}"/>
+                            <ListBox Name="DrinksSpiritsListBox" ItemsSource="{Binding spirits}">
+                                <ListBox.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel Orientation="Horizontal"/>
+                                    </ItemsPanelTemplate>
+                                </ListBox.ItemsPanel>
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Button Content="{Binding Name}" Style="{StaticResource MenuItemStyle}" Click="MenuItemButton_Click" Margin="5"/>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+
+                            <TextBlock Text="Coffee/Tea" Style="{StaticResource HeaderTextBlockStyle}"/>
+                            <ListBox Name="DrinksCoffeeAndTeaListBox" ItemsSource="{Binding coffeeAndTea}">
+                                <ListBox.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel Orientation="Horizontal"/>
+                                    </ItemsPanelTemplate>
+                                </ListBox.ItemsPanel>
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Button Content="{Binding Name}" Style="{StaticResource MenuItemStyle}" Click="MenuItemButton_Click" Margin="5"/>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </StackPanel>
+                    </ScrollViewer>
+                </TabItem>
+
+                <TabItem Header="Dinner">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <StackPanel>
+                            <TextBlock Text="Starters" Style="{StaticResource HeaderTextBlockStyle}"/>
+                            <ListBox Name="DinnerStartersListBox" ItemsSource="{Binding dinnerStarters}">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Button Content="{Binding Name}" Width="auto" Style="{StaticResource MenuItemStyle}" Click="MenuItemButton_Click"/>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+
+                            <TextBlock Text="Mains" Style="{StaticResource HeaderTextBlockStyle}"/>
+                            <ListBox Name="DinnerMainsListBox" ItemsSource="{Binding dinnerEntremets}">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Button Content="{Binding Name}" Width="auto" Style="{StaticResource MenuItemStyle}" Click="MenuItemButton_Click"/>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+
+                            <TextBlock Text="Mains" Style="{StaticResource HeaderTextBlockStyle}"/>
+                            <ListBox Name="DinnerEntremetsListBox" ItemsSource="{Binding dinnerMains}">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Button Content="{Binding Name}" Width="auto" Style="{StaticResource MenuItemStyle}" Click="MenuItemButton_Click"/>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+
+                            <TextBlock Text="Desserts" Style="{StaticResource HeaderTextBlockStyle}"/>
+                            <ListBox Name="DinnerDessertsListBox" ItemsSource="{Binding dinnerDesserts}">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Button Content="{Binding Name}" Width="auto" Style="{StaticResource MenuItemStyle}" Click="MenuItemButton_Click"/>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </StackPanel>
+                    </ScrollViewer>
+                </TabItem>
+
+                <TabItem Header="Lunch">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <StackPanel>
+                            <TextBlock Text="Starters" Style="{StaticResource HeaderTextBlockStyle}"/>
+                            <ListBox Name="LunchStartersListBox" ItemsSource="{Binding lunchStarters}">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Button Content="{Binding Name}" Width="auto" Style="{StaticResource MenuItemStyle}" Click="MenuItemButton_Click"/>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+
+                            <TextBlock Text="Mains" Style="{StaticResource HeaderTextBlockStyle}"/>
+                            <ListBox Name="LunchMainsListBox" ItemsSource="{Binding lunchMains}">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Button Content="{Binding Name}" Width="auto" Style="{StaticResource MenuItemStyle}" Click="MenuItemButton_Click"/>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+
+                            <TextBlock Text="Desserts" Style="{StaticResource HeaderTextBlockStyle}"/>
+                            <ListBox Name="LunchDessertsListBox" ItemsSource="{Binding lunchDesserts}">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Button Content="{Binding Name}" Width="auto" Style="{StaticResource MenuItemStyle}" Click="MenuItemButton_Click"/>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </StackPanel>
+                    </ScrollViewer>
+                </TabItem>
+            </TabControl>
+
+            <!-- Order Overview -->
+            <StackPanel Grid.Column="1" Orientation="Vertical" Margin="10">
+                <TextBlock Text="Order Overview" FontWeight="Bold" FontSize="16" Margin="0,0,0,10"/>
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <ItemsControl Name="OrderItemsControl" ItemsSource="{Binding orderItems}">
+                        <ItemsControl.ItemContainerStyle>
+                            <Style TargetType="ContentPresenter">
+                                <Setter Property="Margin" Value="5"/>
+                            </Style>
+                        </ItemsControl.ItemContainerStyle>
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Vertical"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Style="{StaticResource OrderItemContainerStyle}">
+                                    <TextBlock Text="{Binding Item.Name}" Style="{StaticResource OrderItemTextBlockStyle}" Width="150"/>
+                                    <Button Content="✎" Width="30" Height="30" Style="{StaticResource OrderItemButtonStyle}" Click="EditCommentButton_Click"/>
+                                    <TextBlock Text="{Binding Comment}" Style="{StaticResource OrderItemTextBlockStyle}" Width="150"/>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Button Content="−" Style="{StaticResource OrderItemButtonStyle}" Click="DecreaseQuantityButton_Click"/>
+                                        <TextBlock Text="{Binding Quantity}" Style="{StaticResource OrderItemTextBlockStyle}" Width="30" HorizontalAlignment="Center"/>
+                                        <Button Content="+" Style="{StaticResource OrderItemButtonStyle}" Click="IncreaseQuantityButton_Click"/>
+                                    </StackPanel>
+                                    <TextBlock Text="{Binding TotalPrice, StringFormat=C}" Style="{StaticResource OrderItemTextBlockStyle}" Width="60" HorizontalAlignment="Right"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+                <Button Content="Place Order" Width="100" Click="PlaceOrder_Click"/>
+                <Button Content="Cancel Order" Width="100" Click="CancelOrder_Click"/>
+            </StackPanel>
+        </Grid>
+
     </Grid>
 </UserControl>
