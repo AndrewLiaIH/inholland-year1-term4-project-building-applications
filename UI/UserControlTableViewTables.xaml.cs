@@ -20,7 +20,7 @@ namespace UI
             DataContext = this;
         }
 
-        private void GetAllTables()
+        internal void GetAllTables()
         {
             TableService tableService = new();
             List<Table> tables = tableService.GetAllTables();

@@ -220,7 +220,7 @@ namespace DAL
                 new(ParameterTableId, table.DatabaseId)
             };
 
-            DataTable dataTabel = ExecuteSelectQuery(QueryGetAllRunningOrdersPerTable, sqlParameters);
+            DataTable dataTabel = ExecuteSelectQuery(QueryGetAllRunningOrdersPerTable, out bool error, sqlParameters);
 
             foreach (DataRow row in dataTabel.Rows)
             {
@@ -234,7 +234,7 @@ namespace DAL
         {
             Dictionary<int, Order> ordersDictionary = new();
 
-            DataTable dataTabel = ExecuteSelectQuery(QueryGetAllRunningOrdersTables);
+            DataTable dataTabel = ExecuteSelectQuery(QueryGetAllRunningOrdersTables, out bool error);
 
             foreach (DataRow row in dataTabel.Rows)
             {
@@ -298,7 +298,7 @@ namespace DAL
                 { ParameterNameOrderNumber, orderNumber }
             };
 
-            return GetAllByIntParameters(QueryGetAllItemsOfOrder, ReadRowOrderItem, parameters);
+            return GetAllByIntParameters(QueryGetAllItemsOfOrder, ReadRowOrderItem, parameters, out bool nError);
         }
 
         private Order ReadRowOrder(DataRow dr)

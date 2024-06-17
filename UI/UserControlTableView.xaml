@@ -12,6 +12,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <ui:UserControlHeader x:Name="userControlHeader" Grid.Row="0"/>
-        <ContentControl x:Name="TableViewContentControl" Grid.Row="1" />
+        <ContentControl x:Name="TableViewContentControl" Grid.Row="1"/>
+        <ContentControl x:Name="NetworkErrorView" Grid.Row="1"/>
     </Grid>
 </UserControl>
