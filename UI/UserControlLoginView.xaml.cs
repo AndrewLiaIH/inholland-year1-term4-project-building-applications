@@ -33,6 +33,7 @@ namespace UI
             InitializeTextBox();
         }
 
+
         private void InitializeTextBox()
         {
             activeTextBox = LoginTextBox;

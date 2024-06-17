@@ -1,4 +1,5 @@
 ﻿using Timer = System.Timers.Timer;
+using DAL;
 
 namespace Service
 {
@@ -16,5 +17,10 @@ namespace Service
 
         protected virtual void CheckForChanges(object sender, EventArgs e) { }
         protected virtual void UpdateNetwork(object sender, EventArgs e) { }
+
+        public bool ConnectionAvalible<T>() where T : BaseDao, new()
+        {
+            return new T().ConnectionAvalible();
+        }
     }
 }

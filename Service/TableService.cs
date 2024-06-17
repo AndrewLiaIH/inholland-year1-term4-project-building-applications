@@ -40,10 +40,5 @@ namespace Service
         {
             TableOccupiedChanged?.Invoke();
         }
-
-        public bool ConnectionAvalible()
-        {
-            return tableDao.ConnectionAvalible();
-        }
     }
 }

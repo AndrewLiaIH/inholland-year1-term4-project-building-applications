@@ -1,6 +1,6 @@
-﻿using Model;
+﻿using DAL;
+using Model;
 using Service;
-using System.Windows;
 using System.Windows.Controls;
 
 namespace UI
@@ -15,7 +15,6 @@ namespace UI
         private UserControlTableViewTables userControlTableViewTables;
         private UserControlNetworkError userControlNetworkError;
         
-        private OrderService orderService = new();
         private TableService tableService = new();
 
         public UserControlTableView()
@@ -43,14 +42,18 @@ namespace UI
 
         private void UpdateTables()
         {
-            Dispatcher.Invoke(async () =>
+            Task.Run(async () =>
             {
                 tableService.TableOccupiedChanged -= UpdateTables;
 
-                if (tableService.ConnectionAvalible())
+            if (tableService.ConnectionAvalible<TableDao>())
                 {
-                    await Task.Delay(4000);
-                    ShowTableViewTables();
+                    await Task.Delay(6000);
+
+                    Dispatcher.Invoke(() =>
+                    {
+                        ShowTableViewTables();
+                    });
                 }
             });
         }

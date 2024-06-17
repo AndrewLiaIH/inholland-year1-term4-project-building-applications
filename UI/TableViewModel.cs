@@ -79,8 +79,16 @@ namespace UI
 
             foreach (Order order in RunningOrders)
             {
-                List<OrderItem> doneOrderItems = order.OrderItems.Where(orderItem => orderItem.ItemStatus == OrderStatus.Done).ToList();
-                statuses.UnionWith(doneOrderItems.Select(orderItem => orderItem.Item.Category.MenuCard.MenuType));
+                if (order?.OrderItems != null)
+                {
+                    List<OrderItem> doneOrderItems = order.OrderItems
+                        .Where(orderItem => orderItem.ItemStatus == OrderStatus.Done && orderItem.Item?.Category?.MenuCard != null).ToList();
+
+                    foreach (var orderItem in doneOrderItems)
+                    {
+                        statuses.Add(orderItem.Item.Category.MenuCard.MenuType);
+                    }
+                }
             }
 
             return statuses;

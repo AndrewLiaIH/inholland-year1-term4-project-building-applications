@@ -17,16 +17,9 @@ namespace UI
         private UserControlOrderView userControlOrderView;
         private UserControlKitchenView userControlKitchenView;
         private UserControlNetworkError userControlNetworkError;
-        private EmployeeService employeeService;
 
-        internal static readonly RoutedEvent RemoveEventsEvent = EventManager.RegisterRoutedEvent(
-        "RemoveEvents", RoutingStrategy.Bubble, typeof(RoutedEventHandler), typeof(UserControlTable));
-
-        internal event RoutedEventHandler RemoveEvents
-        {
-            add { AddHandler(RemoveEventsEvent, value); }
-            remove { RemoveHandler(RemoveEventsEvent, value); }
-        }
+        private EmployeeService employeeService = new();
+        private bool isNetworkExceptionSubscribed = false;
 
         public MainWindow()
         {
@@ -40,30 +33,42 @@ namespace UI
                 { EmployeeType.Waiter, ShowTableView }
             };
 
+            SubscribeNetworkException();
             ShowLoginView();
-            employeeService = new();
-            employeeService.NetworkExceptionOccurred += NetworkExceptionOccurred;
         }
 
+        /// <summary>
+        /// Method that is called when network exception occurs. It creates a new UserControlNetworkError and sets it as the main content.
+        /// After RetryLogin is called, it waits for the connection to be available and then calls the Login method.
+        /// </summary>
         private void NetworkExceptionOccurred()
         {
             Dispatcher.Invoke(() =>
-            { 
-            userControlNetworkError ??= new();
-            MainContentControl.Content = userControlNetworkError;
-            employeeService.RetryLogin += RetryLogin;
+            {
+                ShowNetworkErrorView();
+                employeeService.RetryLogin += RetryLogin;
             });
         }
 
         private void RetryLogin()
         {
-            Dispatcher.Invoke(() =>
+            Task.Run(async () =>
             {
-                userControlLoginView.Login();
-                employeeService.RetryLogin -= RetryLogin;
+                while (!employeeService.ConnectionAvalible<EmployeeDao>())
+                {
+                    await Task.Delay(4000);
+                }
 
-                if (userControlLoginView.LoggedInEmployee == null) { }
-                    ShowLoginView();
+                Dispatcher.Invoke(() =>
+                {
+                    userControlLoginView.Login();
+                    employeeService.RetryLogin -= RetryLogin;
+
+                    if (userControlLoginView.LoggedInEmployee == null)
+                    {
+                        ShowLoginView();
+                    }
+                });
             });
         }
 
@@ -76,6 +81,7 @@ namespace UI
             }
 
             MainContentControl.Content = userControlLoginView;
+            SubscribeNetworkException();
         }
 
         private void ShowTableView()
@@ -87,7 +93,7 @@ namespace UI
             }
 
             SetHeader(userControlTableView);
-            employeeService.NetworkExceptionOccurred -= NetworkExceptionOccurred;
+
 
             MainContentControl.Content = userControlTableView;
         }
@@ -104,17 +110,20 @@ namespace UI
 
         private void ShowOrderView()
         {
-            if (userControlOrderView == null)
-                userControlOrderView = new();
-
-            // SetHeader(userControlOrderView);
-
+            userControlOrderView ??= new();
             MainContentControl.Content = userControlOrderView;
+        }
+
+        private void ShowNetworkErrorView()
+        {
+            userControlNetworkError ??= new();
+            MainContentControl.Content = userControlNetworkError;
         }
 
         private void UserControlLoginView_LoginSuccessful(object sender, RoutedEventArgs e)
         {
             UpdateCurrentView(userControlLoginView.LoggedInEmployee);
+            UnsubscribeNetworkException();
         }
 
         public void UpdateCurrentView(Employee currentEmployee)
@@ -135,7 +144,6 @@ namespace UI
 
         private void Logout()
         {
-            employeeService.NetworkExceptionOccurred += NetworkExceptionOccurred;
             userControlLoginView.Refresh();
             ShowLoginView();
 
@@ -143,20 +151,34 @@ namespace UI
                 userControlKitchenView.userControlHeader.Logout -= UserControlHeader_Logout;
 
             if (userControlTableView != null)
-            {
                 userControlTableView.userControlHeader.Logout -= UserControlHeader_Logout;
-            }
 
             if (userControlTableView != null)
-            {
                 userControlTableView.userControlHeader.Logout -= UserControlHeader_Logout;
-            }
         }
 
         private void SetHeader(ILoggedInEmployeeHandler employeeHandler)
         {
             employeeHandler.SetLoggedInEmployee(userControlLoginView.LoggedInEmployee);
             employeeHandler.UserControlHeader.Logout += UserControlHeader_Logout;
+        }
+
+        private void SubscribeNetworkException()
+        {
+            if (!isNetworkExceptionSubscribed)
+            {
+                employeeService.NetworkExceptionOccurred += NetworkExceptionOccurred;
+                isNetworkExceptionSubscribed = true;
+            }
+        }
+
+        private void UnsubscribeNetworkException()
+        {
+            if (isNetworkExceptionSubscribed)
+            {
+                employeeService.NetworkExceptionOccurred -= NetworkExceptionOccurred;
+                isNetworkExceptionSubscribed = false;
+            }
         }
     }
 }

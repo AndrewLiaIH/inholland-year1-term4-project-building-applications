@@ -25,11 +25,6 @@ namespace Service
             WaitingTimeChanged?.Invoke();
         }
 
-        public bool ConnectionAvalible()
-        {
-            return orderDao.ConnectionAvalible();
-        }
-
         protected void NetworkExceptionHandler()
         {
             NetworkExceptionOccurred?.Invoke();
@@ -91,7 +86,7 @@ namespace Service
             return !orders.IsNullOrEmpty();
         }
 
-        public OrderItem GetLongestWaitingTime(List<Order>  runningOrders)
+        public OrderItem GetLongestWaitingTime(List<Order> runningOrders)
         {
             List<OrderItem> allOrderItems = runningOrders.SelectMany(order => order.OrderItems).ToList();
             List<OrderItem> waitingOrderItems = allOrderItems.Where(orderItem => orderItem.ItemStatus != OrderStatus.Served).ToList();

@@ -1,4 +1,5 @@
-﻿using Model;
+﻿using DAL;
+using Model;
 using Service;
 using System.Windows;
 using System.Windows.Controls;
@@ -44,14 +45,18 @@ namespace UI
 
         private void UpdateOrders()
         {
-            Dispatcher.Invoke(async () =>
+            Task.Run(async () =>
             {
                 orderService.RunningOrdersChanged -= UpdateOrders;
 
-                if (orderService.ConnectionAvalible())
+                if (orderService.ConnectionAvalible<OrderDao>())
                 {
-                    await Task.Delay(4000);
-                    ShowKitchenViewRunning();
+                    await Task.Delay(6000);
+                    
+                    Dispatcher.Invoke(() =>
+                    {
+                        ShowKitchenViewRunning();
+                    });
                 }
             });
         }
