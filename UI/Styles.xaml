@@ -860,6 +860,9 @@
                         <DataTrigger Binding="{Binding Status}" Value="Done">
                             <Setter Property="Visibility" Value="Collapsed"/>
                         </DataTrigger>
+                        <DataTrigger Binding="{Binding Status}" Value="Served">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                        </DataTrigger>
                     </Style.Triggers>
                 </Style>
             </Border.Style>
@@ -950,6 +953,9 @@
             <Border.Style>
                 <Style TargetType="Border">
                     <Style.Triggers>
+                        <DataTrigger Binding="{Binding Status}" Value="Served">
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
                         <DataTrigger Binding="{Binding Status}" Value="Done">
                             <Setter Property="Visibility" Value="Visible"/>
                         </DataTrigger>
@@ -1101,6 +1107,12 @@
                 <Setter Property="Content" Value="Finish preparing"/>
             </DataTrigger>
             <DataTrigger Binding="{Binding CategoryStatus}" Value="Done">
+                <Setter Property="Background" Value="{StaticResource Color11}"/>
+                <Setter Property="Foreground" Value="{StaticResource TextDark}"/>
+                <Setter Property="IsEnabled" Value="False"/>
+                <Setter Property="Content" Value="Done"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding CategoryStatus}" Value="Served">
                 <Setter Property="Background" Value="{StaticResource Color11}"/>
                 <Setter Property="Foreground" Value="{StaticResource TextDark}"/>
                 <Setter Property="IsEnabled" Value="False"/>
