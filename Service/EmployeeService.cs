@@ -6,9 +6,16 @@ using System.Text;
 namespace Service
 {
     // This class was written by Andrew Lia
-    public class EmployeeService
+    public class EmployeeService : BaseService
     {
         private EmployeeDao employeeDao = new();
+        public event Action NetworkExceptionOccurred;
+        public event Action RetryLogin;
+
+        public EmployeeService()
+        {
+            BaseDao.NetworkExceptionOccurredDao += NetworkExceptionHandler;
+        }
 
         public List<Employee> GetAllEmployees()
         {
@@ -38,6 +45,16 @@ namespace Service
             }
 
             return builder.ToString();
+        }
+
+        protected void NetworkExceptionHandler()
+        {
+            NetworkExceptionOccurred?.Invoke();
+        }
+
+        protected override void UpdateNetwork(object sender, EventArgs e)
+        {
+            RetryLogin?.Invoke();
         }
     }
 }

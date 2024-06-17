@@ -47,7 +47,7 @@ namespace DAL
                 new(ParameterNamePassword, password)
             };
 
-            DataTable dataTable = ExecuteSelectQuery(QueryGetEmployeeByLoginAndPassword, sqlParameters);
+            DataTable dataTable = ExecuteSelectQuery(QueryGetEmployeeByLoginAndPassword, out bool error, sqlParameters);
             return ReadTable(dataTable, ReadRow).FirstOrDefault();
         }
 

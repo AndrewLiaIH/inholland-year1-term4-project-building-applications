@@ -9,9 +9,15 @@ namespace Service
     {
         private OrderDao orderDao = new();
 
+        public event Action NetworkExceptionOccurred;
         public event Action RunningOrdersChanged;
         public event Action WaitingTimeChanged;
         public event Action OrdersChanged;
+
+        public OrderService()
+        {
+            BaseDao.NetworkExceptionOccurredDao += NetworkExceptionHandler;
+        }
 
         // Methods for OrderDao
         protected override void CheckForChanges(object sender, EventArgs e)
@@ -19,6 +25,11 @@ namespace Service
             RunningOrdersChanged?.Invoke();
             WaitingTimeChanged?.Invoke();
             OrdersChanged?.Invoke();
+        }
+
+        protected void NetworkExceptionHandler()
+        {
+            NetworkExceptionOccurred?.Invoke();
         }
 
         public List<Order> GetAllOrders()
@@ -77,7 +88,7 @@ namespace Service
             return !orders.IsNullOrEmpty();
         }
 
-        public OrderItem GetLongestWaitingTime(List<Order>  runningOrders)
+        public OrderItem GetLongestWaitingTime(List<Order> runningOrders)
         {
             List<OrderItem> allOrderItems = runningOrders.SelectMany(order => order.OrderItems).ToList();
             List<OrderItem> waitingOrderItems = allOrderItems.Where(orderItem => orderItem.ItemStatus != OrderStatus.Served).ToList();

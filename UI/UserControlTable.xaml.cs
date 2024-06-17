@@ -81,8 +81,12 @@ namespace UI
         private void OnTableOccupiedChanged()
         {
             Table updatedTable = tableService.GetTableById(tableViewModel.Table.DatabaseId);
-            tableViewModel.Table.Occupied = updatedTable.Occupied;
-            tableViewModel.SetTableState();
+
+            if (updatedTable != null)
+            {
+                tableViewModel.Table.Occupied = updatedTable.Occupied;
+                tableViewModel.SetTableState();
+            }
         }
 
         private void OnWaitingTimeChanged()
