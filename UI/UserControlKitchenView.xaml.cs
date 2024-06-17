@@ -37,9 +37,6 @@ namespace UI
         {
             userControlKitchenViewRunning = new();
 
-            userControlHeader.CounterWaiting.Visibility = Visibility.Visible;
-            userControlHeader.CounterPreparing.Visibility = Visibility.Visible;
-
             KitchenViewContentControl.Content = userControlKitchenViewRunning;
 
             if (userControlHeader.LoggedInEmployee != null)
@@ -52,9 +49,6 @@ namespace UI
         private void ShowKitchenViewFinished()
         {
             userControlKitchenViewFinished = new();
-
-            userControlHeader.CounterWaiting.Visibility = Visibility.Collapsed;
-            userControlHeader.CounterPreparing.Visibility = Visibility.Collapsed;
 
             KitchenViewContentControl.Content = userControlKitchenViewFinished;
 
