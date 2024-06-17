@@ -13,12 +13,20 @@ namespace UI
     {
         private OrderService orderService = new();
         public List<Order> Orders { get; private set; }
+        private bool forKitchen;
 
         public UserControlKitchenViewFinished()
         {
             InitializeComponent();
             Loaded += UserControlKitchenView_Loaded;
+            orderService.OrdersChanged += UserControlKitchenView_OrdersChanged;
         }
+
+        private void UserControlKitchenView_OrdersChanged()
+        {
+            RefreshOrders(forKitchen, true);
+        }
+
         private void UserControlKitchenView_Loaded(object sender, RoutedEventArgs e)
         {
             AttachEventHandlers();
@@ -62,8 +70,14 @@ namespace UI
 
         public void LoadOrders(bool forKitchen)
         {
-            Orders = orderService.GetAllKitchenBarOrders(forKitchen, false);
+            this.forKitchen = forKitchen;
+            RefreshOrders(forKitchen, false);
             DataContext = this;
+        }
+
+        public void RefreshOrders(bool forKitchen, bool isRunning)
+        {
+            Orders = orderService.GetAllKitchenBarOrders(forKitchen, isRunning);
         }
 
         private void EditStatus_Click(object sender, RoutedEventArgs e)

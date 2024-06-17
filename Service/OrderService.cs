@@ -11,12 +11,14 @@ namespace Service
 
         public event Action RunningOrdersChanged;
         public event Action WaitingTimeChanged;
+        public event Action OrdersChanged;
 
         // Methods for OrderDao
         protected override void CheckForChanges(object sender, EventArgs e)
         {
             RunningOrdersChanged?.Invoke();
             WaitingTimeChanged?.Invoke();
+            OrdersChanged?.Invoke();
         }
 
         public List<Order> GetAllOrders()
