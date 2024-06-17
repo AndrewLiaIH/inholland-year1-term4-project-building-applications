@@ -12,6 +12,7 @@ namespace Service
         public event Action NetworkExceptionOccurred;
         public event Action RunningOrdersChanged;
         public event Action WaitingTimeChanged;
+        public event Action OrdersChanged;
 
         public OrderService()
         {
@@ -23,6 +24,7 @@ namespace Service
         {
             RunningOrdersChanged?.Invoke();
             WaitingTimeChanged?.Invoke();
+            OrdersChanged?.Invoke();
         }
 
         protected void NetworkExceptionHandler()

@@ -68,22 +68,20 @@ namespace UI
 
         private void ShowKitchenViewRunning()
         {
-            if (userControlKitchenViewRunning == null)
-                userControlKitchenViewRunning = new();
-
-            userControlHeader.CounterWaiting.Visibility = Visibility.Visible;
-            userControlHeader.CounterPreparing.Visibility = Visibility.Visible;
+            userControlKitchenViewRunning = new();
 
             KitchenViewContentControl.Content = userControlKitchenViewRunning;
+
+            if (userControlHeader.LoggedInEmployee != null)
+            {
+                bool forKitchen = userControlHeader.LoggedInEmployee.Type == EmployeeType.Chef ? true : false;
+                userControlKitchenViewRunning.LoadOrders(forKitchen);
+            }
         }
 
         private void ShowKitchenViewFinished()
         {
-            if (userControlKitchenViewFinished == null)
-                userControlKitchenViewFinished = new();
-
-            userControlHeader.CounterWaiting.Visibility = Visibility.Collapsed;
-            userControlHeader.CounterPreparing.Visibility = Visibility.Collapsed;
+            userControlKitchenViewFinished = new();
 
             KitchenViewContentControl.Content = userControlKitchenViewFinished;
 

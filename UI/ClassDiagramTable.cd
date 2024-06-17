@@ -1,0 +1,108 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="UI.Folder">
+    <Position X="14.25" Y="0.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAABAAAAAAMAAAABQAgAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Folder.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="UI.MainWindow" BaseTypeListCollapsed="true">
+    <Position X="0.75" Y="0.75" Width="2.75" />
+    <AssociationLine Name="userControlLoginView" Type="UI.UserControlLoginView" FixedToPoint="true">
+      <Path>
+        <Point X="3.062" Y="4.742" />
+        <Point X="3.062" Y="6.25" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-1.653" Y="0.887" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAQgAABAAAAQAAAAAAChCIAAAAARBAAAAAAgAQAEAA=</HashCode>
+      <FileName>MainWindow.xaml.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="userControlLoginView" />
+      <Field Name="userControlTableView" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="UI.UserControlHeader" BaseTypeListCollapsed="true">
+    <Position X="9.75" Y="0.75" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAwAAAAAAIAAAQBAAAAAgQIEAFAAAAAEgAABAAACAAA=</HashCode>
+      <FileName>UserControlHeader.xaml.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="SelectedFolder" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Folders" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="UI.UserControlLoginView" BaseTypeListCollapsed="true">
+    <Position X="1" Y="6.25" Width="2.5" />
+    <Members>
+      <Field Name="activeTextBox" Hidden="true" />
+      <Field Name="EmptyBoxExceptionMessage" Hidden="true" />
+      <Field Name="WrongLoginOrPasswordMessage" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>hAEAQEAAAABBgAAAEhgECyAAAAAAAAAAAACQgCAAAEA=</HashCode>
+      <FileName>UserControlLoginView.xaml.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="UI.UserControlTableView" BaseTypeListCollapsed="true">
+    <Position X="5.5" Y="0.75" Width="2.25" />
+    <AssociationLine Name="userControlTableViewTables" Type="UI.UserControlTableViewTables" FixedToPoint="true">
+      <Path>
+        <Point X="7.375" Y="2.819" />
+        <Point X="7.375" Y="4" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-2.034" Y="0.813" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>gAAQAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAEAAAAAAIA=</HashCode>
+      <FileName>UserControlTableView.xaml.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="userControlTableViewTables" />
+      <Property Name="UserControlHeader" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="UI.TableViewModel">
+    <Position X="5.5" Y="7" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAQAAEAAQAQAAIAAASAgQgAKAEEEBgAAAAQAAAAA=</HashCode>
+      <FileName>TableViewModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="UI.UserControlTable">
+    <Position X="9.5" Y="6.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAgAIAAACBHAAIAAAIABAAAEIAAEAQwAAAAACiAQA=</HashCode>
+      <FileName>UserControlTable.xaml.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="tableViewModel" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="UI.UserControlTableViewTables">
+    <Position X="5.5" Y="4" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>BAAAAAAQACAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>UserControlTableViewTables.xaml.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

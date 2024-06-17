@@ -1,2 +1,176 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ClassDiagram /> 
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Model.Category">
+    <Position X="19.75" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAQAAgAEAAAAAAAABAAAAAAAAAAAAACAAAA=</HashCode>
+      <FileName>Category.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="MenuCard" />
+      <Property Name="CategoryType" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Model.Employee">
+    <Position X="11.25" Y="0.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAQCAAAAAEAAAAQAAAAAAAAAACQQAQAAAAAAg=</HashCode>
+      <FileName>Employee.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Type" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Model.MenuCard">
+    <Position X="19.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAwAAAA=</HashCode>
+      <FileName>MenuCard.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="MenuType" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Model.MenuItem">
+    <Position X="17" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQAgAAAEgAAACASBAAAAAIAAAAAAAAAACAA=</HashCode>
+      <FileName>MenuItem.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Category" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Model.Order">
+    <Position X="14" Y="0.5" Width="2" />
+    <Members>
+      <Field Name="status" Hidden="true" />
+    </Members>
+    <AssociationLine Name="OrderItemsByCategory" Type="Model.CategoryGroup" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="14.688" Y="4.238" />
+        <Point X="14.688" Y="4.681" />
+        <Point X="14.302" Y="4.681" Type="JumpStart" />
+        <Point X="14.135" Y="4.681" Type="JumpEnd" />
+        <Point X="12.49" Y="4.681" Type="JumpStart" />
+        <Point X="12.323" Y="4.681" Type="JumpEnd" />
+        <Point X="11.75" Y="4.681" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.766" Y="0.081" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAQAAAJEAAEAAAAEICQAQAAAgAAA0QAAQAAAAAgAAAA=</HashCode>
+      <FileName>Order.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="status" />
+      <Property Name="Table" />
+      <Property Name="PlacedBy" />
+      <Property Name="Status" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="OrderItems" />
+      <Property Name="OrderItemsByCategory" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Model.OrderItem">
+    <Position X="17" Y="0.5" Width="1.5" />
+    <AssociationLine Name="ItemStatus" Type="Model.OrderStatus" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="17" Y="2.996" />
+        <Point X="16.419" Y="2.996" />
+        <Point X="16.419" Y="9.655" />
+        <Point X="9" Y="9.655" />
+        <Point X="9" Y="8.681" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-1.015" Y="0.695" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>EAAAAAAEAAAAAAAEEgAACAAEAIAAAAAAwAAAkAAAAAA=</HashCode>
+      <FileName>OrderItem.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Item" />
+      <Property Name="ItemStatus" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Model.Table">
+    <Position X="14.5" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAEAAAAAAkAAAAAAAAAAAACAAAQAAAAAAAAAA=</HashCode>
+      <FileName>Table.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Host" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Model.CategoryGroup">
+    <Position X="10" Y="4.5" Width="1.75" />
+    <Members>
+      <Field Name="category" Hidden="true" />
+      <Field Name="categoryStatus" Hidden="true" />
+      <Field Name="items" Hidden="true" />
+    </Members>
+    <AssociationLine Name="CategoryStatus" Type="Model.OrderStatus" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="11.062" Y="6.055" />
+        <Point X="11.062" Y="7.861" />
+        <Point X="9.75" Y="7.861" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAACAAAIAgAAAAAgAEAAAABAAAIAAAACAA=</HashCode>
+      <FileName>CategoryGroup.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="categoryStatus" />
+      <Property Name="CategoryStatus" />
+      <Property Name="Category" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Items" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Enum Name="Model.CategoryType">
+    <Position X="22.5" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEANAAAAAAAAAAAAAAAAAAAAEBAAAAgEACAgAAAAA=</HashCode>
+      <FileName>CategoryType.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Model.EmployeeType">
+    <Position X="8.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAADDCAAAAAAAAAAAAA=</HashCode>
+      <FileName>EmployeeType.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Model.MenuType">
+    <Position X="22.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAgAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAEA=</HashCode>
+      <FileName>MenuType.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Model.OrderStatus">
+    <Position X="8.25" Y="7.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAQgAAAAA=</HashCode>
+      <FileName>OrderStatus.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Model.TableStatus">
+    <Position X="22.5" Y="7.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIEAgAAAAAAgAAUAAAAAAAAAEAAAAAAAABACI=</HashCode>
+      <FileName>TableStatus.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

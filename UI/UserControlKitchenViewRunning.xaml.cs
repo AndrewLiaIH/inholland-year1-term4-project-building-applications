@@ -16,12 +16,19 @@ namespace UI
         private OrderService orderService = new();
         public List<Order> Orders { get; private set; }
         private DispatcherTimer timer;
+        private bool forKitchen;
 
         public UserControlKitchenViewRunning()
         {
             InitializeComponent();
             Loaded += UserControlKitchenView_Loaded;
+            orderService.OrdersChanged += UserControlKitchenView_OrdersChanged;
             InitializeTimer();
+        }
+
+        private void UserControlKitchenView_OrdersChanged()
+        {
+            RefreshOrders(forKitchen, true);
         }
 
         private void UserControlKitchenView_Loaded(object sender, RoutedEventArgs e)
@@ -73,8 +80,14 @@ namespace UI
 
         public void LoadOrders(bool forKitchen)
         {
-            Orders = orderService.GetAllKitchenBarOrders(forKitchen, true);
+            this.forKitchen = forKitchen;
+            RefreshOrders(forKitchen, true);
             DataContext = this;
+        }
+
+        public void RefreshOrders(bool forKitchen, bool isRunning)
+        {
+            Orders = orderService.GetAllKitchenBarOrders(forKitchen, isRunning);
         }
 
         private void InitializeTimer()
@@ -251,7 +264,7 @@ namespace UI
         {
             foreach (OrderItem item in categoryGroup.Items)
             {
-                Order order = Orders.FirstOrDefault(o => o.OrderItems.Contains(item));
+                Order order = Orders.FirstOrDefault(o => o.OrderItems.Any(oi => oi.DatabaseId == item.DatabaseId));
 
                 if (order != null)
                     return order;
