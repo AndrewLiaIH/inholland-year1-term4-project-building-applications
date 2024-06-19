@@ -9,7 +9,7 @@
     <ui:BackgroundToForegroundMultiConverter x:Key="BackgroundToForegroundMultiConverter"/>
 
     <!--COLOURS-->
-    
+
     <SolidColorBrush x:Key="Color1" Color="#FFD5CFE1"/>
     <SolidColorBrush x:Key="Color2" Color="#FF318CE7"/>
     <SolidColorBrush x:Key="Color3" Color="#FF000000"/>
@@ -28,7 +28,7 @@
 
     <!--TEXT STYLES-->
 
-    
+
     <!--Global styles-->
 
     <!-- Global TextBlock Style -->
@@ -57,7 +57,7 @@
         <Setter Property="Foreground" Value="DarkBlue"/>
     </Style>
 
-    
+
     <!--HEADER-->
 
     <!--Folders-->
@@ -129,7 +129,7 @@
 
 
     <!--LOGIN VIEW-->
-    
+
     <!--panels-->
     <Style x:Key="RoundedBorderStyle" TargetType="Border">
         <Setter Property="Width" Value="450"/>
@@ -212,8 +212,8 @@
         <Setter Property="Margin" Value="0,0,0,10"/>
         <Style.Triggers>
             <Trigger Property="IsReadOnly" Value="True">
-            <Setter Property="BorderBrush" Value="{StaticResource Color3}"/>
-        </Trigger>
+                <Setter Property="BorderBrush" Value="{StaticResource Color3}"/>
+            </Trigger>
         </Style.Triggers>
     </Style>
 
@@ -250,7 +250,7 @@
             </Trigger>
         </Style.Triggers>
     </Style>
-    
+
     <!--error styles-->
     <Style x:Key="LoginErrorMessage" TargetType="TextBlock">
         <Setter Property="Foreground" Value="{StaticResource Color6}"/>
@@ -283,7 +283,7 @@
     </Style>
 
     <!--RESTAURANT OVERVEIW-->
-    
+
     <!--panels styles-->
     <Style x:Key="TableRoundedBorderStyle" TargetType="Border">
         <Setter Property="Width" Value="250"/>
@@ -819,7 +819,7 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            
+
             <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding Quantity}" FontSize="16" Margin="0 0 16 0" Foreground="{StaticResource TextDark}" />
             <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Item.ShortName}" FontSize="16" Foreground="{StaticResource TextDark}" />
             <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding Comment}" Foreground="{StaticResource TextDark}" FontSize="16" Margin="36 0 0 0" />
@@ -994,15 +994,8 @@
             </Trigger>
         </Style.Triggers>
     </Style>
-    
-    <!--ORDER VIEW-->
 
-    <!-- Menu Item Style-->
-    <Style x:Key="MenuItemStyle" TargetType="Button">
-        <Setter Property="FontSize" Value="14"/>
-        <Setter Property="Padding" Value="10"/>
-        <Setter Property="Margin" Value="5"/>
-    </Style>
+    <!--ORDER VIEW-->
 
     <!-- Button Style for Place/Cancel Order -->
     <Style x:Key="OrderActionButtonStyle" TargetType="Button">

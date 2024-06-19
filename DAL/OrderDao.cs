@@ -1,6 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
-using System.Data;
 using Model;
+using System.Data;
 
 namespace DAL
 {
@@ -10,7 +10,7 @@ namespace DAL
         private const string QueryGetAllOrders = $"SELECT {ColumnOrderId}, {ColumnTableId}, {ColumnPlacedById}, {ColumnOrderNumber}, {ColumnServingNumber}, {ColumnFinished}, {ColumnTotalPrice} FROM [order]";
         private const string QueryGetOrderById = $"{QueryGetAllOrders} WHERE {ColumnOrderId} = {ParameterNameOrderId}";
         private const string QueryUpdateOrderStatus = $"UPDATE [order] SET {ColumnFinished} = {ParameterNameOrderStatus} WHERE {ColumnOrderId} = {ParameterNameOrderId}";
-        private const string QueryGetAllKitchenBarOrders = 
+        private const string QueryGetAllKitchenBarOrders =
             $"SELECT DISTINCT O.{ColumnOrderId}, {ColumnTableId}, {ColumnPlacedById}, O.{ColumnOrderNumber}, {ColumnServingNumber}, {ColumnFinished}, {ColumnTotalPrice}, {ColumnStatus} FROM [order] AS O " +
             $"JOIN order_item AS OI ON O.{ColumnOrderId} = OI.{ColumnOrderItemNumber} " +
             $"JOIN menu_item AS MI ON OI.{ColumnItemNumber} = MI.item_id " +
@@ -56,7 +56,7 @@ namespace DAL
         private const string QueryGetAllItemsOfOrder = $"{QueryGetAllOrderItems} WHERE {ColumnOrderItemNumber} = {ParameterNameOrderNumber}";
         private const string QueryUpdateAllOrderItemsStatus = $"UPDATE order_item SET {ColumnStatus} = {ParameterNameOrderItemStatus} WHERE {ColumnOrderItemNumber} = {ParameterNameOrderNumber}";
         private const string QueryUpdateOrderItemStatus = $"UPDATE order_item SET [{ColumnStatus}] = {ParameterNameOrderItemStatus} WHERE {ColumnOrderItemId} = {ParameterNameOrderItemId}";
-        private const string QueryGetAllKitchenBarOrderItems = 
+        private const string QueryGetAllKitchenBarOrderItems =
             $"SELECT OI.{ColumnOrderItemId} AS ColumnOrderItemId, OI.{ColumnOrderItemNumber}, OI.{ColumnItemNumber}, {ColumnPlacementTime}, {ColumnStatus}, {ColumnChangeOfStatus}, {ColumnQuantity}, {ColumnComment} FROM order_item AS OI " +
             $"JOIN menu_item AS MI ON OI.{ColumnItemNumber} = MI.item_id " +
             $"JOIN category AS C ON MI.category_id = C.category_id " +
@@ -193,7 +193,7 @@ namespace DAL
 
             DataTable dataTabel = ExecuteSelectQuery(QueryGetAllRunningOrdersTables);
 
-            foreach (DataRow row in dataTabel.Rows) 
+            foreach (DataRow row in dataTabel.Rows)
             {
                 ReadCombinedRow(row, ordersDictionary);
             }

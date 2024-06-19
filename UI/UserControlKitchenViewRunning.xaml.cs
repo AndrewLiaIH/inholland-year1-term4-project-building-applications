@@ -1,11 +1,11 @@
-﻿using Model;
+﻿using Microsoft.IdentityModel.Tokens;
+using Model;
 using Service;
-using System.Windows.Shapes;
-using System.Windows.Threading;
-using System.Windows.Media;
-using Microsoft.IdentityModel.Tokens;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
+using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace UI
 {

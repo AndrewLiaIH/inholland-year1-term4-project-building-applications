@@ -30,7 +30,7 @@ namespace Service
             return orderDao.GetOrderById(orderId);
         }
 
-        public void CreateOrder(Order order) 
+        public void CreateOrder(Order order)
         {
             orderDao.CreateOrder(order);
         }
@@ -91,7 +91,7 @@ namespace Service
             return !orders.IsNullOrEmpty();
         }
 
-        public OrderItem GetLongestWaitingTime(List<Order>  runningOrders)
+        public OrderItem GetLongestWaitingTime(List<Order> runningOrders)
         {
             List<OrderItem> allOrderItems = runningOrders.SelectMany(order => order.OrderItems).ToList();
             List<OrderItem> waitingOrderItems = allOrderItems.Where(orderItem => orderItem.ItemStatus != OrderStatus.Served).ToList();

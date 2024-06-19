@@ -1,8 +1,8 @@
-﻿using Service;
-using System.Windows.Controls;
-using System.Windows;
+﻿using Model;
+using Service;
 using System.Collections.ObjectModel;
-using Model;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace UI
 {

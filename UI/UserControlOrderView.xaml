@@ -7,6 +7,78 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
 
+    <UserControl.Resources>
+        <!-- Converters -->
+        <ui:StockAmountToVisibilityConverter x:Key="StockAmountToVisibilityConverter"/>
+        <ui:LessThanTenConverter x:Key="LessThanTenConverter"/>
+
+        <!-- Templates -->
+        <DataTemplate x:Key="MenuItemTemplate_2">
+            <Border Background="{StaticResource Color4}" CornerRadius="5" Margin="5">
+                <Border.Effect>
+                    <DropShadowEffect ShadowDepth="2" BlurRadius="5" />
+                </Border.Effect>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <!-- ShortName Display -->
+                    <TextBlock Text="{Binding ShortName}" VerticalAlignment="Center" Margin="10" FontSize="16"/>
+
+                    <!-- Yellow Circle for StockAmount < 10 -->
+                    <Ellipse Fill="{StaticResource Color7}" Width="10" Height="10"
+                             Visibility="{Binding StockAmount, Converter={StaticResource StockAmountToVisibilityConverter}, ConverterParameter=Yellow}"
+                             HorizontalAlignment="Right" VerticalAlignment="Top" Margin="5"/>
+
+                    <!-- Red Circle for StockAmount == 0 -->
+                    <Ellipse Fill="{StaticResource Color6}" Width="10" Height="10"
+                             Visibility="{Binding StockAmount, Converter={StaticResource StockAmountToVisibilityConverter}, ConverterParameter=Red}"
+                             HorizontalAlignment="Right" VerticalAlignment="Top" Margin="5"/>
+
+                    <!-- Clickable Area -->
+                    <Button Background="Transparent" BorderBrush="Transparent" Click="MenuItem_Click" Tag="{Binding}" Grid.ColumnSpan="2">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border Background="Transparent"/>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                </Grid>
+
+                <!-- Transparency based on StockAmount -->
+                <Border.Style>
+                    <Style TargetType="Border">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding StockAmount}" Value="0">
+                                <Setter Property="Opacity" Value="0.3"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding StockAmount, Converter={StaticResource LessThanTenConverter}}" Value="True">
+                                <Setter Property="Opacity" Value="0.7"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+            </Border>
+        </DataTemplate>
+
+        <!-- Style for ListBox -->
+        <Style TargetType="ListBox" x:Key="InvisibleListBoxStyle">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListBox">
+                        <Border Background="{TemplateBinding Background}" BorderBrush="Transparent" BorderThickness="0">
+                            <ScrollViewer Padding="{TemplateBinding Padding}" Focusable="false">
+                                <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                            </ScrollViewer>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -16,7 +88,7 @@
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
             <!-- Menu Overview with TabControl -->
@@ -25,73 +97,48 @@
                     <ScrollViewer VerticalScrollBarVisibility="Auto">
                         <StackPanel>
                             <TextBlock Text="Soft Drinks" Style="{StaticResource HeaderTextBlockStyle}"/>
-                            <ListBox Name="DrinksSoftDrinksListBox" ItemsSource="{Binding softDrinks}">
+                            <ListBox x:Name="SoftDrinksListBox" ItemTemplate="{StaticResource MenuItemTemplate_2}" Style="{StaticResource InvisibleListBoxStyle}">
                                 <ListBox.ItemsPanel>
                                     <ItemsPanelTemplate>
-                                        <WrapPanel Orientation="Horizontal"/>
+                                        <WrapPanel MaxWidth="600"/>
                                     </ItemsPanelTemplate>
                                 </ListBox.ItemsPanel>
-                                <ListBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <Button Content="{Binding Name}" Style="{StaticResource MenuItemStyle}" Click="MenuItemButton_Click" Margin="5"/>
-                                    </DataTemplate>
-                                </ListBox.ItemTemplate>
                             </ListBox>
 
                             <TextBlock Text="Beers" Style="{StaticResource HeaderTextBlockStyle}"/>
-                            <ListBox Name="DrinksBeersListBox" ItemsSource="{Binding beers}">
+                            <ListBox x:Name="BeersListBox" ItemTemplate="{StaticResource MenuItemTemplate_2}" Style="{StaticResource InvisibleListBoxStyle}">
                                 <ListBox.ItemsPanel>
                                     <ItemsPanelTemplate>
-                                        <WrapPanel Orientation="Horizontal"/>
+                                        <WrapPanel MaxWidth="600"/>
                                     </ItemsPanelTemplate>
                                 </ListBox.ItemsPanel>
-                                <ListBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <Button Content="{Binding Name}" Style="{StaticResource MenuItemStyle}" Click="MenuItemButton_Click" Margin="5"/>
-                                    </DataTemplate>
-                                </ListBox.ItemTemplate>
                             </ListBox>
 
                             <TextBlock Text="Wines" Style="{StaticResource HeaderTextBlockStyle}"/>
-                            <ListBox Name="DrinksWinesListBox" ItemsSource="{Binding wines}">
+                            <ListBox x:Name="WinesListBox" ItemTemplate="{StaticResource MenuItemTemplate_2}" Style="{StaticResource InvisibleListBoxStyle}">
                                 <ListBox.ItemsPanel>
                                     <ItemsPanelTemplate>
-                                        <WrapPanel Orientation="Horizontal"/>
+                                        <WrapPanel MaxWidth="600"/>
                                     </ItemsPanelTemplate>
                                 </ListBox.ItemsPanel>
-                                <ListBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <Button Content="{Binding Name}" Style="{StaticResource MenuItemStyle}" Click="MenuItemButton_Click" Margin="5"/>
-                                    </DataTemplate>
-                                </ListBox.ItemTemplate>
                             </ListBox>
 
                             <TextBlock Text="Spirits" Style="{StaticResource HeaderTextBlockStyle}"/>
-                            <ListBox Name="DrinksSpiritsListBox" ItemsSource="{Binding spirits}">
+                            <ListBox x:Name="SpiritsListBox" ItemTemplate="{StaticResource MenuItemTemplate_2}" Style="{StaticResource InvisibleListBoxStyle}">
                                 <ListBox.ItemsPanel>
                                     <ItemsPanelTemplate>
-                                        <WrapPanel Orientation="Horizontal"/>
+                                        <WrapPanel MaxWidth="600"/>
                                     </ItemsPanelTemplate>
                                 </ListBox.ItemsPanel>
-                                <ListBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <Button Content="{Binding Name}" Style="{StaticResource MenuItemStyle}" Click="MenuItemButton_Click" Margin="5"/>
-                                    </DataTemplate>
-                                </ListBox.ItemTemplate>
                             </ListBox>
 
                             <TextBlock Text="Coffee/Tea" Style="{StaticResource HeaderTextBlockStyle}"/>
-                            <ListBox Name="DrinksCoffeeAndTeaListBox" ItemsSource="{Binding coffeeAndTea}">
+                            <ListBox x:Name="CoffeeTeaListBox" ItemTemplate="{StaticResource MenuItemTemplate_2}" Style="{StaticResource InvisibleListBoxStyle}">
                                 <ListBox.ItemsPanel>
                                     <ItemsPanelTemplate>
-                                        <WrapPanel Orientation="Horizontal"/>
+                                        <WrapPanel MaxWidth="600"/>
                                     </ItemsPanelTemplate>
                                 </ListBox.ItemsPanel>
-                                <ListBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <Button Content="{Binding Name}" Style="{StaticResource MenuItemStyle}" Click="MenuItemButton_Click" Margin="5"/>
-                                    </DataTemplate>
-                                </ListBox.ItemTemplate>
                             </ListBox>
                         </StackPanel>
                     </ScrollViewer>
@@ -101,39 +148,39 @@
                     <ScrollViewer VerticalScrollBarVisibility="Auto">
                         <StackPanel>
                             <TextBlock Text="Starters" Style="{StaticResource HeaderTextBlockStyle}"/>
-                            <ListBox Name="DinnerStartersListBox" ItemsSource="{Binding dinnerStarters}">
-                                <ListBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <Button Content="{Binding Name}" Width="auto" Style="{StaticResource MenuItemStyle}" Click="MenuItemButton_Click"/>
-                                    </DataTemplate>
-                                </ListBox.ItemTemplate>
+                            <ListBox x:Name="DinnerStartersListBox" ItemTemplate="{StaticResource MenuItemTemplate_2}" Style="{StaticResource InvisibleListBoxStyle}">
+                                <ListBox.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel MaxWidth="600"/>
+                                    </ItemsPanelTemplate>
+                                </ListBox.ItemsPanel>
+                            </ListBox>
+
+                            <TextBlock Text="Entremets" Style="{StaticResource HeaderTextBlockStyle}"/>
+                            <ListBox x:Name="DinnerEntremetsListBox" ItemTemplate="{StaticResource MenuItemTemplate_2}" Style="{StaticResource InvisibleListBoxStyle}">
+                                <ListBox.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel MaxWidth="600"/>
+                                    </ItemsPanelTemplate>
+                                </ListBox.ItemsPanel>
                             </ListBox>
 
                             <TextBlock Text="Mains" Style="{StaticResource HeaderTextBlockStyle}"/>
-                            <ListBox Name="DinnerMainsListBox" ItemsSource="{Binding dinnerEntremets}">
-                                <ListBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <Button Content="{Binding Name}" Width="auto" Style="{StaticResource MenuItemStyle}" Click="MenuItemButton_Click"/>
-                                    </DataTemplate>
-                                </ListBox.ItemTemplate>
-                            </ListBox>
-
-                            <TextBlock Text="Mains" Style="{StaticResource HeaderTextBlockStyle}"/>
-                            <ListBox Name="DinnerEntremetsListBox" ItemsSource="{Binding dinnerMains}">
-                                <ListBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <Button Content="{Binding Name}" Width="auto" Style="{StaticResource MenuItemStyle}" Click="MenuItemButton_Click"/>
-                                    </DataTemplate>
-                                </ListBox.ItemTemplate>
+                            <ListBox x:Name="DinnerMainsListBox" ItemTemplate="{StaticResource MenuItemTemplate_2}" Style="{StaticResource InvisibleListBoxStyle}">
+                                <ListBox.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel MaxWidth="600"/>
+                                    </ItemsPanelTemplate>
+                                </ListBox.ItemsPanel>
                             </ListBox>
 
                             <TextBlock Text="Desserts" Style="{StaticResource HeaderTextBlockStyle}"/>
-                            <ListBox Name="DinnerDessertsListBox" ItemsSource="{Binding dinnerDesserts}">
-                                <ListBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <Button Content="{Binding Name}" Width="auto" Style="{StaticResource MenuItemStyle}" Click="MenuItemButton_Click"/>
-                                    </DataTemplate>
-                                </ListBox.ItemTemplate>
+                            <ListBox x:Name="DinnerDessertsListBox" ItemTemplate="{StaticResource MenuItemTemplate_2}" Style="{StaticResource InvisibleListBoxStyle}">
+                                <ListBox.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel MaxWidth="600"/>
+                                    </ItemsPanelTemplate>
+                                </ListBox.ItemsPanel>
                             </ListBox>
                         </StackPanel>
                     </ScrollViewer>
@@ -143,30 +190,30 @@
                     <ScrollViewer VerticalScrollBarVisibility="Auto">
                         <StackPanel>
                             <TextBlock Text="Starters" Style="{StaticResource HeaderTextBlockStyle}"/>
-                            <ListBox Name="LunchStartersListBox" ItemsSource="{Binding lunchStarters}">
-                                <ListBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <Button Content="{Binding Name}" Width="auto" Style="{StaticResource MenuItemStyle}" Click="MenuItemButton_Click"/>
-                                    </DataTemplate>
-                                </ListBox.ItemTemplate>
+                            <ListBox x:Name="LunchStartersListBox" ItemTemplate="{StaticResource MenuItemTemplate_2}" Style="{StaticResource InvisibleListBoxStyle}">
+                                <ListBox.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel MaxWidth="600"/>
+                                    </ItemsPanelTemplate>
+                                </ListBox.ItemsPanel>
                             </ListBox>
 
                             <TextBlock Text="Mains" Style="{StaticResource HeaderTextBlockStyle}"/>
-                            <ListBox Name="LunchMainsListBox" ItemsSource="{Binding lunchMains}">
-                                <ListBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <Button Content="{Binding Name}" Width="auto" Style="{StaticResource MenuItemStyle}" Click="MenuItemButton_Click"/>
-                                    </DataTemplate>
-                                </ListBox.ItemTemplate>
+                            <ListBox x:Name="LunchMainsListBox" ItemTemplate="{StaticResource MenuItemTemplate_2}" Style="{StaticResource InvisibleListBoxStyle}">
+                                <ListBox.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel MaxWidth="600"/>
+                                    </ItemsPanelTemplate>
+                                </ListBox.ItemsPanel>
                             </ListBox>
 
                             <TextBlock Text="Desserts" Style="{StaticResource HeaderTextBlockStyle}"/>
-                            <ListBox Name="LunchDessertsListBox" ItemsSource="{Binding lunchDesserts}">
-                                <ListBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <Button Content="{Binding Name}" Width="auto" Style="{StaticResource MenuItemStyle}" Click="MenuItemButton_Click"/>
-                                    </DataTemplate>
-                                </ListBox.ItemTemplate>
+                            <ListBox x:Name="LunchDessertsListBox" ItemTemplate="{StaticResource MenuItemTemplate_2}" Style="{StaticResource InvisibleListBoxStyle}">
+                                <ListBox.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel MaxWidth="600"/>
+                                    </ItemsPanelTemplate>
+                                </ListBox.ItemsPanel>
                             </ListBox>
                         </StackPanel>
                     </ScrollViewer>

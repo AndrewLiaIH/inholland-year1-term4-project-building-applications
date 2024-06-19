@@ -7,7 +7,7 @@ namespace Service
         private const int TimerInterval = 10000;
         private Timer timer = new(TimerInterval);
 
-        public BaseService() 
+        public BaseService()
         {
             timer.Elapsed += CheckForChanges;
             timer.Start();

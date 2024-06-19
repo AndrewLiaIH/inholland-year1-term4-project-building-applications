@@ -114,7 +114,7 @@ namespace DAL
             DataTable dataTable = ExecuteSelectQuery(query, sqlParameters);
             return ReadTable(dataTable, readRow);
         }
-        
+
         private SqlParameter[] CreateSqlParameters(Dictionary<string, int> parameters)
         {
             return parameters.Select(p => new SqlParameter(p.Key, p.Value)).ToArray();

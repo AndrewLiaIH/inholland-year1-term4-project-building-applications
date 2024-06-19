@@ -47,12 +47,17 @@
             return $"#{OrderNumber}: ${TotalPrice}";
         }
 
-        public void AddOrderItem(OrderItem item)
+        public void AddOrderItem(OrderItem newOrderItem)
         {
-            if (OrderItems.Contains(item))
-                item.IncreaseQuantity();
-            else
-                OrderItems.Add(item);
+            foreach (OrderItem orderItem in OrderItems)
+            {
+                if (orderItem.Item.ItemId == newOrderItem.Item.ItemId && orderItem.Comment == newOrderItem.Comment)
+                {
+                    orderItem.IncreaseQuantity();
+                    return;
+                }
+            }
+            OrderItems.Add(newOrderItem);
         }
 
         public void SetOrderItems(List<OrderItem> items)

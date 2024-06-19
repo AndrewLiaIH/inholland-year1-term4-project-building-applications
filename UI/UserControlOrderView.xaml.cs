@@ -15,9 +15,6 @@ namespace UI
         private OrderService orderService;
         private MenuService menuService;
         private Table orderingTable;
-        public List<MenuItem> softDrinks, beers, wines, spirits, cofeeAndTea;
-        public List<MenuItem> dinnerStarters, entremets, dinnerMains, dinnerDesserts;
-        public List<MenuItem> lunchStarters, lunchMains, lunchDesserts;
         public ObservableCollection<OrderItem> orderItems;
         private const int temporaryNumber = 0;
 
@@ -28,97 +25,46 @@ namespace UI
             InitializeComponent();
             DataContext = this;
             orderService = new();
-            orderingTable = table;
             menuService = new();
+            orderingTable = table;
             orderItems = new();
 
             List<MenuItem> allMenuItems = menuService.GetAllMenuItems();
-            List<MenuItem> drinkItems = new();
-            List<MenuItem> dinnerItems = new();
-            List<MenuItem> lunchItems = new();
+            Dictionary<MenuType, Dictionary<CategoryType, List<MenuItem>>> menu = LoadMenu(allMenuItems);
 
-            foreach (MenuItem item in allMenuItems)
-                switch (item.Category.MenuCard.MenuType)
-                {
-                    case MenuType.Drinks: drinkItems.Add(item); break;
-                    case MenuType.Dinner: dinnerItems.Add(item); break;
-                    case MenuType.Lunch: lunchItems.Add(item); break;
-                    default: break;
-                }
-
-            LoadDrinks(drinkItems);
-            LoadDinner(dinnerItems);
-            LoadLunch(lunchItems);
-            DrinksSoftDrinksListBox.ItemsSource = softDrinks;
-            DrinksBeersListBox.ItemsSource = beers;
-            DrinksWinesListBox.ItemsSource = wines;
-            DrinksSpiritsListBox.ItemsSource = spirits;
-            DrinksCoffeeAndTeaListBox.ItemsSource = cofeeAndTea;
-            DinnerStartersListBox.ItemsSource = dinnerStarters;
-            DinnerEntremetsListBox.ItemsSource = entremets;
-            DinnerMainsListBox.ItemsSource = dinnerMains;
-            DinnerDessertsListBox.ItemsSource = dinnerDesserts;
-            LunchStartersListBox.ItemsSource = lunchStarters;
-            LunchMainsListBox.ItemsSource = lunchMains;
-            LunchDessertsListBox.ItemsSource= lunchDesserts;
+            SoftDrinksListBox.ItemsSource = menu[MenuType.Drinks][CategoryType.SoftDrinks];
+            BeersListBox.ItemsSource = menu[MenuType.Drinks][CategoryType.BeersOnTap];
+            WinesListBox.ItemsSource = menu[MenuType.Drinks][CategoryType.Wines];
+            SpiritsListBox.ItemsSource = menu[MenuType.Drinks][CategoryType.SpiritDrinks];
+            CoffeeTeaListBox.ItemsSource = menu[MenuType.Drinks][CategoryType.CoffeeTea];
+            DinnerStartersListBox.ItemsSource = menu[MenuType.Dinner][CategoryType.Starters];
+            DinnerEntremetsListBox.ItemsSource = menu[MenuType.Dinner][CategoryType.Entremets];
+            DinnerMainsListBox.ItemsSource = menu[MenuType.Dinner][CategoryType.Mains];
+            DinnerDessertsListBox.ItemsSource = menu[MenuType.Dinner][CategoryType.Deserts];
+            LunchStartersListBox.ItemsSource = menu[MenuType.Lunch][CategoryType.Starters];
+            LunchMainsListBox.ItemsSource = menu[MenuType.Lunch][CategoryType.Mains];
+            LunchDessertsListBox.ItemsSource = menu[MenuType.Lunch][CategoryType.Deserts];
             OrderItemsControl.ItemsSource = orderItems;
         }
 
-        private void LoadDrinks(List<MenuItem> drinkItems)
+        private Dictionary<MenuType, Dictionary<CategoryType, List<MenuItem>>> LoadMenu(List<MenuItem> allMenuItems)
         {
-            softDrinks = new(); beers = new(); wines = new(); spirits = new(); cofeeAndTea = new();
-            foreach (MenuItem item in drinkItems)
-                switch (item.Category.CategoryType)
+            Dictionary<MenuType, Dictionary<CategoryType, List<MenuItem>>> menu = new Dictionary<MenuType, Dictionary<CategoryType, List<MenuItem>>>();
+            foreach (MenuItem item in allMenuItems)
+            {
+                if (!menu.ContainsKey(item.Category.MenuCard.MenuType))
                 {
-                    case CategoryType.SoftDrinks:
-                        softDrinks.Add(item); break;
-                    case CategoryType.BeersOnTap:
-                        beers.Add(item); break;
-                    case CategoryType.Wines:
-                        wines.Add(item); break;
-                    case CategoryType.SpiritDrinks:
-                        spirits.Add(item); break;
-                    case CategoryType.CoffeeTea:
-                        cofeeAndTea.Add(item); break;
-                    default: break;
+                    menu.Add(item.Category.MenuCard.MenuType, new Dictionary<CategoryType, List<MenuItem>>());
+                    menu[item.Category.MenuCard.MenuType].Add(item.Category.CategoryType, new List<MenuItem>());
                 }
+                else if (!menu[item.Category.MenuCard.MenuType].ContainsKey(item.Category.CategoryType))
+                    menu[item.Category.MenuCard.MenuType].Add(item.Category.CategoryType, new List<MenuItem>());
+                menu[item.Category.MenuCard.MenuType][item.Category.CategoryType].Add(item);
+            }
+            return menu;
         }
 
-        private void LoadDinner(List<MenuItem> dinnerItems)
-        {
-            dinnerStarters = new(); entremets = new(); dinnerMains = new(); dinnerDesserts = new();
-            foreach (MenuItem item in dinnerItems)
-                switch (item.Category.CategoryType)
-                {
-                    case CategoryType.Starters:
-                        dinnerStarters.Add(item); break;
-                    case CategoryType.Entremets:
-                        entremets.Add(item); break;
-                    case CategoryType.Mains:
-                        dinnerMains.Add(item); break;
-                    case CategoryType.Deserts:
-                        dinnerDesserts.Add(item); break;
-                    default: break;
-                }
-        }
-
-        private void LoadLunch(List<MenuItem> lunchItems)
-        {
-            lunchStarters = new(); lunchMains = new(); lunchDesserts = new();
-            foreach (MenuItem item in lunchItems)
-                switch (item.Category.CategoryType)
-                {
-                    case CategoryType.Starters:
-                        lunchStarters.Add(item); break;
-                    case CategoryType.Mains:
-                        lunchMains.Add(item); break;
-                    case CategoryType.Deserts:
-                        lunchDesserts.Add(item); break;
-                    default: break;
-                }
-        }
-
-        private void MenuItemButton_Click(object sender, RoutedEventArgs e)
+        private void MenuItem_Click(object sender, RoutedEventArgs e)
         {
             OrderItem newOrderItem = new(temporaryNumber, temporaryNumber, (MenuItem)(sender as Button).DataContext, DateTime.Now, OrderStatus.Waiting, DateTime.Now, 1, string.Empty);
             orderItems.Add(newOrderItem);
@@ -156,7 +102,7 @@ namespace UI
             {
                 orderItems.Clear();
                 Content = new UserControlTableView();
-            }            
+            }
         }
 
         private void PlaceOrder_Click(object sender, RoutedEventArgs e)

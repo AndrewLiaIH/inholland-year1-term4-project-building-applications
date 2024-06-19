@@ -19,12 +19,12 @@
             }
         }
 
-        public decimal? TotalPrice 
-        { 
-            get 
-            { 
-                return Item.Price * Quantity; 
-            } 
+        public decimal? TotalPrice
+        {
+            get
+            {
+                return Item.Price * Quantity;
+            }
         }
 
         public OrderItem(int databaseId, int orderId, MenuItem item, DateTime? placementTime, OrderStatus? status, DateTime? changeOfStatus, int? quantity, string? comment)

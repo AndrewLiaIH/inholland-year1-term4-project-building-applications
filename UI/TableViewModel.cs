@@ -49,7 +49,7 @@ namespace UI
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public TableViewModel(Table table,  int rowIndex, int columnIndex, List<Order> runningOrders)
+        public TableViewModel(Table table, int rowIndex, int columnIndex, List<Order> runningOrders)
         {
             Table = table;
             RowIndex = rowIndex;
