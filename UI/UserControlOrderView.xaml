@@ -11,6 +11,7 @@
         <!-- Converters -->
         <ui:StockAmountToVisibilityConverter x:Key="StockAmountToVisibilityConverter"/>
         <ui:LessThanTenConverter x:Key="LessThanTenConverter"/>
+        <ui:TotalPriceConverter x:Key="TotalPriceConverter"/>
 
         <!-- Templates -->
         <DataTemplate x:Key="MenuItemTemplate_2">
@@ -86,6 +87,51 @@
             <Setter Property="Foreground" Value="{StaticResource TextDark}"/>
             <Setter Property="Margin" Value="25,15,0,0"/>
         </Style>
+
+
+        <DataTemplate x:Key="OrderItemTemplate">
+            <Border Background="{StaticResource Color4}" CornerRadius="5" Margin="5">
+                <Border.Effect>
+                    <DropShadowEffect ShadowDepth="2" BlurRadius="5" />
+                </Border.Effect>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="180"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="200"/>
+                        <ColumnDefinition Width="75"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="68"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Name Display -->
+                    <TextBlock Text="{Binding Item.ShortName}" VerticalAlignment="Center" Margin="10" FontSize="14" FontFamily="Noto Sans" Grid.Column="0"/>
+
+                    <!-- Edit Comment Icon -->
+                    <Button Click="EditComment_Click" Tag="{Binding}" Background="Transparent" BorderBrush="Transparent" Margin="5,0" Grid.Column="1">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="{StaticResource commentIcon}" Width="16" Height="16"/>
+                        </StackPanel>
+                    </Button>
+
+                    <!-- Comment Display -->
+                    <TextBlock Text="{Binding Comment}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Margin="10" FontSize="14" FontFamily="Noto Sans" Grid.Column="2" MaxWidth="200"/>
+
+                    <!-- Quantity Control -->
+                    <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center">
+                        <Button Content="−" Width="20" Height="20" Margin="2" Click="DecreaseQuantity_Click" Tag="{Binding}" BorderThickness="1"/>
+                        <TextBlock Text="{Binding Quantity}" VerticalAlignment="Center" Margin="2" FontSize="14" FontFamily="Noto Sans"/>
+                        <Button Content="+" Width="20" Height="20" Margin="2" Click="IncreaseQuantity_Click" Tag="{Binding}" BorderThickness="1"/>
+                    </StackPanel>
+
+                    <!-- Euro Symbol -->
+                    <TextBlock Text="€" VerticalAlignment="Center" Margin="15,0,0,0" FontSize="14" FontFamily="Noto Sans" Grid.Column="4"/>
+
+                    <!-- Price Display -->
+                    <TextBlock Text="{Binding TotalPrice, Converter={StaticResource TotalPriceConverter}}" TextAlignment="Right" VerticalAlignment="Center" Margin="10" FontSize="14" FontFamily="Noto Sans" Grid.Column="5"/>
+                </Grid>
+            </Border>
+        </DataTemplate>
     </UserControl.Resources>
 
     <Grid>
@@ -111,7 +157,7 @@
                 <TextBlock Text="Menu" HorizontalAlignment="Center" FontSize="25" FontWeight="Bold"/>
             </Border>
 
-            <!-- Menu Overview with TabControl -->
+            <!-- Menu Overview -->
             <TabControl Grid.Column="0" BorderThickness="0" VerticalAlignment="Top" Margin="-6,23,7,0" Grid.RowSpan="2">
                 <TabControl.Resources>
                     <Style TargetType="TabItem">
@@ -271,39 +317,7 @@
             </Border>
 
             <!-- Order Overview -->
-            <StackPanel Grid.Column="2" Grid.Row="2" Margin="10" HorizontalAlignment="Center">
-                <ScrollViewer VerticalScrollBarVisibility="Auto">
-                    <ItemsControl Name="OrderItemsControl" ItemsSource="{Binding orderItems}">
-                        <ItemsControl.ItemContainerStyle>
-                            <Style TargetType="ContentPresenter">
-                                <Setter Property="Margin" Value="5"/>
-                            </Style>
-                        </ItemsControl.ItemContainerStyle>
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <StackPanel Orientation="Vertical"/>
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel Style="{StaticResource OrderItemContainerStyle}">
-                                    <TextBlock Text="{Binding Item.Name}" Style="{StaticResource OrderItemTextBlockStyle}" Width="150"/>
-                                    <Button Content="✎" Width="30" Height="30" Style="{StaticResource OrderItemButtonStyle}" Click="EditCommentButton_Click"/>
-                                    <TextBlock Text="{Binding Comment}" Style="{StaticResource OrderItemTextBlockStyle}" Width="150"/>
-                                    <StackPanel Orientation="Horizontal">
-                                        <Button Content="−" Style="{StaticResource OrderItemButtonStyle}" Click="DecreaseQuantityButton_Click"/>
-                                        <TextBlock Text="{Binding Quantity}" Style="{StaticResource OrderItemTextBlockStyle}" Width="30" HorizontalAlignment="Center"/>
-                                        <Button Content="+" Style="{StaticResource OrderItemButtonStyle}" Click="IncreaseQuantityButton_Click"/>
-                                    </StackPanel>
-                                    <TextBlock Text="{Binding TotalPrice, StringFormat=C}" Style="{StaticResource OrderItemTextBlockStyle}" Width="60" HorizontalAlignment="Right"/>
-                                </StackPanel>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </ScrollViewer>
-                <Button Content="Place Order" Width="100" Click="PlaceOrder_Click"/>
-                <Button Content="Cancel Order" Width="100" Click="CancelOrder_Click"/>
-            </StackPanel>
+            <ListBox x:Name="OrderItemsListBox" ItemTemplate="{StaticResource OrderItemTemplate}" Style="{StaticResource InvisibleListBoxStyle}" Grid.Column="2" Grid.Row="1" Margin="10"/>
         </Grid>
         <Border Grid.Row="0" Grid.RowSpan="2" Width="2" HorizontalAlignment="Center" Margin="0,80,0,0" Background="{StaticResource Color3}"/>
     </Grid>

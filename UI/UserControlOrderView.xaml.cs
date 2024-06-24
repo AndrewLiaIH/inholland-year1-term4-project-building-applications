@@ -26,25 +26,12 @@ namespace UI
             DataContext = this;
             orderService = new();
             menuService = new();
-            orderingTable = table;
             orderItems = new();
+            orderingTable = table;
 
             List<MenuItem> allMenuItems = menuService.GetAllMenuItems();
             Dictionary<MenuType, Dictionary<CategoryType, List<MenuItem>>> menu = LoadMenu(allMenuItems);
-
-            SoftDrinksListBox.ItemsSource = menu[MenuType.Drinks][CategoryType.SoftDrinks];
-            BeersListBox.ItemsSource = menu[MenuType.Drinks][CategoryType.BeersOnTap];
-            WinesListBox.ItemsSource = menu[MenuType.Drinks][CategoryType.Wines];
-            SpiritsListBox.ItemsSource = menu[MenuType.Drinks][CategoryType.SpiritDrinks];
-            CoffeeTeaListBox.ItemsSource = menu[MenuType.Drinks][CategoryType.CoffeeTea];
-            DinnerStartersListBox.ItemsSource = menu[MenuType.Dinner][CategoryType.Starters];
-            DinnerEntremetsListBox.ItemsSource = menu[MenuType.Dinner][CategoryType.Entremets];
-            DinnerMainsListBox.ItemsSource = menu[MenuType.Dinner][CategoryType.Mains];
-            DinnerDessertsListBox.ItemsSource = menu[MenuType.Dinner][CategoryType.Deserts];
-            LunchStartersListBox.ItemsSource = menu[MenuType.Lunch][CategoryType.Starters];
-            LunchMainsListBox.ItemsSource = menu[MenuType.Lunch][CategoryType.Mains];
-            LunchDessertsListBox.ItemsSource = menu[MenuType.Lunch][CategoryType.Deserts];
-            OrderItemsControl.ItemsSource = orderItems;
+            AssignBindings(menu);            
         }
 
         private Dictionary<MenuType, Dictionary<CategoryType, List<MenuItem>>> LoadMenu(List<MenuItem> allMenuItems)
@@ -64,13 +51,66 @@ namespace UI
             return menu;
         }
 
+        public void AssignBindings(Dictionary<MenuType, Dictionary<CategoryType, List<MenuItem>>> menu)
+        {
+            SoftDrinksListBox.ItemsSource = menu[MenuType.Drinks][CategoryType.SoftDrinks];
+            BeersListBox.ItemsSource = menu[MenuType.Drinks][CategoryType.BeersOnTap];
+            WinesListBox.ItemsSource = menu[MenuType.Drinks][CategoryType.Wines];
+            SpiritsListBox.ItemsSource = menu[MenuType.Drinks][CategoryType.SpiritDrinks];
+            CoffeeTeaListBox.ItemsSource = menu[MenuType.Drinks][CategoryType.CoffeeTea];
+            DinnerStartersListBox.ItemsSource = menu[MenuType.Dinner][CategoryType.Starters];
+            DinnerEntremetsListBox.ItemsSource = menu[MenuType.Dinner][CategoryType.Entremets];
+            DinnerMainsListBox.ItemsSource = menu[MenuType.Dinner][CategoryType.Mains];
+            DinnerDessertsListBox.ItemsSource = menu[MenuType.Dinner][CategoryType.Deserts];
+            LunchStartersListBox.ItemsSource = menu[MenuType.Lunch][CategoryType.Starters];
+            LunchMainsListBox.ItemsSource = menu[MenuType.Lunch][CategoryType.Mains];
+            LunchDessertsListBox.ItemsSource = menu[MenuType.Lunch][CategoryType.Deserts];
+            OrderItemsListBox.ItemsSource = orderItems;
+        }
+
         private void MenuItem_Click(object sender, RoutedEventArgs e)
         {
             OrderItem newOrderItem = new(temporaryNumber, temporaryNumber, (MenuItem)(sender as Button).DataContext, DateTime.Now, OrderStatus.Waiting, DateTime.Now, 1, string.Empty);
             orderItems.Add(newOrderItem);
         }
 
-        private void IncreaseQuantityButton_Click(object sender, RoutedEventArgs e)
+        private void IncreaseQuantity_Click(object sender, RoutedEventArgs e)
+        {
+            OrderItem orderItem = (sender as Button).Tag as OrderItem;
+            orderItem.IncreaseQuantity();
+            UpdateOrderOverview();
+        }
+
+        private void DecreaseQuantity_Click(object sender, RoutedEventArgs e)
+        {
+            OrderItem orderItem = (sender as Button).Tag as OrderItem;
+            orderItem.DecreaseQuantity();
+            UpdateOrderOverview();
+        }
+
+        private void EditComment_Click(object sender, RoutedEventArgs e)
+        {
+            OrderItem orderItem = (sender as Button).Tag as OrderItem;
+            string input = Microsoft.VisualBasic.Interaction.InputBox("Enter your comment:", "Edit Comment", orderItem.Comment);
+            orderItem.Comment = input;
+            UpdateOrderOverview();
+        }
+
+        private void UpdateOrderOverview()
+        {
+            List<OrderItem> newItems = orderItems.ToList<OrderItem>();
+            orderItems.Clear();
+            foreach (OrderItem item in newItems)
+                orderItems.Add(item);
+        }
+
+        void ILoggedInEmployeeHandler.SetLoggedInEmployee(Employee employee)
+        {
+            userControlHeader.LoggedInEmployee = employee;
+        }
+
+
+        /*private void IncreaseQuantityButton_Click(object sender, RoutedEventArgs e)
         {
             OrderItem orderItem = (OrderItem)(sender as Button).DataContext;
             orderItem.IncreaseQuantity();
@@ -83,14 +123,6 @@ namespace UI
             orderItem.DecreaseQuantity();
             if (orderItem.Quantity == 0)
                 orderItems.Remove(orderItem);
-            UpdateOrderItemsControl();
-        }
-
-        private void EditCommentButton_Click(object sender, RoutedEventArgs e)
-        {
-            OrderItem orderItem = (OrderItem)(sender as Button).DataContext;
-            string input = Microsoft.VisualBasic.Interaction.InputBox("Enter your comment:", "Edit Comment", orderItem.Comment);
-            orderItem.Comment = input;
             UpdateOrderItemsControl();
         }
 
@@ -115,21 +147,6 @@ namespace UI
             orderService.CreateOrder(newOrder);
             menuService.UpdateStock(orderItems);
             Content = new UserControlTableView();
-        }
-
-        private void UpdateOrderItemsControl()
-        {
-            OrderItem[] itemsSource = orderItems.ToArray();
-            orderItems.Clear();
-            foreach (OrderItem item in itemsSource)
-            {
-                orderItems.Add(item);
-            }
-        }
-
-        void ILoggedInEmployeeHandler.SetLoggedInEmployee(Employee employee)
-        {
-            userControlHeader.LoggedInEmployee = employee;
-        }
+        }*/
     }
 }
