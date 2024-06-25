@@ -53,11 +53,32 @@
             {
                 if (orderItem.Item.ItemId == newOrderItem.Item.ItemId && orderItem.Comment == newOrderItem.Comment)
                 {
-                    orderItem.IncreaseQuantity();
+                    IncreaseOrderItemQuantity(orderItem);
                     return;
                 }
             }
             OrderItems.Add(newOrderItem);
+        }
+
+        public void IncreaseOrderItemQuantity(OrderItem increasingOrderItem)
+        {
+            int menuItemStock = (int)increasingOrderItem.Item.StockAmount;
+            foreach(OrderItem orderItem in OrderItems)
+            {
+                if(orderItem.Item.ItemId == increasingOrderItem.Item.ItemId)
+                    menuItemStock -= (int)orderItem.Quantity;
+            }
+            if(menuItemStock > 0) 
+            {
+                increasingOrderItem.IncreaseQuantity();
+            }
+        }
+
+        public void DecreaseOrderItemQuantity(OrderItem decreasingOrderItem)
+        {
+            decreasingOrderItem.DecreaseQuantity();
+            if(decreasingOrderItem.Quantity == 0)
+                OrderItems.Remove(decreasingOrderItem);
         }
 
         public void SetOrderItems(List<OrderItem> items)

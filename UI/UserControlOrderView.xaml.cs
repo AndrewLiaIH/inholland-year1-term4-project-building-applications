@@ -15,6 +15,7 @@ namespace UI
         private OrderService orderService;
         private MenuService menuService;
         private Table orderingTable;
+        private Order newOrder;
         public ObservableCollection<OrderItem> orderItems;
         private const int temporaryNumber = 0;
 
@@ -28,6 +29,8 @@ namespace UI
             menuService = new();
             orderItems = new();
             orderingTable = table;
+            newOrder = new(0, table, userControlHeader.LoggedInEmployee, 0, 0, false, 0);
+
 
             List<MenuItem> allMenuItems = menuService.GetAllMenuItems();
             Dictionary<MenuType, Dictionary<CategoryType, List<MenuItem>>> menu = LoadMenu(allMenuItems);
@@ -71,20 +74,21 @@ namespace UI
         private void MenuItem_Click(object sender, RoutedEventArgs e)
         {
             OrderItem newOrderItem = new(temporaryNumber, temporaryNumber, (MenuItem)(sender as Button).DataContext, DateTime.Now, OrderStatus.Waiting, DateTime.Now, 1, string.Empty);
-            orderItems.Add(newOrderItem);
+            newOrder.AddOrderItem(newOrderItem);
+            UpdateOrderOverview();
         }
 
         private void IncreaseQuantity_Click(object sender, RoutedEventArgs e)
         {
             OrderItem orderItem = (sender as Button).Tag as OrderItem;
-            orderItem.IncreaseQuantity();
+            newOrder.IncreaseOrderItemQuantity(orderItem);
             UpdateOrderOverview();
         }
 
         private void DecreaseQuantity_Click(object sender, RoutedEventArgs e)
         {
             OrderItem orderItem = (sender as Button).Tag as OrderItem;
-            orderItem.DecreaseQuantity();
+            newOrder.DecreaseOrderItemQuantity(orderItem);
             UpdateOrderOverview();
         }
 
@@ -96,11 +100,17 @@ namespace UI
             UpdateOrderOverview();
         }
 
+        private void RemoveOrderItem_Click(object sender, RoutedEventArgs e)
+        {
+            OrderItem orderItem = (sender as Button).Tag as OrderItem;
+            newOrder.OrderItems.Remove(orderItem);
+            UpdateOrderOverview();
+        }
+
         private void UpdateOrderOverview()
         {
-            List<OrderItem> newItems = orderItems.ToList<OrderItem>();
             orderItems.Clear();
-            foreach (OrderItem item in newItems)
+            foreach (OrderItem item in newOrder.OrderItems)
                 orderItems.Add(item);
         }
 
@@ -109,44 +119,21 @@ namespace UI
             userControlHeader.LoggedInEmployee = employee;
         }
 
-
-        /*private void IncreaseQuantityButton_Click(object sender, RoutedEventArgs e)
-        {
-            OrderItem orderItem = (OrderItem)(sender as Button).DataContext;
-            orderItem.IncreaseQuantity();
-            UpdateOrderItemsControl();
-        }
-
-        private void DecreaseQuantityButton_Click(object sender, RoutedEventArgs e)
-        {
-            OrderItem orderItem = (OrderItem)(sender as Button).DataContext;
-            orderItem.DecreaseQuantity();
-            if (orderItem.Quantity == 0)
-                orderItems.Remove(orderItem);
-            UpdateOrderItemsControl();
-        }
-
         private void CancelOrder_Click(object sender, RoutedEventArgs e)
         {
             MessageBoxResult result = MessageBox.Show("Are you sure you want to cancel the order?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
 
             if (result == MessageBoxResult.Yes)
             {
-                orderItems.Clear();
+                newOrder.OrderItems.Clear();
+                UpdateOrderOverview();
                 Content = new UserControlTableView();
             }
         }
 
         private void PlaceOrder_Click(object sender, RoutedEventArgs e)
         {
-            Order mostRecentOrder = orderService.GetMostRecentOrder();
-            int newOrderNumber = mostRecentOrder.OrderNumber + 1;
-            int? newServingNumber = mostRecentOrder.ServingNumber < 99 ? mostRecentOrder.ServingNumber + 1 : 1;
-            decimal totalPrice = orderService.GetTotalPrice(orderItems);
-            Order newOrder = new(temporaryNumber, orderingTable, userControlHeader.LoggedInEmployee, newOrderNumber, newServingNumber, false, totalPrice);
-            orderService.CreateOrder(newOrder);
-            menuService.UpdateStock(orderItems);
             Content = new UserControlTableView();
-        }*/
+        }
     }
 }

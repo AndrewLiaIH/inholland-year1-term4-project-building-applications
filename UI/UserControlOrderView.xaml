@@ -12,6 +12,7 @@
         <ui:StockAmountToVisibilityConverter x:Key="StockAmountToVisibilityConverter"/>
         <ui:LessThanTenConverter x:Key="LessThanTenConverter"/>
         <ui:TotalPriceConverter x:Key="TotalPriceConverter"/>
+        <ui:StockAmountToIsEnabledConverter x:Key="StockAmountToIsEnabledConverter"/>
 
         <!-- Templates -->
         <DataTemplate x:Key="MenuItemTemplate_2">
@@ -38,8 +39,7 @@
                              Visibility="{Binding StockAmount, Converter={StaticResource StockAmountToVisibilityConverter}, ConverterParameter=Red}"
                              HorizontalAlignment="Right" VerticalAlignment="Top" Margin="2"/>
 
-                    <!-- Clickable Area -->
-                    <Button Background="Transparent" BorderBrush="Transparent" Click="MenuItem_Click" Tag="{Binding}" Grid.ColumnSpan="2">
+                    <Button Background="Transparent" BorderBrush="Transparent" Click="MenuItem_Click" Tag="{Binding}" Grid.ColumnSpan="2" IsEnabled="{Binding StockAmount, Converter={StaticResource StockAmountToIsEnabledConverter}}">
                         <Button.Template>
                             <ControlTemplate TargetType="Button">
                                 <Border Background="Transparent"/>
@@ -53,10 +53,7 @@
                     <Style TargetType="Border">
                         <Style.Triggers>
                             <DataTrigger Binding="{Binding StockAmount}" Value="0">
-                                <Setter Property="Opacity" Value="0.1"/>
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding StockAmount, Converter={StaticResource LessThanTenConverter}}" Value="True">
-                                <Setter Property="Opacity" Value="0.9"/>
+                                <Setter Property="Opacity" Value="0.6"/>
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>
@@ -90,48 +87,99 @@
 
 
         <DataTemplate x:Key="OrderItemTemplate">
-            <Border Background="{StaticResource Color4}" CornerRadius="5" Margin="5">
-                <Border.Effect>
-                    <DropShadowEffect ShadowDepth="2" BlurRadius="5" />
-                </Border.Effect>
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="180"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="200"/>
-                        <ColumnDefinition Width="75"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="68"/>
-                    </Grid.ColumnDefinitions>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Border Background="{StaticResource Color4}" CornerRadius="5" Margin="5" Grid.Column="0">
+                    <Border.Effect>
+                        <DropShadowEffect ShadowDepth="2" BlurRadius="5" />
+                    </Border.Effect>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="180"/>
+                            <ColumnDefinition Width="28"/>
+                            <ColumnDefinition Width="200"/>
+                            <ColumnDefinition Width="75"/>
+                            <ColumnDefinition Width="22"/>
+                            <ColumnDefinition Width="68"/>
+                        </Grid.ColumnDefinitions>
 
-                    <!-- Name Display -->
-                    <TextBlock Text="{Binding Item.ShortName}" VerticalAlignment="Center" Margin="10" FontSize="14" FontFamily="Noto Sans" Grid.Column="0"/>
+                        <!-- Name Display -->
+                        <TextBlock Text="{Binding Item.ShortName}" VerticalAlignment="Center" Margin="10" FontSize="14" FontFamily="Noto Sans" Grid.Column="0"/>
 
-                    <!-- Edit Comment Icon -->
-                    <Button Click="EditComment_Click" Tag="{Binding}" Background="Transparent" BorderBrush="Transparent" Margin="5,0" Grid.Column="1">
-                        <StackPanel Orientation="Horizontal">
-                            <Image Source="{StaticResource commentIcon}" Width="16" Height="16"/>
+                        <!-- Edit Comment Icon -->
+                        <Button Click="EditComment_Click" Tag="{Binding}" Background="Transparent" BorderBrush="Transparent" Margin="5,0" Grid.Column="1">
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="{StaticResource commentIcon}" Width="16" Height="16"/>
+                            </StackPanel>
+                        </Button>
+
+                        <!-- Comment Display -->
+                        <TextBlock Text="{Binding Comment}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Margin="10" FontSize="14" FontFamily="Noto Sans" Grid.Column="2" MaxWidth="200"/>
+
+                        <!-- Quantity Control -->
+                        <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center">
+                            <Button Content="−" Width="20" Height="20" Margin="2" Click="DecreaseQuantity_Click" Tag="{Binding}" BorderThickness="1"/>
+                            <TextBlock Text="{Binding Quantity}" VerticalAlignment="Center" Margin="2" FontSize="14" FontFamily="Noto Sans"/>
+                            <Button Content="+" Width="20" Height="20" Margin="2" Click="IncreaseQuantity_Click" Tag="{Binding}" BorderThickness="1"/>
                         </StackPanel>
-                    </Button>
 
-                    <!-- Comment Display -->
-                    <TextBlock Text="{Binding Comment}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" Margin="10" FontSize="14" FontFamily="Noto Sans" Grid.Column="2" MaxWidth="200"/>
+                        <!-- Euro Symbol -->
+                        <TextBlock Text="€" VerticalAlignment="Center" Margin="15,0,0,0" FontSize="14" FontFamily="Noto Sans" Grid.Column="4"/>
 
-                    <!-- Quantity Control -->
-                    <StackPanel Grid.Column="3" Orientation="Horizontal" VerticalAlignment="Center">
-                        <Button Content="−" Width="20" Height="20" Margin="2" Click="DecreaseQuantity_Click" Tag="{Binding}" BorderThickness="1"/>
-                        <TextBlock Text="{Binding Quantity}" VerticalAlignment="Center" Margin="2" FontSize="14" FontFamily="Noto Sans"/>
-                        <Button Content="+" Width="20" Height="20" Margin="2" Click="IncreaseQuantity_Click" Tag="{Binding}" BorderThickness="1"/>
+                        <!-- Price Display -->
+                        <TextBlock Text="{Binding TotalPrice, Converter={StaticResource TotalPriceConverter}}" TextAlignment="Right" VerticalAlignment="Center" Margin="10" FontSize="14" FontFamily="Noto Sans" Grid.Column="5"/>
+                    </Grid>
+                </Border>
+
+                <!-- Remove Button -->
+                <Button Click="RemoveOrderItem_Click" Tag="{Binding}" Background="Transparent" BorderBrush="Transparent" Grid.Column="1" Margin="10">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="{StaticResource removeIcon}" Width="16" Height="16"/>
                     </StackPanel>
-
-                    <!-- Euro Symbol -->
-                    <TextBlock Text="€" VerticalAlignment="Center" Margin="15,0,0,0" FontSize="14" FontFamily="Noto Sans" Grid.Column="4"/>
-
-                    <!-- Price Display -->
-                    <TextBlock Text="{Binding TotalPrice, Converter={StaticResource TotalPriceConverter}}" TextAlignment="Right" VerticalAlignment="Center" Margin="10" FontSize="14" FontFamily="Noto Sans" Grid.Column="5"/>
-                </Grid>
-            </Border>
+                </Button>
+            </Grid>
         </DataTemplate>
+
+        <Style x:Key="OrderOverviewButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="{StaticResource Color2}"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid>
+                            <Border x:Name="border" Background="{TemplateBinding Background}" CornerRadius="5" BorderThickness="0">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                        </Grid>
+                        <ControlTemplate.Resources>
+                            <Style TargetType="Border">
+                                <Setter Property="Effect">
+                                    <Setter.Value>
+                                        <DropShadowEffect ShadowDepth="2" BlurRadius="5"/>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </ControlTemplate.Resources>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="Effect">
+                                    <Setter.Value>
+                                        <DropShadowEffect ShadowDepth="4" BlurRadius="10"/>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </UserControl.Resources>
 
     <Grid>
@@ -316,9 +364,43 @@
                 <TextBlock Text="Order Overview" HorizontalAlignment="Center" FontSize="25" FontWeight="Bold"/>
             </Border>
 
-            <!-- Order Overview -->
-            <ListBox x:Name="OrderItemsListBox" ItemTemplate="{StaticResource OrderItemTemplate}" Style="{StaticResource InvisibleListBoxStyle}" Grid.Column="2" Grid.Row="1" Margin="10"/>
-        </Grid>
+            
+            <Grid Grid.Row="2" Grid.Column="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- Headers -->
+                <Grid Grid.Row="0" Margin="20,5,5,5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Text="Name" FontSize="14" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Column="0" Margin="0,0,140,0"/>
+                    <TextBlock Text="Comment" FontSize="14" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Column="1" Margin="0,0,157,0"/>
+                    <TextBlock Text="Quantity" FontSize="14" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="2" Margin="0,0,31,0"/>
+                    <TextBlock Text="Price" FontSize="14" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Right" Grid.Column="3"/>
+                </Grid>
+
+                <!-- ListBox of OrderItems -->
+                <ListBox Grid.Row="1" x:Name="OrderItemsListBox" ItemTemplate="{StaticResource OrderItemTemplate}" Style="{StaticResource InvisibleListBoxStyle}">
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <VirtualizingStackPanel/>
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                </ListBox>
+
+                <Button Grid.Row="2" Content="Cancel Order" Click="CancelOrder_Click" Style="{StaticResource OrderOverviewButtonStyle}" HorizontalAlignment="Left"/>
+
+                <Button Grid.Row="2" Content="Place Order" Click="PlaceOrder_Click" Style="{StaticResource OrderOverviewButtonStyle}" HorizontalAlignment="Right"/>
+            </Grid>
+    </Grid>
         <Border Grid.Row="0" Grid.RowSpan="2" Width="2" HorizontalAlignment="Center" Margin="0,80,0,0" Background="{StaticResource Color3}"/>
     </Grid>
 </UserControl>
