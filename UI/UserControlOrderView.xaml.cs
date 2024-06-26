@@ -12,29 +12,27 @@ namespace UI
     /// </summary>
     public partial class UserControlOrderView : UserControl, ILoggedInEmployeeHandler
     {
+        public UserControlHeader UserControlHeader => userControlHeader;
         private OrderService orderService;
         private MenuService menuService;
-        private Table orderingTable;
         private Order newOrder;
         public ObservableCollection<OrderItem> orderItems;
-        private const int temporaryNumber = 0;
+        Action returnToTableOverview;
 
-        UserControlHeader ILoggedInEmployeeHandler.UserControlHeader => userControlHeader;
 
-        public UserControlOrderView(Table table)
+        public UserControlOrderView(Table table, Employee employee, Action returnToTableOverview)
         {
             InitializeComponent();
             DataContext = this;
             orderService = new();
             menuService = new();
+            newOrder = new(table, employee);
             orderItems = new();
-            orderingTable = table;
-            newOrder = new(0, table, userControlHeader.LoggedInEmployee, 0, 0, false, 0);
-
+            this.returnToTableOverview = returnToTableOverview;
 
             List<MenuItem> allMenuItems = menuService.GetAllMenuItems();
             Dictionary<MenuType, Dictionary<CategoryType, List<MenuItem>>> menu = LoadMenu(allMenuItems);
-            AssignBindings(menu);            
+            AssignBindings(menu);
         }
 
         private Dictionary<MenuType, Dictionary<CategoryType, List<MenuItem>>> LoadMenu(List<MenuItem> allMenuItems)
@@ -73,7 +71,7 @@ namespace UI
 
         private void MenuItem_Click(object sender, RoutedEventArgs e)
         {
-            OrderItem newOrderItem = new(temporaryNumber, temporaryNumber, (MenuItem)(sender as Button).DataContext, DateTime.Now, OrderStatus.Waiting, DateTime.Now, 1, string.Empty);
+            OrderItem newOrderItem = new((MenuItem)(sender as Button).DataContext, 1);
             newOrder.AddOrderItem(newOrderItem);
             UpdateOrderOverview();
         }
@@ -95,8 +93,7 @@ namespace UI
         private void EditComment_Click(object sender, RoutedEventArgs e)
         {
             OrderItem orderItem = (sender as Button).Tag as OrderItem;
-            string input = Microsoft.VisualBasic.Interaction.InputBox("Enter your comment:", "Edit Comment", orderItem.Comment);
-            orderItem.Comment = input;
+            orderItem.Comment = Microsoft.VisualBasic.Interaction.InputBox("Enter your comment:", "Edit Comment", orderItem.Comment);
             UpdateOrderOverview();
         }
 
@@ -107,6 +104,30 @@ namespace UI
             UpdateOrderOverview();
         }
 
+        private void CancelOrder_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBoxResult result = MessageBox.Show("Are you sure you want to cancel the order?", "Confirm cancelation", MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                newOrder.OrderItems.Clear();
+                UpdateOrderOverview();
+                returnToTableOverview();
+            }
+        }
+
+        private void PlaceOrder_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBoxResult result = MessageBox.Show("Are you sure you want to place the order?", "Confirm order", MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                orderService.LoadNewOrder(newOrder);
+                MessageBox.Show("Order placed successfully!");
+                returnToTableOverview();
+            }
+        }
+
         private void UpdateOrderOverview()
         {
             orderItems.Clear();
@@ -114,26 +135,9 @@ namespace UI
                 orderItems.Add(item);
         }
 
-        void ILoggedInEmployeeHandler.SetLoggedInEmployee(Employee employee)
+        public void SetLoggedInEmployee(Employee employee)
         {
             userControlHeader.LoggedInEmployee = employee;
-        }
-
-        private void CancelOrder_Click(object sender, RoutedEventArgs e)
-        {
-            MessageBoxResult result = MessageBox.Show("Are you sure you want to cancel the order?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
-
-            if (result == MessageBoxResult.Yes)
-            {
-                newOrder.OrderItems.Clear();
-                UpdateOrderOverview();
-                Content = new UserControlTableView();
-            }
-        }
-
-        private void PlaceOrder_Click(object sender, RoutedEventArgs e)
-        {
-            Content = new UserControlTableView();
         }
     }
 }

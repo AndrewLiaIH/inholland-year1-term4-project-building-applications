@@ -8,9 +8,19 @@
         public int OrderNumber { get; private set; }
         public int? ServingNumber { get; private set; }
         public bool Finished { get; set; }
-        public decimal TotalPrice { get; private set; }
+        public decimal TotalPrice
+        {
+            get
+            {
+                decimal totalPrice = 0;
+                foreach (OrderItem orderItem in OrderItems)
+                    totalPrice += (decimal)orderItem.TotalPrice;
+                return totalPrice;
+            }
+            private set { }
+        }
         public List<OrderItem> OrderItems { get; private set; }
-        public OrderStatus? OrderStatus { get; set; }
+        public OrderStatus? OrderStatus { get; set; } //CONSIDER CALCULATED PROPERTY!!!!!!!!!!!!!!!!
 
         public List<CategoryGroup> OrderItemsByCategory
         {
@@ -42,6 +52,15 @@
             OrderItems = new();
         }
 
+        public Order(Table table, Employee placedBy, int orderNumber, int? servingNumber)
+            : this(0, table, placedBy, orderNumber, servingNumber, false, 0)
+        {
+        }
+
+        public Order(Table table, Employee employee)
+            : this(0, table, employee, 0, 0, false, 0)
+        { }
+
         public override string ToString()
         {
             return $"#{OrderNumber}: ${TotalPrice}";
@@ -63,21 +82,19 @@
         public void IncreaseOrderItemQuantity(OrderItem increasingOrderItem)
         {
             int menuItemStock = (int)increasingOrderItem.Item.StockAmount;
-            foreach(OrderItem orderItem in OrderItems)
+            foreach (OrderItem orderItem in OrderItems)
             {
-                if(orderItem.Item.ItemId == increasingOrderItem.Item.ItemId)
+                if (orderItem.Item.ItemId == increasingOrderItem.Item.ItemId)
                     menuItemStock -= (int)orderItem.Quantity;
             }
-            if(menuItemStock > 0) 
-            {
+            if (menuItemStock > 0)
                 increasingOrderItem.IncreaseQuantity();
-            }
         }
 
         public void DecreaseOrderItemQuantity(OrderItem decreasingOrderItem)
         {
             decreasingOrderItem.DecreaseQuantity();
-            if(decreasingOrderItem.Quantity == 0)
+            if (decreasingOrderItem.Quantity == 0)
                 OrderItems.Remove(decreasingOrderItem);
         }
 

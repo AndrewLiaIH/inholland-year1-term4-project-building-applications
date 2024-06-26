@@ -26,7 +26,7 @@
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <!-- ShortName Display -->
+                    <!-- Name -->
                     <TextBlock Text="{Binding ShortName}" VerticalAlignment="Center" Margin="10" FontSize="14" FontFamily="Noto Sans"/>
 
                     <!-- Yellow Circle for StockAmount < 10 -->
@@ -147,14 +147,15 @@
             <Setter Property="Background" Value="{StaticResource Color2}"/>
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Margin" Value="10"/>
+            <Setter Property="Margin" Value="15"/>
+            <Setter Property="Padding" Value="10"/>
             <Setter Property="HorizontalAlignment" Value="Center"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
                         <Grid>
-                            <Border x:Name="border" Background="{TemplateBinding Background}" CornerRadius="5" BorderThickness="0">
+                            <Border x:Name="border" Background="{TemplateBinding Background}" CornerRadius="5" BorderThickness="0" Padding="{TemplateBinding Padding}">
                                 <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             </Border>
                         </Grid>

@@ -1,6 +1,5 @@
 ﻿using DAL;
 using Model;
-using System.Collections.ObjectModel;
 
 namespace Service
 {
@@ -38,10 +37,19 @@ namespace Service
             return menuDao.GetMenuItemById(itemId);
         }
 
-        public void UpdateStock(ObservableCollection<OrderItem> orderItems)
+        public void UpdateStockOfMenuItems(List<OrderItem> orderItems)
         {
+            Dictionary<int, int> newMenuItemStocks = new(); //First int is the MenuItem database ID, second int is the new stock 
             foreach (OrderItem orderItem in orderItems)
-                menuDao.UpdateStock(orderItem.Item.ItemId, (int)(orderItem.Item.StockAmount - orderItem.Quantity));
+            {
+                if (!newMenuItemStocks.ContainsKey(orderItem.Item.ItemId))
+                    newMenuItemStocks.Add(orderItem.Item.ItemId, (int)orderItem.Item.StockAmount);
+
+                newMenuItemStocks[orderItem.Item.ItemId] -= (int)orderItem.Quantity;
+            }
+
+            foreach (KeyValuePair<int, int> valuePair in newMenuItemStocks)
+                menuDao.UpdateStockOfMenuItem(valuePair.Key, valuePair.Value);
         }
     }
 }

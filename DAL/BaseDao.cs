@@ -52,6 +52,29 @@ namespace DAL
         }
 
         /// <summary>
+        /// For Create/Update/Delete Scalar Queries.
+        /// </summary>
+        protected int ExecuteScalarQuery(string query, SqlParameter[] sqlParameters)
+        {
+            int databaseId = 0;
+            try
+            {
+                using (SqlConnection connection = OpenConnection())
+                {
+                    using (SqlCommand command = CreateCommand(connection, query, sqlParameters))
+                    {
+                        databaseId = (int)command.ExecuteScalar();
+                    }
+                }
+            }
+            catch (SqlException ex)
+            {
+                HandleSqlException(ex);
+            }
+            return databaseId;
+        }
+
+        /// <summary>
         /// For Select Queries.
         /// </summary>
         protected DataTable ExecuteSelectQuery(string query, params SqlParameter[] sqlParameters)

@@ -9,6 +9,7 @@ namespace Service
     public class OrderService : BaseService
     {
         private OrderDao orderDao = new();
+        private MenuService menuService = new();
 
         public event Action RunningOrdersChanged;
         public event Action WaitingTimeChanged;
@@ -30,9 +31,41 @@ namespace Service
             return orderDao.GetOrderById(orderId);
         }
 
-        public void CreateOrder(Order order)
+
+        public void LoadNewOrder(Order order)
         {
-            orderDao.CreateOrder(order);
+            int orderId = CreateOrder(order);
+            CreateOrderItems(orderId, order.OrderItems);
+            menuService.UpdateStockOfMenuItems(order.OrderItems);
+        }
+
+        private int CreateOrder(Order order)
+        {
+            Order mostRecentOrder = GetMostRecentOrder();
+            int servingNumber = ((int)mostRecentOrder.ServingNumber) < 999 ? (int)mostRecentOrder.ServingNumber + 1 : 1;
+            Order fullOrder = new(order.Table, order.PlacedBy, mostRecentOrder.OrderNumber + 1, servingNumber);
+            fullOrder.SetOrderItems(order.OrderItems);
+
+            return orderDao.CreateOrderAndGetId(fullOrder);
+        }
+
+        private void CreateOrderItems(int orderId, List<OrderItem> orderItems)
+        {
+            orderItems = FillOrderItemsInformation(orderId, orderItems);
+
+            foreach (OrderItem orderItem in orderItems)
+                orderDao.CreateOrderItem(orderItem);
+        }
+
+        private List<OrderItem> FillOrderItemsInformation(int orderNumber, List<OrderItem> orderItems)
+        {
+            for (int i = 0; i < orderItems.Count; i++)
+            {
+                string comment = orderItems[i].Comment == null ? String.Empty : orderItems[i].Comment;
+                orderItems[i] = new(orderNumber, orderItems[i].Item, DateTime.Now, OrderStatus.Waiting, DateTime.Now, orderItems[i].Quantity, comment);
+            }
+
+            return orderItems;
         }
 
         public Order GetMostRecentOrder()

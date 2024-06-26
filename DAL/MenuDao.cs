@@ -89,7 +89,7 @@ namespace DAL
             return GetByIntParameters(QueryGetMenuItemById, ReadRowMenuItem, parameters);
         }
 
-        public void UpdateStock(int itemId, int newStock)
+        public void UpdateStockOfMenuItem(int itemId, int newStock)
         {
             SqlParameter[] parameters = new SqlParameter[]
             {

@@ -59,17 +59,14 @@ namespace UI
             userControlKitchenView = new();
 
             SetHeader(userControlKitchenView);
+            MainContentControl.Content = userControlKitchenView;
             bool forKitchen = userControlLoginView.LoggedInEmployee.Type == EmployeeType.Chef ? true : false;
             userControlKitchenView.userControlKitchenViewRunning.LoadOrders(forKitchen);
-
-            MainContentControl.Content = userControlKitchenView;
         }
 
         private void ShowOrderView(Table table)
         {
-            if (userControlOrderView == null)
-                userControlOrderView = new(table);
-
+            userControlOrderView = new(table, userControlLoginView.LoggedInEmployee, ShowTableView);
             SetHeader(userControlOrderView);
 
             MainContentControl.Content = userControlOrderView;

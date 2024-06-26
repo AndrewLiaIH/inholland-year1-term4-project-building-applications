@@ -39,6 +39,14 @@
             Comment = comment;
         }
 
+        public OrderItem(int orderId, MenuItem item, DateTime? placementTime, OrderStatus? status, DateTime? changeOfStatus, int? quantity, string? comment)
+            : this(0, orderId, item, placementTime, status, changeOfStatus, quantity, comment)
+        { }
+
+        public OrderItem(MenuItem item, int quantity)
+            : this(0, 0, item, null, null, null, quantity, null)
+        { }
+
         public override string ToString()
         {
             return $"Placement time: {PlacementTime}, Status: {ItemStatus}, Change of status: {ChangeOfStatus}, Quantity: {Quantity}, Comment: {Comment}";
