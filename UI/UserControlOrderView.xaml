@@ -14,12 +14,41 @@
         <ui:TotalPriceConverter x:Key="TotalPriceConverter"/>
         <ui:StockAmountToIsEnabledConverter x:Key="StockAmountToIsEnabledConverter"/>
 
-        <!-- Templates -->
+        <!-- Templates and Styles-->
+
+        <!-- Style for ToolTip -->
+        <Style TargetType="ToolTip" x:Key="ToolTipStyle">
+            <Setter Property="Background" Value="{StaticResource Color5}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource Color3}"/>
+            <Setter Property="BorderThickness" Value="0.5"/>
+            <Setter Property="Padding" Value="10"/>
+            <Setter Property="FontFamily" Value="Noto Sans"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ToolTip">
+                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="5">
+                            <ContentPresenter Margin="{TemplateBinding Padding}"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Template for MenuItem -->
         <DataTemplate x:Key="MenuItemTemplate_2">
             <Border Background="{StaticResource Color4}" CornerRadius="5" Margin="5">
                 <Border.Effect>
                     <DropShadowEffect ShadowDepth="2" BlurRadius="5" />
                 </Border.Effect>
+                <Border.ToolTip>
+                    <ToolTip Style="{StaticResource ToolTipStyle}">
+                        <StackPanel>
+                            <TextBlock Text="{Binding StockAmount}"/>
+                        </StackPanel>
+                    </ToolTip>
+                </Border.ToolTip>
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
@@ -76,8 +105,8 @@
             </Setter>
         </Style>
 
-        <!-- Style for ListBox header-->
-        <Style TargetType="TextBlock" x:Key="ListBoxHeaderStyle">
+        <!-- Style for Subheader-->
+        <Style TargetType="TextBlock" x:Key="SubHeaderStyle">
             <Setter Property="FontFamily" Value="Noto Sans"/>
             <Setter Property="FontSize" Value="16"/>
             <Setter Property="FontWeight" Value="Bold"/>
@@ -103,7 +132,7 @@
                             <ColumnDefinition Width="200"/>
                             <ColumnDefinition Width="75"/>
                             <ColumnDefinition Width="22"/>
-                            <ColumnDefinition Width="68"/>
+                            <ColumnDefinition Width="55"/>
                         </Grid.ColumnDefinitions>
 
                         <!-- Name Display -->
@@ -130,12 +159,12 @@
                         <TextBlock Text="€" VerticalAlignment="Center" Margin="15,0,0,0" FontSize="14" FontFamily="Noto Sans" Grid.Column="4"/>
 
                         <!-- Price Display -->
-                        <TextBlock Text="{Binding TotalPrice, Converter={StaticResource TotalPriceConverter}}" TextAlignment="Right" VerticalAlignment="Center" Margin="10" FontSize="14" FontFamily="Noto Sans" Grid.Column="5"/>
+                        <TextBlock Text="{Binding TotalPrice, Converter={StaticResource TotalPriceConverter}}" TextAlignment="Right" VerticalAlignment="Center" Margin="0,0,10,0" FontSize="14" FontFamily="Noto Sans" Grid.Column="5"/>
                     </Grid>
                 </Border>
 
                 <!-- Remove Button -->
-                <Button Click="RemoveOrderItem_Click" Tag="{Binding}" Background="Transparent" BorderBrush="Transparent" Grid.Column="1" Margin="10">
+                <Button Click="RemoveOrderItem_Click" Tag="{Binding}" Background="Transparent" BorderBrush="Transparent" Grid.Column="1" Margin="20,0,0,0">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="{StaticResource removeIcon}" Width="16" Height="16"/>
                     </StackPanel>
@@ -144,7 +173,6 @@
         </DataTemplate>
 
         <Style x:Key="OrderOverviewButtonStyle" TargetType="Button">
-            <Setter Property="Background" Value="{StaticResource Color2}"/>
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Margin" Value="15"/>
@@ -237,7 +265,7 @@
                 <TabItem Header="Drinks" FontFamily="Noto Sans">
                     <ScrollViewer VerticalScrollBarVisibility="Hidden">
                         <StackPanel>
-                            <TextBlock Text="Soft Drinks" Style="{StaticResource ListBoxHeaderStyle}"/>
+                            <TextBlock Text="Soft Drinks" Style="{StaticResource SubHeaderStyle}"/>
                             <ListBox x:Name="SoftDrinksListBox" ItemTemplate="{StaticResource MenuItemTemplate_2}" Style="{StaticResource InvisibleListBoxStyle}">
                                 <ListBox.ItemsPanel>
                                     <ItemsPanelTemplate>
@@ -246,7 +274,7 @@
                                 </ListBox.ItemsPanel>
                             </ListBox>
 
-                            <TextBlock Text="Beers" Style="{StaticResource ListBoxHeaderStyle}"/>
+                            <TextBlock Text="Beers" Style="{StaticResource SubHeaderStyle}"/>
                             <ListBox x:Name="BeersListBox" ItemTemplate="{StaticResource MenuItemTemplate_2}" Style="{StaticResource InvisibleListBoxStyle}">
                                 <ListBox.ItemsPanel>
                                     <ItemsPanelTemplate>
@@ -255,7 +283,7 @@
                                 </ListBox.ItemsPanel>
                             </ListBox>
 
-                            <TextBlock Text="Wines" Style="{StaticResource ListBoxHeaderStyle}"/>
+                            <TextBlock Text="Wines" Style="{StaticResource SubHeaderStyle}"/>
                             <ListBox x:Name="WinesListBox" ItemTemplate="{StaticResource MenuItemTemplate_2}" Style="{StaticResource InvisibleListBoxStyle}">
                                 <ListBox.ItemsPanel>
                                     <ItemsPanelTemplate>
@@ -264,7 +292,7 @@
                                 </ListBox.ItemsPanel>
                             </ListBox>
 
-                            <TextBlock Text="Spirits" Style="{StaticResource ListBoxHeaderStyle}"/>
+                            <TextBlock Text="Spirits" Style="{StaticResource SubHeaderStyle}"/>
                             <ListBox x:Name="SpiritsListBox" ItemTemplate="{StaticResource MenuItemTemplate_2}" Style="{StaticResource InvisibleListBoxStyle}">
                                 <ListBox.ItemsPanel>
                                     <ItemsPanelTemplate>
@@ -273,7 +301,7 @@
                                 </ListBox.ItemsPanel>
                             </ListBox>
 
-                            <TextBlock Text="Coffee/Tea" Style="{StaticResource ListBoxHeaderStyle}"/>
+                            <TextBlock Text="Coffee/Tea" Style="{StaticResource SubHeaderStyle}"/>
                             <ListBox x:Name="CoffeeTeaListBox" ItemTemplate="{StaticResource MenuItemTemplate_2}" Style="{StaticResource InvisibleListBoxStyle}">
                                 <ListBox.ItemsPanel>
                                     <ItemsPanelTemplate>
@@ -288,7 +316,7 @@
                 <TabItem Header="Dinner" FontFamily="Noto Sans">
                     <ScrollViewer VerticalScrollBarVisibility="Hidden">
                         <StackPanel>
-                            <TextBlock Text="Starters" Style="{StaticResource ListBoxHeaderStyle}"/>
+                            <TextBlock Text="Starters" Style="{StaticResource SubHeaderStyle}"/>
                             <ListBox x:Name="DinnerStartersListBox" ItemTemplate="{StaticResource MenuItemTemplate_2}" Style="{StaticResource InvisibleListBoxStyle}">
                                 <ListBox.ItemsPanel>
                                     <ItemsPanelTemplate>
@@ -297,7 +325,7 @@
                                 </ListBox.ItemsPanel>
                             </ListBox>
 
-                            <TextBlock Text="Entremets" Style="{StaticResource ListBoxHeaderStyle}"/>
+                            <TextBlock Text="Entremets" Style="{StaticResource SubHeaderStyle}"/>
                             <ListBox x:Name="DinnerEntremetsListBox" ItemTemplate="{StaticResource MenuItemTemplate_2}" Style="{StaticResource InvisibleListBoxStyle}">
                                 <ListBox.ItemsPanel>
                                     <ItemsPanelTemplate>
@@ -306,7 +334,7 @@
                                 </ListBox.ItemsPanel>
                             </ListBox>
 
-                            <TextBlock Text="Mains" Style="{StaticResource ListBoxHeaderStyle}"/>
+                            <TextBlock Text="Mains" Style="{StaticResource SubHeaderStyle}"/>
                             <ListBox x:Name="DinnerMainsListBox" ItemTemplate="{StaticResource MenuItemTemplate_2}" Style="{StaticResource InvisibleListBoxStyle}">
                                 <ListBox.ItemsPanel>
                                     <ItemsPanelTemplate>
@@ -315,7 +343,7 @@
                                 </ListBox.ItemsPanel>
                             </ListBox>
 
-                            <TextBlock Text="Desserts" Style="{StaticResource ListBoxHeaderStyle}"/>
+                            <TextBlock Text="Desserts" Style="{StaticResource SubHeaderStyle}"/>
                             <ListBox x:Name="DinnerDessertsListBox" ItemTemplate="{StaticResource MenuItemTemplate_2}" Style="{StaticResource InvisibleListBoxStyle}">
                                 <ListBox.ItemsPanel>
                                     <ItemsPanelTemplate>
@@ -330,7 +358,7 @@
                 <TabItem Header="Lunch" FontFamily="Noto Sans">
                     <ScrollViewer VerticalScrollBarVisibility="Hidden">
                         <StackPanel>
-                            <TextBlock Text="Starters" Style="{StaticResource ListBoxHeaderStyle}"/>
+                            <TextBlock Text="Starters" Style="{StaticResource SubHeaderStyle}"/>
                             <ListBox x:Name="LunchStartersListBox" ItemTemplate="{StaticResource MenuItemTemplate_2}" Style="{StaticResource InvisibleListBoxStyle}">
                                 <ListBox.ItemsPanel>
                                     <ItemsPanelTemplate>
@@ -339,7 +367,7 @@
                                 </ListBox.ItemsPanel>
                             </ListBox>
 
-                            <TextBlock Text="Mains" Style="{StaticResource ListBoxHeaderStyle}"/>
+                            <TextBlock Text="Mains" Style="{StaticResource SubHeaderStyle}"/>
                             <ListBox x:Name="LunchMainsListBox" ItemTemplate="{StaticResource MenuItemTemplate_2}" Style="{StaticResource InvisibleListBoxStyle}">
                                 <ListBox.ItemsPanel>
                                     <ItemsPanelTemplate>
@@ -348,7 +376,7 @@
                                 </ListBox.ItemsPanel>
                             </ListBox>
 
-                            <TextBlock Text="Desserts" Style="{StaticResource ListBoxHeaderStyle}"/>
+                            <TextBlock Text="Desserts" Style="{StaticResource SubHeaderStyle}"/>
                             <ListBox x:Name="LunchDessertsListBox" ItemTemplate="{StaticResource MenuItemTemplate_2}" Style="{StaticResource InvisibleListBoxStyle}">
                                 <ListBox.ItemsPanel>
                                     <ItemsPanelTemplate>
@@ -374,7 +402,7 @@
                 </Grid.RowDefinitions>
 
                 <!-- Headers -->
-                <Grid Grid.Row="0" Margin="20,5,5,5">
+                <Grid Grid.Row="0" Margin="20,5,5,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
@@ -382,10 +410,10 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
 
-                    <TextBlock Text="Name" FontSize="14" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Column="0" Margin="0,0,140,0"/>
-                    <TextBlock Text="Comment" FontSize="14" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Column="1" Margin="0,0,157,0"/>
-                    <TextBlock Text="Quantity" FontSize="14" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Column="2" Margin="0,0,31,0"/>
-                    <TextBlock Text="Price" FontSize="14" FontWeight="Bold" VerticalAlignment="Center" HorizontalAlignment="Right" Grid.Column="3"/>
+                    <TextBlock Text="Name" Style="{StaticResource SubHeaderStyle}" VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Column="0" Margin="-1,0,134,0"/>
+                    <TextBlock Text="Comment" Style="{StaticResource SubHeaderStyle}" VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Column="1" Margin="0,0,145,0"/>
+                    <TextBlock Text="Quantity" Style="{StaticResource SubHeaderStyle}" VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Column="2" Margin="0,0,25,0"/>
+                    <TextBlock Text="Price" Style="{StaticResource SubHeaderStyle}" VerticalAlignment="Center" HorizontalAlignment="Left" Grid.Column="3" Margin="0"/>
                 </Grid>
 
                 <!-- ListBox of OrderItems -->
@@ -397,9 +425,9 @@
                     </ListBox.ItemsPanel>
                 </ListBox>
 
-                <Button Grid.Row="2" Content="Cancel Order" Click="CancelOrder_Click" Style="{StaticResource OrderOverviewButtonStyle}" HorizontalAlignment="Left"/>
+                <Button Grid.Row="2" Background="{StaticResource Color6}" Content="Cancel Order" Click="CancelOrder_Click" Style="{StaticResource OrderOverviewButtonStyle}" HorizontalAlignment="Left"/>
 
-                <Button Grid.Row="2" Content="Place Order" Click="PlaceOrder_Click" Style="{StaticResource OrderOverviewButtonStyle}" HorizontalAlignment="Right"/>
+                <Button Grid.Row="2" Background="{StaticResource Color9}"  Content="Place Order" Click="PlaceOrder_Click" Style="{StaticResource OrderOverviewButtonStyle}" HorizontalAlignment="Right"/>
             </Grid>
     </Grid>
         <Border Grid.Row="0" Grid.RowSpan="2" Width="2" HorizontalAlignment="Center" Margin="0,80,0,0" Background="{StaticResource Color3}"/>
