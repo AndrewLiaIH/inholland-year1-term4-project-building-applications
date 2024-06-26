@@ -127,7 +127,7 @@ namespace DAL
                 new SqlParameter(ParameterNameOrderItemStatus, orderItem.ItemStatus.ToString()),
                 new SqlParameter(ParameterNameChangeOfStatus, orderItem.ChangeOfStatus),
                 new SqlParameter(ParameterNameQuantity, orderItem.Quantity),
-                new SqlParameter(ParameterNameComment, orderItem.Comment)
+                new SqlParameter(ParameterNameComment, orderItem.Comment ?? (object)DBNull.Value)
             };
 
             ExecuteEditQuery(QueryCreateOrderItem, sqlParameters);

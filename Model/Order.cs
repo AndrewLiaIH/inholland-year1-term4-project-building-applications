@@ -12,10 +12,7 @@
         {
             get
             {
-                decimal totalPrice = 0;
-                foreach (OrderItem orderItem in OrderItems)
-                    totalPrice += (decimal)orderItem.TotalPrice;
-                return totalPrice;
+                return GetTotalPrice();
             }
             private set { }
         }
@@ -54,8 +51,7 @@
 
         public Order(Table table, Employee placedBy, int orderNumber, int? servingNumber)
             : this(0, table, placedBy, orderNumber, servingNumber, false, 0)
-        {
-        }
+        { }
 
         public Order(Table table, Employee employee)
             : this(0, table, employee, 0, 0, false, 0)
@@ -68,27 +64,26 @@
 
         public void AddOrderItem(OrderItem newOrderItem)
         {
-            foreach (OrderItem orderItem in OrderItems)
+            if(CanIncreaseQuantity(newOrderItem)) 
             {
-                if (orderItem.Item.ItemId == newOrderItem.Item.ItemId && orderItem.Comment == newOrderItem.Comment)
+                foreach (OrderItem orderItem in OrderItems)
                 {
-                    IncreaseOrderItemQuantity(orderItem);
-                    return;
+                    if (orderItem.Item.ItemId == newOrderItem.Item.ItemId && orderItem.Comment == newOrderItem.Comment)
+                    {
+                        IncreaseOrderItemQuantity(orderItem, true);
+                        return;
+                    }
                 }
-            }
-            OrderItems.Add(newOrderItem);
+                OrderItems.Add(newOrderItem);
+            }            
         }
 
-        public void IncreaseOrderItemQuantity(OrderItem increasingOrderItem)
+        public void IncreaseOrderItemQuantity(OrderItem increasingOrderItem, bool alreadyCheckedIfCanIncreaseQuantity = false)
         {
-            int menuItemStock = (int)increasingOrderItem.Item.StockAmount;
-            foreach (OrderItem orderItem in OrderItems)
-            {
-                if (orderItem.Item.ItemId == increasingOrderItem.Item.ItemId)
-                    menuItemStock -= (int)orderItem.Quantity;
-            }
-            if (menuItemStock > 0)
-                increasingOrderItem.IncreaseQuantity();
+            if (!alreadyCheckedIfCanIncreaseQuantity)
+                if (!CanIncreaseQuantity(increasingOrderItem))
+                    return;
+            increasingOrderItem.IncreaseQuantity();
         }
 
         public void DecreaseOrderItemQuantity(OrderItem decreasingOrderItem)
@@ -101,6 +96,27 @@
         public void SetOrderItems(List<OrderItem> items)
         {
             OrderItems = items;
+        }
+
+        private bool CanIncreaseQuantity(OrderItem newOrderItem)
+        {
+            int menuItemStock = (int)newOrderItem.Item.StockAmount;
+            foreach (OrderItem orderItem in OrderItems)
+            {
+                if (orderItem.Item.ItemId == newOrderItem.Item.ItemId)
+                    menuItemStock -= (int)orderItem.Quantity;
+            }
+            if (menuItemStock > 0)
+                return true;
+            return false;
+        }
+
+        private decimal GetTotalPrice()
+        {
+            decimal totalPrice = 0;
+            foreach (OrderItem orderItem in OrderItems)
+                totalPrice += (decimal)orderItem.TotalPrice;
+            return totalPrice;
         }
 
         private OrderStatus? GetCategoryStatus(List<OrderItem> items)

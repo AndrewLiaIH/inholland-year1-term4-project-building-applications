@@ -31,22 +31,26 @@ namespace Service
             return orderDao.GetOrderById(orderId);
         }
 
-
         public void LoadNewOrder(Order order)
         {
-            int orderId = CreateOrder(order);
+            int orderId = CreateOrderAndGetId(order);
             CreateOrderItems(orderId, order.OrderItems);
             menuService.UpdateStockOfMenuItems(order.OrderItems);
         }
 
-        private int CreateOrder(Order order)
+        private int CreateOrderAndGetId(Order order)
         {
             Order mostRecentOrder = GetMostRecentOrder();
             int servingNumber = ((int)mostRecentOrder.ServingNumber) < 999 ? (int)mostRecentOrder.ServingNumber + 1 : 1;
-            Order fullOrder = new(order.Table, order.PlacedBy, mostRecentOrder.OrderNumber + 1, servingNumber);
-            fullOrder.SetOrderItems(order.OrderItems);
+            Order completeOrder = new(order.Table, order.PlacedBy, mostRecentOrder.OrderNumber + 1, servingNumber);
+            completeOrder.SetOrderItems(order.OrderItems);
 
-            return orderDao.CreateOrderAndGetId(fullOrder);
+            return orderDao.CreateOrderAndGetId(completeOrder);
+        }
+
+        private Order GetMostRecentOrder()
+        {
+            return orderDao.GetMostRecentOrder();
         }
 
         private void CreateOrderItems(int orderId, List<OrderItem> orderItems)
@@ -54,23 +58,15 @@ namespace Service
             orderItems = FillOrderItemsInformation(orderId, orderItems);
 
             foreach (OrderItem orderItem in orderItems)
-                orderDao.CreateOrderItem(orderItem);
+                orderDao.CreateOrderItem(orderItem);    
         }
 
         private List<OrderItem> FillOrderItemsInformation(int orderNumber, List<OrderItem> orderItems)
         {
             for (int i = 0; i < orderItems.Count; i++)
-            {
-                string comment = orderItems[i].Comment == null ? String.Empty : orderItems[i].Comment;
-                orderItems[i] = new(orderNumber, orderItems[i].Item, DateTime.Now, OrderStatus.Waiting, DateTime.Now, orderItems[i].Quantity, comment);
-            }
+                orderItems[i] = new(orderNumber, orderItems[i].Item, DateTime.Now, OrderStatus.Waiting, DateTime.Now, orderItems[i].Quantity, orderItems[i].Comment);
 
             return orderItems;
-        }
-
-        public Order GetMostRecentOrder()
-        {
-            return orderDao.GetMostRecentOrder();
         }
 
         public List<Order> GetAllKitchenBarOrders(bool forKitchen, bool isRunning)

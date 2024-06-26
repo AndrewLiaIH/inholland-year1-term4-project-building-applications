@@ -16,14 +16,12 @@ namespace UI
         private OrderService orderService;
         private MenuService menuService;
         private Order newOrder;
-        public ObservableCollection<OrderItem> orderItems;
-        Action returnToTableOverview;
-
+        private ObservableCollection<OrderItem> orderItems;
+        private Action returnToTableOverview;
 
         public UserControlOrderView(Table table, Employee employee, Action returnToTableOverview)
         {
             InitializeComponent();
-            DataContext = this;
             orderService = new();
             menuService = new();
             newOrder = new(table, employee);
@@ -52,7 +50,7 @@ namespace UI
             return menu;
         }
 
-        public void AssignBindings(Dictionary<MenuType, Dictionary<CategoryType, List<MenuItem>>> menu)
+        private void AssignBindings(Dictionary<MenuType, Dictionary<CategoryType, List<MenuItem>>> menu)
         {
             SoftDrinksListBox.ItemsSource = menu[MenuType.Drinks][CategoryType.SoftDrinks];
             BeersListBox.ItemsSource = menu[MenuType.Drinks][CategoryType.BeersOnTap];
@@ -94,6 +92,8 @@ namespace UI
         {
             OrderItem orderItem = (sender as Button).Tag as OrderItem;
             orderItem.Comment = Microsoft.VisualBasic.Interaction.InputBox("Enter your comment:", "Edit Comment", orderItem.Comment);
+            if (orderItem.Comment == String.Empty)
+                orderItem.Comment = null;
             UpdateOrderOverview();
         }
 
@@ -109,11 +109,7 @@ namespace UI
             MessageBoxResult result = MessageBox.Show("Are you sure you want to cancel the order?", "Confirm cancelation", MessageBoxButton.YesNo, MessageBoxImage.Question);
 
             if (result == MessageBoxResult.Yes)
-            {
-                newOrder.OrderItems.Clear();
-                UpdateOrderOverview();
                 returnToTableOverview();
-            }
         }
 
         private void PlaceOrder_Click(object sender, RoutedEventArgs e)
@@ -123,7 +119,7 @@ namespace UI
             if (result == MessageBoxResult.Yes)
             {
                 orderService.LoadNewOrder(newOrder);
-                MessageBox.Show("Order placed successfully!");
+                MessageBox.Show("Order placed successfully!", "Success", MessageBoxButton.OK);
                 returnToTableOverview();
             }
         }
@@ -131,8 +127,8 @@ namespace UI
         private void UpdateOrderOverview()
         {
             orderItems.Clear();
-            foreach (OrderItem item in newOrder.OrderItems)
-                orderItems.Add(item);
+            foreach (OrderItem orderItem in newOrder.OrderItems)
+                orderItems.Add(orderItem);
         }
 
         public void SetLoggedInEmployee(Employee employee)

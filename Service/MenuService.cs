@@ -48,8 +48,8 @@ namespace Service
                 newMenuItemStocks[orderItem.Item.ItemId] -= (int)orderItem.Quantity;
             }
 
-            foreach (KeyValuePair<int, int> valuePair in newMenuItemStocks)
-                menuDao.UpdateStockOfMenuItem(valuePair.Key, valuePair.Value);
+            foreach (KeyValuePair<int, int> keyValuePair in newMenuItemStocks)
+                menuDao.UpdateStockOfMenuItem(keyValuePair.Key, keyValuePair.Value);
         }
     }
 }
