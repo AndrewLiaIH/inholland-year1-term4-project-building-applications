@@ -7,17 +7,10 @@
         public Employee PlacedBy { get; private set; }
         public int OrderNumber { get; private set; }
         public int? ServingNumber { get; private set; }
-        public bool Finished { get; set; }
-        public decimal TotalPrice
-        {
-            get
-            {
-                return GetTotalPrice();
-            }
-            private set { }
-        }
+        public bool Finished { get; private set; }
+        public decimal TotalPrice { get { return GetTotalPrice(); } private set { } }
         public List<OrderItem> OrderItems { get; private set; }
-        public OrderStatus? OrderStatus { get; set; } //CONSIDER CALCULATED PROPERTY!!!!!!!!!!!!!!!!
+        public OrderStatus? OrderStatus { get { return GetStatus(OrderItems); } private set { } }
 
         public List<CategoryGroup> OrderItemsByCategory
         {
@@ -28,7 +21,7 @@
                     .Select(group => new CategoryGroup
                     {
                         Category = group.Key,
-                        CategoryStatus = GetCategoryStatus(group.ToList()),
+                        CategoryStatus = GetStatus(group.ToList()),
                         Items = group.ToList()
 
                     })
@@ -64,7 +57,7 @@
 
         public void AddOrderItem(OrderItem newOrderItem)
         {
-            if(CanIncreaseQuantity(newOrderItem)) 
+            if (CanIncreaseQuantity(newOrderItem))
             {
                 foreach (OrderItem orderItem in OrderItems)
                 {
@@ -75,7 +68,12 @@
                     }
                 }
                 OrderItems.Add(newOrderItem);
-            }            
+            }
+        }
+
+        public void RemoveOrderItem(OrderItem removingOrderItem)
+        {
+            OrderItems.Remove(removingOrderItem);
         }
 
         public void IncreaseOrderItemQuantity(OrderItem increasingOrderItem, bool alreadyCheckedIfCanIncreaseQuantity = false)
@@ -90,12 +88,17 @@
         {
             decreasingOrderItem.DecreaseQuantity();
             if (decreasingOrderItem.Quantity == 0)
-                OrderItems.Remove(decreasingOrderItem);
+                RemoveOrderItem(decreasingOrderItem);
         }
 
         public void SetOrderItems(List<OrderItem> items)
         {
             OrderItems = items;
+        }
+
+        public void SetIsFinished(bool isFinished)
+        {
+            Finished = isFinished;
         }
 
         private bool CanIncreaseQuantity(OrderItem newOrderItem)
@@ -119,7 +122,7 @@
             return totalPrice;
         }
 
-        private OrderStatus? GetCategoryStatus(List<OrderItem> items)
+        private OrderStatus? GetStatus(List<OrderItem> items)
         {
             OrderStatus? status = null;
             bool isNotDone = false;

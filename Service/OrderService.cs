@@ -1,7 +1,6 @@
 ﻿using DAL;
 using Microsoft.IdentityModel.Tokens;
 using Model;
-using System.Collections.ObjectModel;
 
 namespace Service
 {
@@ -19,16 +18,6 @@ namespace Service
         {
             RunningOrdersChanged?.Invoke();
             WaitingTimeChanged?.Invoke();
-        }
-
-        public List<Order> GetAllOrders()
-        {
-            return orderDao.GetAllOrders();
-        }
-
-        public Order GetOrderById(int orderId)
-        {
-            return orderDao.GetOrderById(orderId);
         }
 
         public void LoadNewOrder(Order order)
@@ -58,7 +47,7 @@ namespace Service
             orderItems = FillOrderItemsInformation(orderId, orderItems);
 
             foreach (OrderItem orderItem in orderItems)
-                orderDao.CreateOrderItem(orderItem);    
+                orderDao.CreateOrderItem(orderItem);
         }
 
         private List<OrderItem> FillOrderItemsInformation(int orderNumber, List<OrderItem> orderItems)
@@ -74,21 +63,6 @@ namespace Service
             return orderDao.GetAllKitchenBarOrders(forKitchen, isRunning);
         }
 
-        public List<Order> GetAllRunningOrdersForTables()
-        {
-            return orderDao.GetAllRunningOrdersForTables();
-        }
-
-        public List<OrderItem> GetAllOrderItems()
-        {
-            return orderDao.GetAllOrderItems();
-        }
-
-        public OrderItem GetOrderItemById(int orderId)
-        {
-            return orderDao.GetOrderItemById(orderId);
-        }
-
         public void UpdateOrderItemsStatus(List<OrderItem> orderItems)
         {
             orderDao.UpdateOrderItemsStatus(orderItems);
@@ -97,11 +71,6 @@ namespace Service
         public void UpdateOrderFinishedStatus(Order order)
         {
             orderDao.UpdateOrderFinishedStatus(order);
-        }
-
-        public void UpdateAllOrderItemsStatus(Order order)
-        {
-            orderDao.UpdateAllOrderItemsStatus(order);
         }
 
         public List<Order> GetAllRunningOrdersForTable(Table table)
@@ -131,7 +100,7 @@ namespace Service
 
         public void FinishAllOrders(List<Order> orders)
         {
-            orders.ForEach(order => order.Finished = true);
+            orders.ForEach(order => order.SetIsFinished(true));
             orders.ForEach(order => UpdateOrderFinishedStatus(order));
         }
 
@@ -153,7 +122,7 @@ namespace Service
             {
                 if (orderItem.ItemStatus == OrderStatus.Done)
                 {
-                    orderItem.ItemStatus = OrderStatus.Served;
+                    orderItem.SetItemStatus(OrderStatus.Served);
                     changedOrderItems.Add(orderItem);
                 }
             }
@@ -163,14 +132,6 @@ namespace Service
         {
             List<OrderItem> servedOrderItems = OrderItemsToServed(runningOrders);
             UpdateOrderItemsStatus(servedOrderItems);
-        }
-
-        public decimal GetTotalPrice(ObservableCollection<OrderItem> orderItems)
-        {
-            decimal totalPrice = 0;
-            foreach (OrderItem orderItem in orderItems)
-                totalPrice += (decimal)orderItem.TotalPrice;
-            return totalPrice;
         }
     }
 }

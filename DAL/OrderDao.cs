@@ -136,7 +136,7 @@ namespace DAL
         public Order GetMostRecentOrder()
         {
             DataTable dataTable = ExecuteSelectQuery(QueryGetMostRecentOrder, new SqlParameter[] { });
-            return ReadTable(dataTable, ReadRowOrder_Andrew).First();
+            return ReadTable(dataTable, ReadRowOrderWithOrderId).First();
         }
 
         public void UpdateOrderFinishedStatus(Order order)
@@ -279,9 +279,9 @@ namespace DAL
             return GetAllByIntParameters(QueryGetAllItemsOfOrder, ReadRowOrderItem, parameters);
         }
 
-        private Order ReadRowOrder_Andrew(DataRow dr)
+        private Order ReadRowOrder(DataRow dr)
         {
-            int id = (int)dr[ColumnOrderId];
+            int id = (int)dr["ColumnOrderId"];
             Table table = tableDao.GetTableById((int)dr[ColumnTableId]);
             Employee employee = employeeDao.GetEmployeeById((int)dr[ColumnPlacedById]);
             int orderNumber = (int)dr[ColumnOrderNumber];
@@ -292,9 +292,9 @@ namespace DAL
             return new(id, table, employee, orderNumber, servingNumber, finished, totalPrice);
         }
 
-        private Order ReadRowOrder(DataRow dr)
+        private Order ReadRowOrderWithOrderId(DataRow dr)
         {
-            int id = (int)dr["ColumnOrderId"];
+            int id = (int)dr[ColumnOrderId];
             Table table = tableDao.GetTableById((int)dr[ColumnTableId]);
             Employee employee = employeeDao.GetEmployeeById((int)dr[ColumnPlacedById]);
             int orderNumber = (int)dr[ColumnOrderNumber];

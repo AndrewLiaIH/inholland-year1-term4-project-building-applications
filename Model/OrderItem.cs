@@ -7,25 +7,12 @@
         public int OrderId { get; private set; }
         public MenuItem Item { get; private set; }
         public DateTime? PlacementTime { get; private set; }
-        public OrderStatus? ItemStatus { get; set; }
+        public OrderStatus? ItemStatus { get; private set; }
         public DateTime? ChangeOfStatus { get; private set; }
         public int? Quantity { get; private set; }
-        public string? Comment { get; set; }
-        public TimeSpan RunningTime
-        {
-            get
-            {
-                return DateTime.Now - PlacementTime.Value;
-            }
-        }
-
-        public decimal? TotalPrice
-        {
-            get
-            {
-                return Item.Price * Quantity;
-            }
-        }
+        public string? Comment { get; private set; }
+        public TimeSpan RunningTime { get { return DateTime.Now - PlacementTime.Value; } }
+        public decimal? TotalPrice { get { return Item.Price * Quantity; } }
 
         public OrderItem(int databaseId, int orderId, MenuItem item, DateTime? placementTime, OrderStatus? status, DateTime? changeOfStatus, int? quantity, string? comment)
         {
@@ -60,6 +47,13 @@
         public void DecreaseQuantity()
         {
             Quantity--;
+        }
+
+        public void SetComment(string comment)
+        {
+            if (comment == String.Empty)
+                comment = null;
+            Comment = comment;
         }
 
         public void SetItemStatus(OrderStatus status)

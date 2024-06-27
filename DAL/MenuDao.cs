@@ -79,16 +79,6 @@ namespace DAL
             return GetAll(QueryGetAllMenuItems, ReadRowMenuItem);
         }
 
-        public MenuItem GetMenuItemById(int itemId)
-        {
-            Dictionary<string, int> parameters = new()
-            {
-                { ParameterNameItemId, itemId }
-            };
-
-            return GetByIntParameters(QueryGetMenuItemById, ReadRowMenuItem, parameters);
-        }
-
         public void UpdateStockOfMenuItem(int itemId, int newStock)
         {
             SqlParameter[] parameters = new SqlParameter[]
@@ -100,11 +90,22 @@ namespace DAL
             ExecuteEditQuery(QueryUpdateStock, parameters);
         }
 
+        public MenuItem GetMenuItemById(int itemId)
+        {
+            Dictionary<string, int> parameters = new()
+            {
+                { ParameterNameItemId, itemId }
+            };
+
+            return GetByIntParameters(QueryGetMenuItemById, ReadRowMenuItem, parameters);
+        }
+
         private MenuCard ReadRowMenuCard(DataRow dr)
         {
             int cardId = (int)dr[ColumnCardId];
-            bool parsedMenuType = Enum.TryParse((string)dr[ColumnMenuType], out MenuType menuType);
-            return new MenuCard(cardId, menuType);
+            bool parsedMenuType = Enum.TryParse((string)dr[ColumnMenuType], true, out MenuType menuType);
+
+            return new(cardId, menuType);
         }
 
         private Category ReadRowCategory(DataRow dr)
